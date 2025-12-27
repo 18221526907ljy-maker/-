@@ -25,7 +25,6 @@
         ::-webkit-scrollbar-thumb { background: #D1D1D1; }
         ::-webkit-scrollbar-thumb:hover { background: #8E8E93; }
 
-        /* Custom Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -38,10 +37,21 @@
 <body class="bg-[#F5F5F7] text-[#1D1D1F] font-sans selection:bg-[#E5E5E5] overflow-x-hidden">
     <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+    <!-- Firebase Bridge to handle ESM and Babel correctly -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Icons handled via SVG for standalone compatibility
+        window.FirebaseSDK = {
+            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
+            getFirestore, doc, setDoc, getDoc, onSnapshot, collection
+        };
+    </script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
         const Icon = ({ name, size = 20, className = "" }) => {
             const icons = {
                 plus: <path d="M12 5v14M5 12h14" />,
@@ -74,7 +84,8 @@
                     </React.Fragment>
                 ),
                 arrowRight: <path d="M5 12h14m-7-7 7 7-7 7" />,
-                circle: <circle cx="12" cy="12" r="10" />
+                circle: <circle cx="12" cy="12" r="10" />,
+                square: <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
             };
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -85,7 +96,6 @@
 
         const apiKey = ""; 
 
-        // Exponential backoff fetch helper
         const fetchWithRetry = async (url, options, retries = 5, backoff = 1000) => {
             try {
                 const response = await fetch(url, options);
@@ -106,7 +116,13 @@
             { id: 'finance', name: '财务管理', label: 'CAPITAL', color: 'from-[#D4C3B3] to-[#A08E7D]', icon: 'wallet' }
         ];
 
+        const TEMPLATES = {
+            question: "题目：[多选] 以下哪些属于品牌资产的维度？\nA. 品牌知名度\nB. 品牌忠诚度\nC. 品牌关联性\nD. 品牌感知质量\n答案：ABCD\n解析：这是Hailey风格的解析样例。",
+            card: "正面：S-T-P分析法\n背面：市场细分 (Segmentation)、目标市场选择 (Targeting) 和 市场定位 (Positioning)\n解析：这是Hailey风格的解析样例。"
+        };
+
         const App = () => {
+            const [user, setUser] = useState(null);
             const [view, setView] = useState('home'); 
             const [activeSubject, setActiveSubject] = useState(SUBJECTS[0]);
             const [db, setDb] = useState({ brand: { questions: [], cards: [] }, marketing: { questions: [], cards: [] }, finance: { questions: [], cards: [] } });
@@ -121,14 +137,79 @@
             const [importType, setImportType] = useState('question');
             const [statusMsg, setStatusMsg] = useState('');
 
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'gossip-study-hailey';
+
+            // --- Authentication Setup ---
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    if (window.FirebaseSDK) {
+                        clearInterval(interval);
+                        const sdk = window.FirebaseSDK;
+                        const firebaseConfig = JSON.parse(__firebase_config);
+                        const app = sdk.initializeApp(firebaseConfig);
+                        const auth = sdk.getAuth(app);
+
+                        const performAuth = async () => {
+                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                                await sdk.signInWithCustomToken(auth, __initial_auth_token);
+                            } else {
+                                await sdk.signInAnonymously(auth);
+                            }
+                        };
+                        performAuth();
+                        sdk.onAuthStateChanged(auth, setUser);
+                    }
+                }, 100);
+                return () => clearInterval(interval);
+            }, []);
+
+            // --- Real-time Cloud Sync ---
+            useEffect(() => {
+                if (!user || !window.FirebaseSDK) return;
+                const sdk = window.FirebaseSDK;
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = sdk.initializeApp(firebaseConfig);
+                const fs = sdk.getFirestore(app);
+
+                const dataRef = sdk.doc(fs, 'artifacts', appId, 'users', user.uid, 'data', 'user_archive');
+                const unsubscribe = sdk.onSnapshot(dataRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const cloudData = docSnap.data();
+                        if (cloudData.db) setDb(cloudData.db);
+                        if (cloudData.mistakes) setMistakes(cloudData.mistakes);
+                    }
+                }, (error) => console.error("Firestore Sync Error:", error));
+
+                return () => unsubscribe();
+            }, [user]);
+
+            const saveToCloud = async (updatedDb, updatedMistakes) => {
+                if (!user || !window.FirebaseSDK) return;
+                const sdk = window.FirebaseSDK;
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = sdk.initializeApp(firebaseConfig);
+                const fs = sdk.getFirestore(app);
+
+                const dataRef = sdk.doc(fs, 'artifacts', appId, 'users', user.uid, 'data', 'user_archive');
+                try {
+                    await sdk.setDoc(dataRef, {
+                        db: updatedDb || db,
+                        mistakes: updatedMistakes || mistakes,
+                        updatedAt: Date.now()
+                    }, { merge: true });
+                } catch (e) {
+                    console.error("Cloud Save Failed:", e);
+                }
+            };
+
             const parseData = async () => {
                 if (!rawText.trim()) return;
                 setIsParsing(true);
-                setStatusMsg('');
+                setStatusMsg('正在通过 AI 编码您的资料... 🕊️');
                 
                 const systemPrompt = importType === 'question' 
-                    ? `将文本解析为考试题目JSON数组: [{type: 'single'|'multiple'|'open', question, options[], correct, logic}]。专业简洁。`
-                    : `将文本解析为闪卡JSON数组: [{front, back, logic}]。极简高级。`;
+                    ? `将文本解析为考试题目JSON数组。单选: {type: 'single', question, options: [A, B, C, D], correct: 索引(0-3), logic} 多选: {type: 'multiple', question, options: [A, B, C, D], correct: [索引数组], logic} 问答: {type: 'open', question, correct: '参考答案', logic}`
+                    : `将文本解析为闪卡JSON数组: [{front, back, logic}]。`;
                 
                 try {
                     const result = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
@@ -137,96 +218,129 @@
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: `解析以下${importType}内容：\n${rawText}` }] }],
                             systemInstruction: { parts: [{ text: systemPrompt }] },
-                            generationConfig: { 
-                                responseMimeType: "application/json",
-                                responseSchema: {
-                                    type: "ARRAY",
-                                    items: {
-                                        type: "OBJECT",
-                                        properties: importType === 'question' ? {
-                                            type: { type: "STRING" },
-                                            question: { type: "STRING" },
-                                            options: { type: "ARRAY", items: { type: "STRING" } },
-                                            correct: { type: "NUMBER" },
-                                            logic: { type: "STRING" }
-                                        } : {
-                                            front: { type: "STRING" },
-                                            back: { type: "STRING" },
-                                            logic: { type: "STRING" }
-                                        }
-                                    }
-                                }
-                            }
+                            generationConfig: { responseMimeType: "application/json" }
                         })
                     });
 
                     const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (!responseText) throw new Error("无法从 AI 获取有效内容，请检查数据。");
+                    const parsed = JSON.parse(responseText || "[]");
+                    const newItems = parsed.map(item => ({ ...item, id: Math.random().toString(36).substr(2, 9), status: null }));
                     
-                    const parsed = JSON.parse(responseText);
-                    const newItems = parsed.map(item => ({ 
-                        ...item, 
-                        id: Math.random().toString(36).substr(2, 9), 
-                        status: null 
-                    }));
-                    
-                    setDb(prev => ({
-                        ...prev,
+                    const updatedDb = {
+                        ...db,
                         [activeSubject.id]: {
-                            ...prev[activeSubject.id],
-                            [importType === 'question' ? 'questions' : 'cards']: [...prev[activeSubject.id][importType === 'question' ? 'questions' : 'cards'], ...newItems]
+                            ...db[activeSubject.id],
+                            [importType === 'question' ? 'questions' : 'cards']: [...(db[activeSubject.id][importType === 'question' ? 'questions' : 'cards'] || []), ...newItems]
                         }
-                    }));
+                    };
+                    
+                    setDb(updatedDb);
+                    await saveToCloud(updatedDb, mistakes);
                     setRawText('');
+                    setStatusMsg('Edit Complete. 档案已更新。');
+                    setTimeout(() => setStatusMsg(''), 3000);
                     setView('home');
                 } catch (e) { 
-                    console.error(e); 
-                    setStatusMsg('解析失败，请检查输入格式或稍后再试。💅');
-                } finally { 
-                    setIsParsing(false); 
-                }
+                    setStatusMsg('解码失败。请检查输入格式。💅');
+                } finally { setIsParsing(false); }
             };
 
             const startSession = (mode, type) => {
-                let pool = type === 'cards' ? db[activeSubject.id].cards : db[activeSubject.id].questions;
+                const subjectData = db[activeSubject.id] || { questions: [], cards: [] };
+                let pool = type === 'cards' ? (subjectData.cards || []) : (subjectData.questions || []);
+                if (!pool || pool.length === 0) return;
+                
                 if (mode === 'forgotten') pool = pool.filter(c => c.status === 'forgotten');
                 if (mode === 'blurred') pool = pool.filter(c => c.status === 'blurred');
                 if (pool.length === 0) return;
-                setActiveItems([...pool].sort(() => Math.random() - 0.5));
-                setCurrentIdx(0); setIsFlipped(false); setQuizAnswered(false); setSelectedIdx(null); setView(type);
+
+                const shuffled = [...pool].sort(() => Math.random() - 0.5);
+                setActiveItems(shuffled);
+                setCurrentIdx(0);
+                setIsFlipped(false);
+                setQuizAnswered(false);
+                setSelectedIdx(shuffled[0].type === 'multiple' ? [] : null);
+                setView(type);
             };
 
             const handleQuizAnswer = (idx) => {
                 if (quizAnswered) return;
-                setSelectedIdx(idx); setQuizAnswered(true);
-                const q = activeItems[currentIdx];
-                if (idx !== q.correct) setMistakes(prev => prev.find(m => m.id === q.id) ? prev : [...prev, q]);
+                const currentQ = activeItems[currentIdx];
+                if (currentQ.type === 'multiple') {
+                    setSelectedIdx(prev => {
+                        const currentArr = Array.isArray(prev) ? prev : [];
+                        return currentArr.includes(idx) ? currentArr.filter(i => i !== idx) : [...currentArr, idx];
+                    });
+                } else {
+                    setSelectedIdx(idx);
+                    finishQuestion(idx);
+                }
             };
 
-            const updateCardStatus = (status) => {
-                const cardId = activeItems[currentIdx].id;
-                setDb(prev => ({
-                    ...prev,
+            const finishQuestion = async (finalSelection) => {
+                const q = activeItems[currentIdx];
+                setQuizAnswered(true);
+                
+                let isCorrect = false;
+                if (q.type === 'multiple') {
+                    isCorrect = JSON.stringify([...finalSelection].sort()) === JSON.stringify([...q.correct].sort());
+                } else if (q.type === 'single') {
+                    isCorrect = finalSelection === q.correct;
+                }
+
+                if (!isCorrect && q.type !== 'open') {
+                    const newMistakes = mistakes.find(m => m.id === q.id) ? mistakes : [...mistakes, q];
+                    setMistakes(newMistakes);
+                    await saveToCloud(db, newMistakes);
+                }
+            };
+
+            const updateCardStatus = async (status) => {
+                const currentItem = activeItems[currentIdx];
+                if (!currentItem) return;
+
+                const updatedDb = {
+                    ...db,
                     [activeSubject.id]: {
-                        ...prev[activeSubject.id],
-                        cards: prev[activeSubject.id].cards.map(c => c.id === cardId ? { ...c, status } : c)
+                        ...db[activeSubject.id],
+                        cards: db[activeSubject.id].cards.map(c => c.id === currentItem.id ? { ...c, status } : c)
                     }
-                }));
-                if (currentIdx + 1 < activeItems.length) { setCurrentIdx(c => c + 1); setIsFlipped(false); } 
-                else setView('home');
+                };
+                setDb(updatedDb);
+                await saveToCloud(updatedDb, mistakes);
+                goToNext();
+            };
+
+            const goToNext = () => {
+                if (currentIdx + 1 < activeItems.length) {
+                    const nextItem = activeItems[currentIdx + 1];
+                    setCurrentIdx(c => c + 1);
+                    setQuizAnswered(false);
+                    setSelectedIdx(nextItem.type === 'multiple' ? [] : null);
+                    setIsFlipped(false);
+                } else {
+                    setView('home');
+                }
+            };
+
+            const removeFromArchive = async (id) => {
+                const newMistakes = mistakes.filter(m => m.id !== id);
+                setMistakes(newMistakes);
+                await saveToCloud(db, newMistakes);
             };
 
             return (
                 <div className="min-h-screen">
+                    {/* High Fashion Background */}
                     <div className="fixed inset-0 pointer-events-none z-0">
-                        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-gray-200/40 to-transparent blur-[120px]"></div>
-                        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-[#D4C3B3]/20 to-transparent blur-[120px]"></div>
+                        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-gray-200/30 to-transparent blur-[120px]"></div>
+                        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-[#D4C3B3]/10 to-transparent blur-[120px]"></div>
                     </div>
 
                     <nav className="relative z-10 flex justify-between items-center p-8 px-12 border-b border-gray-200 bg-white/40 backdrop-blur-xl">
                         <div className="flex items-center gap-6 cursor-pointer" onClick={() => setView('home')}>
                             <h1 className="text-2xl font-light tracking-[0.4em] uppercase border-b border-black pb-1">Archive</h1>
-                            <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 mt-2">STUDY EDIT</span>
+                            <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 mt-2 uppercase">Study Edit</span>
                         </div>
                         <button onClick={() => setView('burnbook')} className="text-[11px] font-bold tracking-widest uppercase hover:opacity-50 transition-opacity flex items-center gap-2">
                             The Archive ({mistakes.length})
@@ -235,15 +349,22 @@
 
                     <main className="relative z-10 max-w-6xl mx-auto px-6 py-16">
                         {statusMsg && (
-                            <div className="mb-8 p-4 bg-black text-white text-[10px] uppercase tracking-widest text-center animate-in">
+                            <div className="mb-8 p-4 bg-black text-white text-[10px] uppercase tracking-[0.3em] text-center animate-in shadow-xl">
                                 {statusMsg}
                             </div>
                         )}
 
-                        {view === 'home' && (
+                        {!user && (
+                            <div className="flex flex-col items-center justify-center py-40 text-gray-300">
+                                <Icon name="sparkles" className="animate-spin mb-6" size={32} />
+                                <span className="text-[10px] uppercase tracking-[0.6em]">Authenticating Private Archive...</span>
+                            </div>
+                        )}
+
+                        {user && view === 'home' && (
                             <div className="space-y-24 animate-in">
                                 <header className="space-y-6 text-center">
-                                    <h2 className="text-7xl md:text-9xl font-light tracking-tighter leading-none italic font-serif">Effortless.</h2>
+                                    <h2 className="text-7xl md:text-9xl font-light tracking-tighter leading-none italic font-serif text-gray-900">Effortless.</h2>
                                     <p className="text-xs font-bold uppercase tracking-[0.6em] text-gray-400">Master your craft with intention</p>
                                 </header>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -258,8 +379,8 @@
                                             </div>
                                             <div className="space-y-6 px-2">
                                                 <div className="flex justify-between text-[10px] font-bold tracking-widest text-gray-400 border-b border-gray-100 pb-2 uppercase">
-                                                    <span>Data Pool</span>
-                                                    <span className="text-black font-medium">{db[sub.id].questions.length + db[sub.id].cards.length} Items</span>
+                                                    <span>Archive Pool</span>
+                                                    <span className="text-black font-medium">{(db[sub.id]?.questions || []).length + (db[sub.id]?.cards || []).length} Items</span>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <button onClick={() => { setActiveSubject(sub); startSession('all', 'questions'); }} className="py-4 bg-black text-white text-[10px] font-bold tracking-widest uppercase hover:bg-gray-800 transition shadow-lg">Practice</button>
@@ -277,13 +398,13 @@
                             <div className="max-w-xl mx-auto space-y-12 animate-in">
                                 <button onClick={() => setView('home')} className="flex items-center gap-4 text-gray-400 font-bold uppercase text-[10px] tracking-widest hover:text-black"><Icon name="chevronLeft" size={16} /> Back</button>
                                 <div className="bg-white p-12 border border-gray-100 shadow-sm space-y-10 text-center">
-                                    <h2 className="text-3xl font-light italic font-serif">Focus Session</h2>
+                                    <h2 className="text-3xl font-light italic font-serif text-gray-900">Focus Session</h2>
                                     <div className="space-y-4">
                                         {['all', 'forgotten', 'blurred'].map(mode => (
                                             <button key={mode} onClick={() => startSession(mode, 'cards')} className="w-full group flex justify-between items-center py-4 border-b border-gray-100 hover:border-black transition-all">
                                                 <span className="text-[11px] font-bold tracking-[0.3em] uppercase">{mode} Signals</span>
                                                 <span className="text-[10px] text-gray-300 group-hover:text-black">
-                                                    {mode === 'all' ? db[activeSubject.id].cards.length : db[activeSubject.id].cards.filter(c => c.status === mode).length} Items
+                                                    {mode === 'all' ? (db[activeSubject.id]?.cards || []).length : (db[activeSubject.id]?.cards || []).filter(c => c.status === mode).length} Items
                                                 </span>
                                             </button>
                                         ))}
@@ -299,94 +420,131 @@
                                     <div className="flex justify-between items-end">
                                         <div>
                                             <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Workspace</span>
-                                            <h2 className="text-4xl font-light italic font-serif">Import: {activeSubject.name}</h2>
+                                            <h2 className="text-4xl font-light italic font-serif text-gray-900">Import: {activeSubject.name}</h2>
                                         </div>
                                         <div className="flex border border-gray-100 p-1">
                                             {['question', 'card'].map(t => (
-                                                <button key={t} onClick={() => setImportType(t)} className={`px-8 py-3 text-[10px] font-bold tracking-widest uppercase transition-all ${importType === t ? 'bg-black text-white' : 'text-gray-300'}`}>{t}s</button>
+                                                <button key={t} onClick={() => setImportType(t)} className={`px-8 py-3 text-[10px] font-bold tracking-widest uppercase transition-all ${importType === t ? 'bg-black text-white shadow-md' : 'text-gray-300'}`}>{t}s</button>
                                             ))}
                                         </div>
                                     </div>
-                                    <textarea value={rawText} onChange={(e) => setRawText(e.target.value)} placeholder="Paste content here..." className="w-full h-80 bg-[#FAFAFA] border-none p-10 outline-none text-sm font-medium leading-relaxed resize-none shadow-inner" />
-                                    <button disabled={isParsing || !rawText} onClick={parseData} className="w-full py-6 bg-black text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-gray-800 disabled:opacity-20 transition-all flex items-center justify-center gap-4">
-                                        {isParsing ? <Icon name="sparkles" className="animate-spin" /> : <Icon name="sparkles" />} {isParsing ? 'Processing' : 'Generate Edit'}
+
+                                    <div className="p-6 bg-[#FAFAFA] border border-gray-100 space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400 font-medium">Recommended Structure</span>
+                                            <button onClick={() => setRawText(TEMPLATES[importType])} className="text-[9px] font-bold uppercase border-b border-black text-black">Use Template</button>
+                                        </div>
+                                        <p className="text-[11px] text-gray-400 leading-relaxed italic">AI is decoding your archive. Keep data separate for best results.</p>
+                                    </div>
+
+                                    <textarea value={rawText} onChange={(e) => setRawText(e.target.value)} placeholder="Paste content here..." className="w-full h-80 bg-[#FAFAFA] border-none p-10 outline-none text-sm font-medium leading-relaxed resize-none shadow-inner placeholder:text-gray-200" />
+                                    
+                                    <button disabled={isParsing || !rawText} onClick={parseData} className="w-full py-6 bg-black text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-gray-800 disabled:opacity-20 transition-all flex items-center justify-center gap-4 shadow-xl">
+                                        {isParsing ? <Icon name="sparkles" className="animate-spin" /> : <Icon name="sparkles" />} {isParsing ? 'Archiving' : 'Generate Edit'}
                                     </button>
                                 </div>
                             </div>
                         )}
 
-                        {view === 'questions' && (
+                        {view === 'questions' && activeItems.length > 0 && (
                             <div className="max-w-3xl mx-auto animate-in">
                                 <div className="flex justify-between items-end mb-12">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-300">Section {currentIdx + 1} // {activeItems.length}</span>
-                                    <button onClick={() => setView('home')} className="text-[10px] font-bold uppercase text-gray-300 hover:text-black">Quit</button>
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-300 font-medium">Section {currentIdx + 1} // {activeItems.length}</span>
+                                    <button onClick={() => setView('home')} className="text-[10px] font-bold uppercase text-gray-300 hover:text-black tracking-widest font-bold">Quit</button>
                                 </div>
                                 <div className="bg-white border border-gray-100 p-12 md:p-20 space-y-16 shadow-lg relative">
                                     <div className="absolute top-0 left-0 h-1 bg-black transition-all duration-700" style={{ width: `${((currentIdx+1)/activeItems.length)*100}%` }}></div>
-                                    <p className="text-4xl font-light italic font-serif leading-tight text-gray-900">{activeItems[currentIdx].question}</p>
-                                    <div className="space-y-4">
-                                        {activeItems[currentIdx].type !== 'open' ? (
-                                            activeItems[currentIdx].options.map((opt, i) => {
-                                                const isCorrect = i === activeItems[currentIdx].correct;
-                                                const isSel = selectedIdx === i;
-                                                let style = "border-gray-50 bg-[#FAFAFA] hover:bg-gray-100";
-                                                if (quizAnswered) {
-                                                    if (isCorrect) style = "border-black bg-black text-white";
-                                                    else if (isSel) style = "border-gray-200 bg-gray-50 text-gray-300";
-                                                    else style = "opacity-20";
-                                                }
-                                                return (
-                                                    <button key={i} disabled={quizAnswered} onClick={() => handleQuizAnswer(i)} className={`w-full text-left p-6 border text-sm font-medium transition-all flex justify-between items-center ${style}`}>
-                                                        {opt} {quizAnswered && isCorrect && <Icon name="check" size={16} />}
-                                                    </button>
-                                                )
-                                            })
-                                        ) : (
-                                            <div className="space-y-8">
-                                                {!quizAnswered ? (
-                                                    <button onClick={() => setQuizAnswered(true)} className="w-full py-20 border border-dashed border-gray-200 text-gray-300 font-bold uppercase tracking-[0.3em] hover:text-black transition-all flex flex-col items-center gap-4"><Icon name="eye" size={24} /> Reveal Insight</button>
+                                    {activeItems[currentIdx] && (
+                                        <React.Fragment>
+                                            <div className="flex justify-between items-start gap-4">
+                                                <p className="text-4xl font-light italic font-serif leading-tight text-gray-900">{activeItems[currentIdx].question}</p>
+                                                {activeItems[currentIdx].type === 'multiple' && (
+                                                    <span className="shrink-0 text-[9px] font-bold uppercase tracking-widest px-2 py-1 bg-gray-100 text-gray-500 rounded-sm">Multiple</span>
+                                                )}
+                                            </div>
+                                            
+                                            <div className="space-y-4">
+                                                {activeItems[currentIdx].type !== 'open' ? (
+                                                    (activeItems[currentIdx].options || []).map((opt, i) => {
+                                                        const isCorrect = Array.isArray(activeItems[currentIdx].correct) 
+                                                            ? activeItems[currentIdx].correct.includes(i)
+                                                            : i === activeItems[currentIdx].correct;
+                                                        const isSelected = Array.isArray(selectedIdx) 
+                                                            ? selectedIdx.includes(i)
+                                                            : selectedIdx === i;
+                                                        let style = "border-gray-50 bg-[#FAFAFA] hover:bg-gray-100";
+                                                        if (quizAnswered) {
+                                                            if (isCorrect) style = "border-black bg-black text-white shadow-md";
+                                                            else if (isSelected) style = "border-gray-200 bg-gray-50 text-gray-300";
+                                                            else style = "opacity-20";
+                                                        } else if (isSelected) style = "border-black bg-gray-100";
+
+                                                        return (
+                                                            <button key={i} disabled={quizAnswered} onClick={() => handleQuizAnswer(i)} className={`w-full text-left p-6 border text-sm font-medium transition-all flex justify-between items-center ${style}`}>
+                                                                <span className="flex items-center gap-4">
+                                                                    {activeItems[currentIdx].type === 'multiple' && (
+                                                                        <Icon name={isSelected ? "check" : "square"} size={14} className={isSelected ? "text-black" : "text-gray-200"} />
+                                                                    )}
+                                                                    {opt}
+                                                                </span>
+                                                                {quizAnswered && isCorrect && <Icon name="check" size={16} />}
+                                                            </button>
+                                                        )
+                                                    })
                                                 ) : (
-                                                    <div className="p-10 bg-[#FAFAFA] border border-gray-100 shadow-inner">
-                                                        <span className="text-[10px] font-bold text-gray-300 uppercase mb-4 block tracking-widest">Archive Answer:</span>
-                                                        <p className="text-xl font-light italic font-serif leading-relaxed">"{activeItems[currentIdx].correct}"</p>
+                                                    <div className="space-y-8">
+                                                        {!quizAnswered ? (
+                                                            <button onClick={() => setQuizAnswered(true)} className="w-full py-20 border border-dashed border-gray-200 text-gray-300 font-bold uppercase tracking-[0.3em] hover:text-black transition-all flex flex-col items-center gap-4 group"><Icon name="eye" size={24} className="group-hover:scale-110 transition-transform" /> Reveal</button>
+                                                        ) : (
+                                                            <div className="p-10 bg-[#FAFAFA] border border-gray-100 shadow-inner text-gray-600 italic font-serif text-lg leading-relaxed">
+                                                                {activeItems[currentIdx].correct}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                    {quizAnswered && (
-                                        <div className="pt-12 border-t border-gray-50 space-y-10">
-                                            <div className="text-[11px] leading-loose text-gray-400 italic">"Note: {activeItems[currentIdx].logic}"</div>
-                                            <button onClick={() => { if(currentIdx+1 < activeItems.length) { setCurrentIdx(c => c + 1); setQuizAnswered(false); setSelectedIdx(null); } else setView('home'); }} className="w-full py-6 bg-black text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-gray-800 transition flex items-center justify-center gap-4">Proceed <Icon name="arrowRight" size={16}/></button>
-                                        </div>
+
+                                            {activeItems[currentIdx].type === 'multiple' && !quizAnswered && (
+                                                <button onClick={() => finishQuestion(selectedIdx)} disabled={selectedIdx.length === 0} className="w-full py-6 bg-black text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-gray-800 disabled:opacity-20 transition shadow-xl">Submit Archive</button>
+                                            )}
+
+                                            {quizAnswered && (
+                                                <div className="pt-12 border-t border-gray-50 space-y-10 animate-in">
+                                                    <div className="text-[11px] leading-loose text-gray-400 italic">"Edit Note: {activeItems[currentIdx].logic}"</div>
+                                                    <button onClick={goToNext} className="w-full py-6 bg-black text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-gray-800 transition flex items-center justify-center gap-4 shadow-xl">Next Look <Icon name="arrowRight" size={16}/></button>
+                                                </div>
+                                            )}
+                                        </React.Fragment>
                                     )}
                                 </div>
                             </div>
                         )}
 
-                        {view === 'cards' && (
+                        {view === 'cards' && activeItems.length > 0 && (
                             <div className="max-w-2xl mx-auto animate-in">
                                 <div className="flex justify-between items-center mb-10">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-300">Look {currentIdx + 1} / {activeItems.length}</span>
-                                    <button onClick={() => setView('home')} className="text-[10px] text-gray-300 hover:text-black">Close</button>
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-300 font-medium font-bold">Session {currentIdx + 1} // {activeItems.length}</span>
+                                    <button onClick={() => setView('home')} className="text-[10px] text-gray-300 hover:text-black uppercase font-bold tracking-widest transition">Close</button>
                                 </div>
                                 <div className="perspective-1000">
-                                    <div onClick={() => setIsFlipped(!isFlipped)} className={`relative h-[550px] w-full transition-all duration-1000 preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`}>
-                                        <div className="absolute inset-0 backface-hidden bg-white border border-gray-100 shadow-xl p-16 flex flex-col items-center justify-center text-center">
-                                            <div className="absolute top-12 left-1/2 -translate-x-1/2"><Icon name="circle" size={12} className="text-gray-100" /></div>
-                                            <p className="text-3xl font-light italic font-serif text-gray-900 leading-snug">{activeItems[currentIdx].front}</p>
-                                            <span className="absolute bottom-16 font-bold text-[9px] text-gray-200 tracking-[0.5em] uppercase">Click to Reveal</span>
+                                    {activeItems[currentIdx] && (
+                                        <div onClick={() => setIsFlipped(!isFlipped)} className={`relative h-[550px] w-full transition-all duration-1000 preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`}>
+                                            <div className="absolute inset-0 backface-hidden bg-white border border-gray-100 shadow-xl p-16 flex flex-col items-center justify-center text-center">
+                                                <div className="absolute top-12 left-1/2 -translate-x-1/2"><Icon name="circle" size={12} className="text-gray-100 animate-pulse" /></div>
+                                                <p className="text-3xl font-light italic font-serif text-gray-900 leading-snug">{activeItems[currentIdx].front}</p>
+                                                <span className="absolute bottom-16 font-bold text-[9px] text-gray-200 tracking-[0.5em] uppercase">Reveal Detail</span>
+                                            </div>
+                                            <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black border border-black p-16 flex flex-col items-center justify-center text-center shadow-2xl">
+                                                <p className="text-4xl font-light italic font-serif text-white leading-tight mb-10">{activeItems[currentIdx].back}</p>
+                                                <p className="text-[11px] text-gray-500 leading-loose italic max-w-sm">"{activeItems[currentIdx].logic}"</p>
+                                            </div>
                                         </div>
-                                        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black border border-black p-16 flex flex-col items-center justify-center text-center shadow-2xl">
-                                            <p className="text-4xl font-light italic font-serif text-white leading-tight mb-10">{activeItems[currentIdx].back}</p>
-                                            <p className="text-[11px] text-gray-500 leading-loose italic">"{activeItems[currentIdx].logic}"</p>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
-                                <div className={`mt-16 flex gap-6 transition-all duration-1000 ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                                    <button onClick={() => updateCardStatus('forgotten')} className="flex-1 py-5 border border-gray-100 text-[10px] font-bold uppercase hover:bg-black hover:text-white transition">Forgotten</button>
-                                    <button onClick={() => updateCardStatus('blurred')} className="flex-1 py-5 border border-gray-100 text-[10px] font-bold uppercase hover:bg-black hover:text-white transition">Blurred</button>
-                                    <button onClick={() => updateCardStatus('mastered')} className="flex-1 py-5 bg-black text-white text-[10px] font-bold uppercase transition">Mastered</button>
+                                <div className={`mt-16 flex gap-6 transition-all duration-1000 ${isFlipped ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95 pointer-events-none'}`}>
+                                    <button onClick={() => updateCardStatus('forgotten')} className="flex-1 py-5 border border-gray-100 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-black hover:text-white transition">Forgotten</button>
+                                    <button onClick={() => updateCardStatus('blurred')} className="flex-1 py-5 border border-gray-100 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-black hover:text-white transition">Blurred</button>
+                                    <button onClick={() => updateCardStatus('mastered')} className="flex-1 py-5 bg-black text-white text-[10px] font-bold tracking-[0.3em] uppercase transition">Mastered</button>
                                 </div>
                             </div>
                         )}
@@ -394,27 +552,29 @@
                         {view === 'burnbook' && (
                             <div className="max-w-5xl mx-auto animate-in">
                                 <header className="flex justify-between items-end mb-20 border-b border-gray-200 pb-10">
-                                    <h2 className="text-6xl font-light italic font-serif">The Archive</h2>
-                                    <button onClick={() => setView('home')} className="text-[10px] font-bold uppercase tracking-[0.4em] hover:opacity-50">Return</button>
+                                    <h2 className="text-6xl font-light italic font-serif text-gray-900">The Archive</h2>
+                                    <button onClick={() => setView('home')} className="text-[10px] font-bold uppercase tracking-[0.4em] hover:opacity-50 transition tracking-widest">Return</button>
                                 </header>
                                 {mistakes.length === 0 ? (
-                                    <div className="text-center py-40 border border-dashed border-gray-100 text-gray-200 uppercase tracking-[0.6em]">Clean Slate</div>
+                                    <div className="text-center py-40 border border-dashed border-gray-100 text-gray-200 uppercase tracking-[0.6em] font-medium">Clean Archive // Zero Distortions</div>
                                 ) : (
                                     <div className="grid gap-12">
-                                        {mistakes.map((m, i) => (
-                                            <div key={i} className="bg-white border border-gray-50 p-12 hover:shadow-xl group transition-all">
-                                                <div className="flex justify-between mb-8">
-                                                    <span className="text-[9px] font-bold tracking-[0.5em] text-gray-300 uppercase">Entry {i+1}</span>
-                                                    <button onClick={() => setMistakes(prev => prev.filter(item => item.id !== m.id))} className="text-gray-200 hover:text-black"><Icon name="trash" size={16} /></button>
+                                        {(mistakes || []).map((m, i) => (
+                                            <div key={m.id || i} className="bg-white border border-gray-50 p-12 hover:shadow-xl group transition-all relative overflow-hidden">
+                                                <div className="flex justify-between mb-8 relative z-10">
+                                                    <span className="text-[9px] font-bold tracking-[0.5em] text-gray-300 uppercase font-medium">Archive Entry {i+1}</span>
+                                                    <button onClick={() => removeFromArchive(m.id)} className="text-gray-200 hover:text-black transition"><Icon name="trash" size={16} /></button>
                                                 </div>
-                                                <p className="text-3xl font-light italic font-serif text-gray-900 mb-10">{m.question}</p>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                                <p className="text-3xl font-light italic font-serif text-gray-900 mb-10 relative z-10 leading-tight pr-10">{m.question}</p>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
                                                     <div className="space-y-4 border-l border-black pl-6">
-                                                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest block">Reference</span>
-                                                        <p className="text-lg font-medium text-gray-700 italic">{m.type === 'open' ? m.correct : m.options[m.correct]}</p>
+                                                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest block font-medium">Detail</span>
+                                                        <p className="text-lg font-medium text-gray-700 italic leading-relaxed">
+                                                            {m.type === 'open' ? m.correct : (Array.isArray(m.correct) ? m.correct.map(idx => (m.options && m.options[idx]) || 'N/A').join(', ') : (m.options && m.options[m.correct] !== undefined ? m.options[m.correct] : 'N/A'))}
+                                                        </p>
                                                     </div>
-                                                    <div className="space-y-4 text-xs text-gray-400">
-                                                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest block">Context</span>
+                                                    <div className="space-y-4 text-[11px] text-gray-400 italic font-medium leading-relaxed">
+                                                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest block not-italic">Perspective</span>
                                                         <p>"{m.logic}"</p>
                                                     </div>
                                                 </div>
