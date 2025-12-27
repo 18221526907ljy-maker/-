@@ -52,6 +52,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
+        // --- Pure Component: Icons ---
         const Icon = ({ name, size = 20, className = "" }) => {
             const icons = {
                 plus: <path d="M12 5v14M5 12h14" />,
@@ -137,33 +138,52 @@
             const [importType, setImportType] = useState('question');
             const [statusMsg, setStatusMsg] = useState('');
 
+            // Context from environment
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'gossip-study-hailey';
 
-            // --- Authentication Setup ---
+            // --- Robust Firebase Setup ---
             useEffect(() => {
-                const interval = setInterval(() => {
-                    if (window.FirebaseSDK) {
-                        clearInterval(interval);
+                let sdkInited = false;
+                const checkAndInit = async () => {
+                    if (window.FirebaseSDK && !sdkInited) {
+                        sdkInited = true;
                         const sdk = window.FirebaseSDK;
                         const firebaseConfig = JSON.parse(__firebase_config);
                         const app = sdk.initializeApp(firebaseConfig);
                         const auth = sdk.getAuth(app);
 
                         const performAuth = async () => {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await sdk.signInWithCustomToken(auth, __initial_auth_token);
-                            } else {
-                                await sdk.signInAnonymously(auth);
+                            try {
+                                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                                    await sdk.signInWithCustomToken(auth, __initial_auth_token);
+                                } else {
+                                    await sdk.signInAnonymously(auth);
+                                }
+                            } catch (err) {
+                                console.error("Auth failed:", err);
+                                setStatusMsg("Authentication failed. Please refresh. 💅");
                             }
                         };
-                        performAuth();
-                        sdk.onAuthStateChanged(auth, setUser);
+                        
+                        await performAuth();
+                        const unsubscribe = sdk.onAuthStateChanged(auth, (u) => {
+                            setUser(u);
+                        });
+                        return unsubscribe;
                     }
-                }, 100);
+                };
+
+                const interval = setInterval(async () => {
+                    const unsubscribe = await checkAndInit();
+                    if (sdkInited) {
+                        clearInterval(interval);
+                    }
+                }, 200);
+
                 return () => clearInterval(interval);
             }, []);
 
-            // --- Real-time Cloud Sync ---
+            // --- Real-time Cloud Sync Listener ---
             useEffect(() => {
                 if (!user || !window.FirebaseSDK) return;
                 const sdk = window.FirebaseSDK;
@@ -178,7 +198,10 @@
                         if (cloudData.db) setDb(cloudData.db);
                         if (cloudData.mistakes) setMistakes(cloudData.mistakes);
                     }
-                }, (error) => console.error("Firestore Sync Error:", error));
+                }, (error) => {
+                    console.error("Firestore Sync Error:", error);
+                    setStatusMsg("Cloud sync issues. Retrying... 🕊️");
+                });
 
                 return () => unsubscribe();
             }, [user]);
