@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRE / MULTIVERSE PERFECT</title>
+    <title>GRE / MULTIVERSE TIMELINE</title>
     <!-- React & Tailwind -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -88,16 +88,13 @@
         const { useState, useEffect, useMemo, useRef } = React;
 
         // --- 1. THEME ENGINE (PERFECT BALANCE) ---
-        // fontTitle: Home Page only (Artistic)
-        // fontCard: The Word on the Card (Readable, but themed)
-        // fontBody: Examples and definitions (Max Readability)
         const THEMES = {
             obsidian: {
                 id: 'obsidian',
                 name: 'Obsidian Zen',
                 bg: 'url(https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2000&auto=format&fit=crop)', 
                 fontTitle: "'Playfair Display', serif", 
-                fontCard: "'Playfair Display', serif", // Consistent elegance
+                fontCard: "'Playfair Display', serif", 
                 fontBody: "'Inter', sans-serif",
                 accent: '#d4af37', 
                 glass: 'rgba(0, 0, 0, 0.7)',
@@ -110,9 +107,9 @@
                 id: 'westwood',
                 name: 'Westwood Punk',
                 bg: 'url(https://images.unsplash.com/photo-1598556776374-2c3f8704288c?q=80&w=2000&auto=format&fit=crop)', 
-                fontTitle: "'UnifrakturMaguntia', cursive", // GOTHIC for Home
-                fontCard: "'Playfair Display', serif", // READABLE Bold Serif for Cards (Newspaper cutout vibe)
-                fontBody: "'Inter', sans-serif", // Clean for definitions
+                fontTitle: "'UnifrakturMaguntia', cursive", 
+                fontCard: "'Playfair Display', serif", 
+                fontBody: "'Inter', sans-serif", 
                 accent: '#ef4444', 
                 glass: 'rgba(20, 20, 20, 0.95)', 
                 text: '#fff',
@@ -125,9 +122,9 @@
                 id: 'harryPotter',
                 name: 'Wizarding World',
                 bg: 'linear-gradient(135deg, #1a0f0a 0%, #3e2723 50%, #1a1a1a 100%)', 
-                fontTitle: "'Cinzel', serif", // Magical Title
-                fontCard: "'Cinzel', serif", // Cinzel is readable enough for cards
-                fontBody: "'Playfair Display', serif", // Book text
+                fontTitle: "'Cinzel', serif", 
+                fontCard: "'Cinzel', serif", 
+                fontBody: "'Playfair Display', serif", 
                 accent: '#fbbf24', 
                 glass: 'rgba(40, 30, 20, 0.6)', 
                 text: '#fcd34d',
@@ -152,11 +149,10 @@
             fantasy: {
                 id: 'fantasy',
                 name: 'Dark Fantasy',
-                // Updated BG for better "Dark Fantasy" consistency
                 bg: 'url(https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=2000&auto=format&fit=crop)', 
-                fontTitle: "'UnifrakturMaguntia', cursive", // Ancient Tome Title
-                fontCard: "'Cinzel', serif", // Readable Magic font for Word
-                fontBody: "'Playfair Display', serif", // Readable body
+                fontTitle: "'UnifrakturMaguntia', cursive", 
+                fontCard: "'Cinzel', serif", 
+                fontBody: "'Playfair Display', serif", 
                 accent: '#c084fc', 
                 glass: 'rgba(15, 5, 20, 0.85)',
                 text: '#e9d5ff',
@@ -168,8 +164,8 @@
                 id: 'meanGirls',
                 name: 'The Plastics',
                 bg: 'url(https://images.unsplash.com/photo-1550920756-3c0f64dc9397?q=80&w=2000&auto=format&fit=crop)', 
-                fontTitle: "'Caveat', cursive", // Handwriting Title
-                fontCard: "'Inter', sans-serif", // Clean Sans for Word (Bold)
+                fontTitle: "'Caveat', cursive", 
+                fontCard: "'Inter', sans-serif", 
                 fontBody: "'Inter', sans-serif", 
                 accent: '#ff007f', 
                 glass: 'rgba(255, 220, 235, 0.95)',
@@ -182,8 +178,8 @@
                 id: 'strangerThings',
                 name: 'Upside Down',
                 bg: 'url(https://images.unsplash.com/photo-1504609773096-104ff10587a2?q=80&w=2000&auto=format&fit=crop)', 
-                fontTitle: "'Creepster', display", // Horror Title
-                fontCard: "'Inter', sans-serif", // Clean for Word
+                fontTitle: "'Creepster', display", 
+                fontCard: "'Inter', sans-serif", 
                 fontBody: "'Inter', sans-serif", 
                 accent: '#ff0000', 
                 glass: 'rgba(10, 10, 10, 0.9)',
@@ -248,8 +244,14 @@
 
         const App = () => {
             // --- STATE ---
-            const [cards, setCards] = useState(() => JSON.parse(localStorage.getItem('gre_v9_cards')) || INITIAL_DATA);
-            const [settings, setSettings] = useState(() => JSON.parse(localStorage.getItem('gre_v9_settings')) || { contextMode: false, theme: 'obsidian' });
+            const [cards, setCards] = useState(() => JSON.parse(localStorage.getItem('gre_v10_cards')) || INITIAL_DATA);
+            const [settings, setSettings] = useState(() => JSON.parse(localStorage.getItem('gre_v10_settings')) || { contextMode: false, theme: 'obsidian' });
+            // TIMELINE STATE
+            const [startDate, setStartDate] = useState(() => {
+                const saved = localStorage.getItem('gre_start_date');
+                return saved ? parseInt(saved) : Date.now();
+            });
+            
             const [view, setView] = useState('home'); 
             const [queue, setQueue] = useState([]);
             const [curr, setCurr] = useState(0);
@@ -265,8 +267,9 @@
             const theme = THEMES[settings.theme] || THEMES.obsidian;
 
             // Persistence
-            useEffect(() => localStorage.setItem('gre_v9_cards', JSON.stringify(cards)), [cards]);
-            useEffect(() => localStorage.setItem('gre_v9_settings', JSON.stringify(settings)), [settings]);
+            useEffect(() => localStorage.setItem('gre_v10_cards', JSON.stringify(cards)), [cards]);
+            useEffect(() => localStorage.setItem('gre_v10_settings', JSON.stringify(settings)), [settings]);
+            useEffect(() => localStorage.setItem('gre_start_date', startDate), [startDate]);
 
             // Stats
             const stats = useMemo(() => {
@@ -278,6 +281,10 @@
                     hard: cards.filter(c => c.ease < 2.3 && c.reviewCount > 0).length
                 };
             }, [cards]);
+
+            // Timeline Calc
+            const currentDay = Math.floor((Date.now() - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            const totalDays = 60;
 
             // Keyboard
             useEffect(() => {
@@ -461,6 +468,11 @@
                         </div>
                         
                         <div className="flex gap-6 items-center">
+                            {/* PLAN BUTTON */}
+                            <span className="cursor-pointer hover:opacity-80 transition flex items-center gap-1" onClick={() => setView('plan')} style={{ color: view === 'plan' ? theme.accent : 'inherit' }}>
+                                <i className="fas fa-calendar-alt"></i> Plan ({currentDay}/{totalDays})
+                            </span>
+
                             {/* XP BAR */}
                             {xp > 0 && (
                                 <div className="hidden md:flex items-center gap-2">
@@ -632,6 +644,75 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: PLAN */}
+                        {view === 'plan' && (
+                            <div className="glass p-10 max-w-4xl mx-auto animate-fade-in" style={cardStyle}>
+                                <h2 style={{fontFamily: theme.fontTitle}} className="text-3xl mb-6 border-b pb-4" style={{borderColor: 'rgba(255,255,255,0.1)'}}>Battle Plan</h2>
+                                
+                                <div className="mb-8 text-center">
+                                    <div className="text-[10px] uppercase tracking-widest opacity-60">Current Progress</div>
+                                    <div className="text-6xl font-bold my-4" style={{color: theme.accent, fontFamily: theme.fontTitle}}>Day {currentDay}</div>
+                                    <div className="w-full bg-black/30 h-2 rounded-full mt-2">
+                                        <div className="h-full transition-all duration-1000 rounded-full" style={{width: `${Math.min(100, (currentDay/60)*100)}%`, backgroundColor: theme.accent}}></div>
+                                    </div>
+                                    <div className="flex justify-between text-[10px] mt-2 opacity-50 uppercase tracking-widest">
+                                        <span>Start</span>
+                                        <span>Victory (Day 60)</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="p-6 border rounded-lg bg-black/20" style={{borderColor: theme.accent}}>
+                                        <h3 className="text-xl mb-4 font-bold" style={{fontFamily: theme.fontTitle}}>Today's Mission</h3>
+                                        <ul className="space-y-4 text-sm">
+                                            <li className="flex justify-between items-center border-b border-white/10 pb-2">
+                                                <span className="opacity-70 uppercase tracking-widest text-[10px]">New Words Goal</span>
+                                                <span className="font-mono text-lg font-bold" style={{color: theme.accent}}>{currentDay <= 45 ? '70' : '0'}</span>
+                                            </li>
+                                            <li className="flex justify-between items-center border-b border-white/10 pb-2">
+                                                <span className="opacity-70 uppercase tracking-widest text-[10px]">Review Due</span>
+                                                <span className="font-mono text-lg font-bold">{stats.due}</span>
+                                            </li>
+                                            <li className="flex justify-between items-center pt-2">
+                                                <span className="opacity-70 uppercase tracking-widest text-[10px]">Phase</span>
+                                                <span className="text-[10px] uppercase px-2 py-1 rounded bg-white/10 font-bold tracking-widest">
+                                                    {currentDay <= 45 ? 'Acquisition' : 'Mastery'}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        {cards.length < 1000 && (
+                                            <div className="mt-4 p-3 bg-red-900/30 border border-red-900/50 rounded text-xs text-red-300">
+                                                <i className="fas fa-exclamation-triangle mr-2"></i> Low Data. Please Import 3000 Words.
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="p-6 rounded-lg bg-white/5 border border-white/5">
+                                        <h3 className="text-xl mb-4 font-bold" style={{fontFamily: theme.fontTitle}}>60-Day Roadmap</h3>
+                                        <div className="space-y-6 text-sm">
+                                            <div className={`p-3 rounded ${currentDay <= 45 ? "bg-white/10 border-l-2" : "opacity-30"}`} style={{borderColor: theme.accent}}>
+                                                <strong style={{color: theme.accent, fontFamily: theme.fontTitle}}>Phase 1 (Day 1-45)</strong> 
+                                                <p className="opacity-70 mt-1 text-xs leading-relaxed">Aggressive intake. Learn 70 new words daily. Complete SRS reviews.</p>
+                                            </div>
+                                            <div className={`p-3 rounded ${currentDay > 45 ? "bg-white/10 border-l-2" : "opacity-30"}`} style={{borderColor: theme.accent}}>
+                                                <strong style={{color: theme.accent, fontFamily: theme.fontTitle}}>Phase 2 (Day 46-60)</strong>
+                                                <p className="opacity-70 mt-1 text-xs leading-relaxed">Zero new words. Clear Mistake Notebook (Hard words). Full consolidation.</p>
+                                            </div>
+                                        </div>
+                                        <button onClick={() => {
+                                            if(confirm("Reset schedule to Day 1? This cannot be undone.")) {
+                                                setStartDate(Date.now());
+                                            }
+                                        }} className="mt-6 text-[10px] underline opacity-40 hover:opacity-100 uppercase tracking-widest w-full text-center">
+                                            Reset Schedule Timer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <button onClick={() => setView('home')} className="mt-8 w-full py-3 opacity-50 hover:opacity-100 uppercase tracking-widest text-xs border border-transparent hover:border-white/20 transition-all rounded">Back to Base</button>
                             </div>
                         )}
 
