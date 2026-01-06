@@ -3,93 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRE / OBSIDIAN ULTIMATE</title>
+    <title>GRE / MULTIVERSE PERFECT</title>
     <!-- React & Tailwind -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonts & Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Fonts Injection -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;600;900&family=Creepster&family=Caveat:wght@700&family=UnifrakturMaguntia&family=Orbitron:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --bg-deep: #050505;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #d4af37; /* Champagne Gold */
-            --accent-glow: rgba(212, 175, 55, 0.15);
-        }
-        body { 
-            font-family: 'Lato', sans-serif; 
-            background-color: var(--bg-deep);
-            color: #e0e0e0;
-            overflow: hidden; 
-        }
-        .font-serif { font-family: 'Playfair Display', serif; }
+        /* Base Reset */
+        body { margin: 0; overflow: hidden; transition: all 0.5s ease; user-select: none; }
         
-        /* Glassmorphism Card */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Inputs */
-        .luxury-input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            color: #d4af37;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            transition: all 0.3s;
-        }
-        .luxury-input:focus {
-            outline: none;
-            border-bottom: 1px solid #d4af37;
-            background: linear-gradient(to top, rgba(212,175,55,0.05), transparent);
-        }
-
-        /* 3D Flip */
+        /* 3D Card Utils */
         .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
+        .preserve-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         
-        /* Animations */
-        .fade-enter { opacity: 0; transform: translateY(10px); }
-        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 500ms ease-out, transform 500ms ease-out; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+        /* Animation Utils */
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; }
+            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; }
+        }
+        .neon-text { animation: neonPulse 2s infinite alternate; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        
+        @keyframes floatTitle {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: floatTitle 6s ease-in-out infinite; }
+
+        /* Pop Feedback Animation */
+        @keyframes popUp {
+            0% { opacity: 0; transform: translate(-50%, 20px) scale(0.8); }
+            50% { opacity: 1; transform: translate(-50%, -20px) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50px) scale(1); }
+        }
+        .feedback-pop {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            animation: popUp 0.8s ease-out forwards;
+            pointer-events: none;
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        /* Scanline Effect for Stranger Things */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo, useCallback, useRef } = React;
+        const { useState, useEffect, useMemo, useRef } = React;
 
-        // --- Data Handling ---
+        // --- 1. THEME ENGINE (PERFECT BALANCE) ---
+        // fontTitle: Home Page only (Artistic)
+        // fontCard: The Word on the Card (Readable, but themed)
+        // fontBody: Examples and definitions (Max Readability)
+        const THEMES = {
+            obsidian: {
+                id: 'obsidian',
+                name: 'Obsidian Zen',
+                bg: 'url(https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'Playfair Display', serif", 
+                fontCard: "'Playfair Display', serif", // Consistent elegance
+                fontBody: "'Inter', sans-serif",
+                accent: '#d4af37', 
+                glass: 'rgba(0, 0, 0, 0.7)',
+                text: '#e2e8f0',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                overlay: 'rgba(0,0,0,0.6)',
+                btnClass: 'rounded-lg border hover:bg-white/10'
+            },
+            westwood: {
+                id: 'westwood',
+                name: 'Westwood Punk',
+                bg: 'url(https://images.unsplash.com/photo-1598556776374-2c3f8704288c?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'UnifrakturMaguntia', cursive", // GOTHIC for Home
+                fontCard: "'Playfair Display', serif", // READABLE Bold Serif for Cards (Newspaper cutout vibe)
+                fontBody: "'Inter', sans-serif", // Clean for definitions
+                accent: '#ef4444', 
+                glass: 'rgba(20, 20, 20, 0.95)', 
+                text: '#fff',
+                border: '3px solid #ef4444',
+                overlay: 'rgba(0,0,0,0.5)',
+                extraClass: 'uppercase tracking-wide',
+                btnClass: 'border-2 border-red-500 hover:bg-red-600 hover:text-white transform -skew-x-12' 
+            },
+            harryPotter: {
+                id: 'harryPotter',
+                name: 'Wizarding World',
+                bg: 'linear-gradient(135deg, #1a0f0a 0%, #3e2723 50%, #1a1a1a 100%)', 
+                fontTitle: "'Cinzel', serif", // Magical Title
+                fontCard: "'Cinzel', serif", // Cinzel is readable enough for cards
+                fontBody: "'Playfair Display', serif", // Book text
+                accent: '#fbbf24', 
+                glass: 'rgba(40, 30, 20, 0.6)', 
+                text: '#fcd34d',
+                border: '1px solid rgba(251, 191, 36, 0.3)',
+                overlay: 'rgba(0,0,0,0.2)',
+                btnClass: 'rounded-full border border-yellow-500/50 hover:bg-yellow-900/30'
+            },
+            oldMoney: {
+                id: 'oldMoney',
+                name: 'Old Money',
+                bg: 'url(https://images.unsplash.com/photo-1605218427368-35b80a37db79?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'Playfair Display', serif",
+                fontCard: "'Playfair Display', serif",
+                fontBody: "'Playfair Display', serif",
+                accent: '#1e3a8a', 
+                glass: 'rgba(245, 245, 240, 0.95)', 
+                text: '#1e293b', 
+                border: '1px solid #1e3a8a',
+                overlay: 'rgba(255,255,255,0.1)',
+                btnClass: 'rounded-sm border border-blue-900 hover:bg-blue-900 hover:text-white'
+            },
+            fantasy: {
+                id: 'fantasy',
+                name: 'Dark Fantasy',
+                // Updated BG for better "Dark Fantasy" consistency
+                bg: 'url(https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'UnifrakturMaguntia', cursive", // Ancient Tome Title
+                fontCard: "'Cinzel', serif", // Readable Magic font for Word
+                fontBody: "'Playfair Display', serif", // Readable body
+                accent: '#c084fc', 
+                glass: 'rgba(15, 5, 20, 0.85)',
+                text: '#e9d5ff',
+                border: '1px solid #c084fc',
+                overlay: 'rgba(0,0,0,0.5)',
+                btnClass: 'rounded border border-purple-500 hover:shadow-[0_0_15px_#c084fc]'
+            },
+            meanGirls: {
+                id: 'meanGirls',
+                name: 'The Plastics',
+                bg: 'url(https://images.unsplash.com/photo-1550920756-3c0f64dc9397?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'Caveat', cursive", // Handwriting Title
+                fontCard: "'Inter', sans-serif", // Clean Sans for Word (Bold)
+                fontBody: "'Inter', sans-serif", 
+                accent: '#ff007f', 
+                glass: 'rgba(255, 220, 235, 0.95)',
+                text: '#be185d',
+                border: '3px dashed #ff007f',
+                overlay: 'rgba(255,255,255,0.2)',
+                btnClass: 'rounded-xl border-2 border-pink-500 hover:bg-pink-500 hover:text-white font-bold'
+            },
+            strangerThings: {
+                id: 'strangerThings',
+                name: 'Upside Down',
+                bg: 'url(https://images.unsplash.com/photo-1504609773096-104ff10587a2?q=80&w=2000&auto=format&fit=crop)', 
+                fontTitle: "'Creepster', display", // Horror Title
+                fontCard: "'Inter', sans-serif", // Clean for Word
+                fontBody: "'Inter', sans-serif", 
+                accent: '#ff0000', 
+                glass: 'rgba(10, 10, 10, 0.9)',
+                text: '#ff0000',
+                border: '1px solid #ff0000',
+                overlay: 'rgba(0,0,0,0.8)',
+                extraClass: 'neon-text',
+                btnClass: 'rounded border border-red-600 hover:bg-red-900/50 hover:shadow-[0_0_10px_#ff0000]',
+                scanlines: true
+            },
+            cleanGirl: {
+                id: 'cleanGirl',
+                name: 'Clean Girl',
+                bg: 'linear-gradient(135deg, #fdfbf7 0%, #e2e8f0 100%)', 
+                fontTitle: "'Playfair Display', serif", 
+                fontCard: "'Playfair Display', serif",
+                fontBody: "'Inter', sans-serif",
+                accent: '#65a30d', 
+                glass: 'rgba(255, 255, 255, 0.85)',
+                text: '#44403c', 
+                border: '1px solid #d6d3d1',
+                overlay: 'rgba(255,255,255,0)',
+                btnClass: 'rounded-full border border-stone-300 hover:bg-lime-500 hover:text-white hover:border-lime-500'
+            }
+        };
+
+        // --- 2. DATA LAYER ---
         const INITIAL_DATA = [
-            // A - E
             { id: 101, word: "abandon", phonetic: "/ə'bændən/", meaning: "v. 放纵；放弃", example: "The scheme's investors, fearful of bankruptcy, decided to abandon the project.", mnemonic: "a+band(乐队)+on -> 乐队在台上'放纵'演奏", userSentence: "", tags: ["再要你命3000"], nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 102, word: "abate", phonetic: "/ə'beɪt/", meaning: "v. 减轻，减少", example: "We must wait for the storm to abate.", synonyms: "mitigate, curtail, temper, ameliorate", tags: ["六选二"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 103, word: "aberrant", phonetic: "/æ'berənt/", meaning: "adj. 异常的，非常规的", example: "Aberrant behavior can be a sign of stress.", synonyms: "anomaly", tags: ["再要你命3000"], mnemonic: "ab(离)+err(错误)+ant -> 离家出走犯错 -> 异常的", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 104, word: "cacophony", phonetic: "/kə'kɒfəni/", meaning: "n. 刺耳的声音", example: "A cacophony of deafening alarm bells.", tags: ["GRE核心"], mnemonic: "caco(坏)+phon(声音)", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 105, word: "enervate", phonetic: "/'enəveɪt/", meaning: "v. 使衰弱", example: "The heat enervated us all.", tags: ["易混淆"], mnemonic: "e(出)+nerv(神经) -> 神经出来了 -> 衰弱", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 106, word: "ephemeral", phonetic: "/ɪ'femərəl/", meaning: "adj. 短暂的", example: "Fashions are ephemeral, changing with every season.", synonyms: "transient, evanescent", tags: ["高频"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
-            
-            // F - P
             { id: 107, word: "garrulous", phonetic: "/'ɡærələs/", meaning: "adj. 唠叨的，多嘴的", example: "He became positively garrulous after a few glasses of wine.", synonyms: "loquacious, verbose", tags: ["阅读机经"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 108, word: "iconoclast", phonetic: "/aɪ'kɒnəklæst/", meaning: "n. 特立独行的人；打破旧习者", example: "Ideally, the press should be an iconoclast.", tags: ["镇考3000"], mnemonic: "icon(偶像)+clast(打碎) -> 打碎偶像的人", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 109, word: "mitigate", phonetic: "/'mɪtɪɡeɪt/", meaning: "v. 缓和，减轻", example: "Emergency funds are being provided to mitigate the effects of the disaster.", synonyms: "abate, curtail, temper, ameliorate", tags: ["六选二同义词"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 110, word: "proliferate", phonetic: "/prə'lɪfəreɪt/", meaning: "v. 激增，繁殖", example: "Small businesses have proliferated in the last ten years.", synonyms: "abound", tags: ["六选二同义词"], mnemonic: "pro(前)+life(生命)+rate -> 生命力向前的速率 -> 繁殖", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
-            
-            // Q - Z
             { id: 111, word: "quiescent", phonetic: "/kwi'esnt/", meaning: "adj. 静止的，不活动的", example: "Strikes were headed by groups of workers who had previously been quiescent.", synonyms: "abeyant, calm", tags: ["六选二同义词"], mnemonic: "quiet+scent", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 112, word: "tacit", phonetic: "/'tæsɪt/", meaning: "adj. 缄默的；不言而喻的", example: "There was a tacit agreement that he would pay for the meal.", tags: ["阅读机经"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 113, word: "unanimous", phonetic: "/ju'nænɪməs/", meaning: "adj. 一致同意的", example: "The decision was unanimous.", tags: ["再要你命3000"], mnemonic: "uni(一)+anim(精神) -> 一个精神 -> 一致", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
@@ -100,43 +232,41 @@
             { id: 118, word: "zealot", phonetic: "/'zelət/", meaning: "n. 狂热者", example: "I am an index believer, but not a zealot.", synonyms: "extremist, ideologue", tags: ["镇考3000"], mnemonic: "zeal(热情)+lot(多) -> 热情太多 -> 狂热者", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
         ];
 
-        // SRS Logic (Ebbinghaus)
         const calculateNextReview = (card, quality) => {
             let { interval, ease, reviewCount = 0 } = card;
-            if (quality === 0) {
-                interval = 0;
-                reviewCount = 0;
-            } else {
+            if (quality === 0) { interval = 0; reviewCount = 0; }
+            else {
                 if (reviewCount === 0) interval = 1;
-                else if (reviewCount === 1) interval = 3; 
+                else if (reviewCount === 1) interval = 3;
                 else interval = Math.round(interval * ease);
                 reviewCount++;
             }
             ease = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
-            // Realtime calc
             let nextReviewTime = interval === 0 ? Date.now() + 60000 : Date.now() + (interval * 24 * 60 * 60 * 1000); 
             return { ...card, interval, ease, reviewCount, nextReview: nextReviewTime };
         };
 
         const App = () => {
-            const [cards, setCards] = useState(() => {
-                const saved = localStorage.getItem('gre_luxury_cards_v5');
-                return saved ? JSON.parse(saved) : INITIAL_DATA;
-            });
+            // --- STATE ---
+            const [cards, setCards] = useState(() => JSON.parse(localStorage.getItem('gre_v9_cards')) || INITIAL_DATA);
+            const [settings, setSettings] = useState(() => JSON.parse(localStorage.getItem('gre_v9_settings')) || { contextMode: false, theme: 'obsidian' });
             const [view, setView] = useState('home'); 
             const [queue, setQueue] = useState([]);
-            const [currentIndex, setCurrentIndex] = useState(0);
+            const [curr, setCurr] = useState(0);
             const [flipped, setFlipped] = useState(false);
-            const [settings, setSettings] = useState(() => {
-                const saved = localStorage.getItem('gre_luxury_settings_v5');
-                return saved ? JSON.parse(saved) : { contextMode: false };
-            });
             
+            // GAMIFICATION STATE
+            const [combo, setCombo] = useState(0);
+            const [xp, setXp] = useState(0);
+            const [feedback, setFeedback] = useState(null); 
+
             const fileInputRef = useRef(null);
 
-            // Persist Data & Settings
-            useEffect(() => localStorage.setItem('gre_luxury_cards_v5', JSON.stringify(cards)), [cards]);
-            useEffect(() => localStorage.setItem('gre_luxury_settings_v5', JSON.stringify(settings)), [settings]);
+            const theme = THEMES[settings.theme] || THEMES.obsidian;
+
+            // Persistence
+            useEffect(() => localStorage.setItem('gre_v9_cards', JSON.stringify(cards)), [cards]);
+            useEffect(() => localStorage.setItem('gre_v9_settings', JSON.stringify(settings)), [settings]);
 
             // Stats
             const stats = useMemo(() => {
@@ -145,18 +275,15 @@
                     total: cards.length,
                     due: cards.filter(c => c.nextReview <= now).length,
                     mastered: cards.filter(c => c.interval > 21).length,
-                    hard: cards.filter(c => c.ease < 2.3 && c.reviewCount > 0).length // "Mistake Notebook" logic
+                    hard: cards.filter(c => c.ease < 2.3 && c.reviewCount > 0).length
                 };
             }, [cards]);
 
-            // Keyboard Shortcuts
+            // Keyboard
             useEffect(() => {
                 const handleKey = (e) => {
                     if (view !== 'study') return;
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        setFlipped(prev => !prev);
-                    }
+                    if (e.code === 'Space') { e.preventDefault(); setFlipped(p => !p); }
                     if (flipped) {
                         if (e.key === '1') handleRate(0); 
                         if (e.key === '2') handleRate(3); 
@@ -166,85 +293,124 @@
                 };
                 window.addEventListener('keydown', handleKey);
                 return () => window.removeEventListener('keydown', handleKey);
-            }, [view, flipped, currentIndex, queue]);
+            }, [view, flipped, curr, queue]);
 
+            // Handlers
             const startSession = (mode = 'normal') => {
                 const now = Date.now();
                 let q = [];
-                if (mode === 'normal') {
-                    q = cards.filter(c => c.nextReview <= now).sort((a,b) => a.nextReview - b.nextReview);
-                } else if (mode === 'hard') {
-                    q = cards.filter(c => c.ease < 2.3 && c.reviewCount > 0);
-                }
+                if (mode === 'normal') q = cards.filter(c => c.nextReview <= now).sort((a,b) => a.nextReview - b.nextReview);
+                else if (mode === 'hard') q = cards.filter(c => c.ease < 2.3 && c.reviewCount > 0);
                 
                 if (q.length === 0) {
-                    alert(mode === 'hard' ? "错题本空空如也，太棒了！" : "当前没有复习任务！");
+                    alert(mode === 'hard' ? "No mistakes found. Perfect!" : "All caught up!");
                     return;
                 }
                 setQueue(q);
-                setCurrentIndex(0);
+                setCurr(0);
                 setFlipped(false);
+                setCombo(0); 
+                setXp(0); 
                 setView('study');
             };
 
             const handleRate = (quality) => {
-                const currentCard = queue[currentIndex];
+                const currentCard = queue[curr];
                 const updated = calculateNextReview(currentCard, quality);
                 setCards(prev => prev.map(c => c.id === updated.id ? updated : c));
+                
+                // GAMIFICATION LOGIC
+                if (quality >= 4) { // Good or Easy
+                    const newCombo = combo + 1;
+                    setCombo(newCombo);
+                    const gain = 10 + (newCombo * 2);
+                    setXp(p => p + gain);
+                    triggerFeedback(quality === 5 ? "PERFECT" : "GOOD", `+${gain} XP`, theme.accent);
+                } else { // Hard or Forget
+                    setCombo(0);
+                    triggerFeedback(quality === 3 ? "HARD" : "FORGET", "Keep Going", "#ef4444");
+                }
 
-                if (currentIndex < queue.length - 1) {
+                if (curr < queue.length - 1) {
                     setFlipped(false);
-                    setTimeout(() => setCurrentIndex(prev => prev + 1), 200); 
+                    setTimeout(() => setCurr(prev => prev + 1), 200); 
                 } else {
                     setView('home');
                 }
             };
 
-            // Update Mnemonic/Sentence
+            const triggerFeedback = (mainText, subText, color) => {
+                setFeedback({ main: mainText, sub: subText, color: color, id: Date.now() });
+                setTimeout(() => setFeedback(null), 800);
+            };
+
             const updateCardField = (id, field, value) => {
                 const updatedQueue = [...queue];
-                updatedQueue[currentIndex] = { ...updatedQueue[currentIndex], [field]: value };
+                updatedQueue[curr] = { ...updatedQueue[curr], [field]: value };
                 setQueue(updatedQueue); 
                 setCards(prev => prev.map(c => c.id === id ? { ...c, [field]: value } : c)); 
             };
 
             const handleImportText = (text) => {
+                try {
+                    const json = JSON.parse(text);
+                    if (Array.isArray(json)) {
+                        const newCards = json.map((item, idx) => ({
+                            id: Date.now() + idx,
+                            word: item.word || "Unknown",
+                            meaning: item.meaning || "No definition",
+                            example: item.example || "No context provided.",
+                            phonetic: item.phonetic || "",
+                            mnemonic: item.mnemonic || "",
+                            userSentence: item.userSentence || "",
+                            tags: ["Imported"], nextReview: Date.now(), interval: 0, ease: 2.5
+                        }));
+                        setCards([...cards, ...newCards]);
+                        alert(`JSON Import Successful: Added ${newCards.length} words.`);
+                        setView('home');
+                        return;
+                    }
+                } catch(e) {}
+
                 const lines = text.split('\n').filter(l => l.trim());
+                if (lines.length === 0) return;
+
                 const newCards = lines.map((line, idx) => {
-                    const parts = line.split(/,|\t/); 
+                    let parts;
+                    if (line.includes('\t')) parts = line.split('\t'); 
+                    else if (line.includes('|')) parts = line.split('|');
+                    else if (line.includes('，')) parts = line.split('，');
+                    else parts = line.split(',');
+                    
+                    const word = parts[0] ? parts[0].trim() : "Unknown";
+                    const meaning = parts[1] ? parts[1].trim() : "No definition";
+                    const example = parts.length > 2 ? parts.slice(2).join(', ').trim() : "No context provided.";
+
                     return {
                         id: Date.now() + idx,
-                        word: parts[0]?.trim() || "Unknown",
-                        meaning: parts[1]?.trim() || "No definition",
-                        example: parts[2]?.trim() || "No context provided.",
-                        mnemonic: "",
-                        userSentence: "",
-                        tags: ["Imported"],
-                        nextReview: Date.now(),
-                        interval: 0,
-                        ease: 2.5
+                        word, meaning, example,
+                        phonetic: "", mnemonic: "", userSentence: "", tags: ["Imported"], nextReview: Date.now(), interval: 0, ease: 2.5
                     };
                 });
-                setCards([...cards, ...newCards]);
-                alert(`成功注入 ${newCards.length} 条数据到记忆库。`);
-                setView('home');
+                
+                if (newCards.length > 0) {
+                    setCards([...cards, ...newCards]);
+                    alert(`Text Import Successful: Added ${newCards.length} words.`);
+                    setView('home');
+                } else {
+                    alert("Could not parse. Try pasting from Excel.");
+                }
             };
-
-            // --- Backup & Restore Functions ---
+            
             const exportData = () => {
                 const dataStr = JSON.stringify(cards);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                const exportFileDefaultName = `gre_backup_${new Date().toISOString().slice(0,10)}.json`;
                 const linkElement = document.createElement('a');
                 linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.setAttribute('download', `gre_multiverse_backup.json`);
                 linkElement.click();
             };
-
-            const triggerFileInput = () => {
-                fileInputRef.current.click();
-            };
-
+            
             const handleFileImport = (e) => {
                 const fileReader = new FileReader();
                 fileReader.readAsText(e.target.files[0], "UTF-8");
@@ -252,182 +418,216 @@
                     try {
                         const importedCards = JSON.parse(e.target.result);
                         if (Array.isArray(importedCards)) {
-                            if(confirm(`检测到备份文件包含 ${importedCards.length} 个单词。\n是否覆盖当前进度？`)) {
-                                setCards(importedCards);
-                                alert("数据恢复成功！");
-                                setView('home');
-                            }
-                        } else {
-                            alert("文件格式错误，请使用本应用导出的 JSON 文件。");
+                            if(confirm(`Restore ${importedCards.length} words?`)) { setCards(importedCards); setView('home'); }
                         }
-                    } catch (error) {
-                        alert("解析失败: " + error);
-                    }
+                    } catch (error) { alert("Invalid File"); }
                 };
             };
 
-            const resetData = () => {
-                if(confirm("警告：确定要重置所有数据吗？这将清空所有进度和笔记！")) {
-                    setCards(INITIAL_DATA);
-                    localStorage.removeItem('gre_luxury_cards_v5');
-                    alert("已重置为初始状态。");
-                    setView('home');
-                }
-            }
+            // --- RENDER HELPERS ---
+            const appStyle = {
+                fontFamily: theme.fontBody,
+                color: theme.text,
+                background: theme.bg, 
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            };
+            
+            const cardStyle = {
+                background: theme.glass,
+                border: theme.border,
+                color: theme.text,
+                boxShadow: `0 8px 32px 0 rgba(0,0,0,0.5)`
+            };
 
             return (
-                <div className="h-screen w-full flex flex-col items-center justify-center relative bg-black text-gray-200">
-                    {/* Background Texture */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50"></div>
+                <div className={`h-screen w-full flex flex-col relative transition-all duration-700 ${theme.extraClass || ''}`} style={appStyle}>
+                    <div className="absolute inset-0 z-0 transition-all duration-700" style={{ backgroundColor: theme.overlay }}></div>
+                    {theme.scanlines && <div className="scanlines"></div>}
 
-                    {/* Navbar */}
-                    <div className="absolute top-0 w-full p-6 flex justify-between items-center z-20 text-gray-500 text-xs tracking-[0.2em] uppercase font-sans">
-                        <div className="flex gap-6">
-                            <span className={`cursor-pointer hover:text-[#d4af37] transition ${view === 'home' ? 'text-white' : ''}`} onClick={() => setView('home')}>GRE / Obsidian</span>
-                            <span className="cursor-pointer hover:text-white transition flex items-center gap-2" onClick={() => startSession('hard')}>
-                                <i className="fas fa-exclamation-circle text-red-500"></i> 错题本 ({stats.hard})
-                            </span>
-                            <span className="cursor-pointer hover:text-white transition" onClick={() => setView('data')}>数据管理</span>
+                    {/* HUD - Navbar */}
+                    <nav className="relative z-20 p-6 flex justify-between items-center text-xs tracking-[0.2em] uppercase w-full">
+                        <div className="flex gap-4 md:gap-8 items-center">
+                            <span className="font-bold cursor-pointer hover:opacity-80" onClick={() => setView('home')} style={{ color: theme.accent }}>GRE / {theme.name}</span>
+                            <select 
+                                value={settings.theme}
+                                onChange={(e) => setSettings(s => ({...s, theme: e.target.value}))}
+                                className="bg-transparent border-none outline-none cursor-pointer uppercase font-bold text-[10px] md:text-xs opacity-60 hover:opacity-100"
+                                style={{ color: theme.text }}
+                            >
+                                {Object.values(THEMES).map(t => <option key={t.id} value={t.id} className="text-black">{t.name}</option>)}
+                            </select>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer hover:text-white transition" title="语境模式：正面显示例句，背面显示单词">
-                                <div className={`w-3 h-3 border border-gray-600 ${settings.contextMode ? 'bg-[#d4af37] border-[#d4af37]' : ''}`}></div>
-                                <span>Context Mode</span>
+                        
+                        <div className="flex gap-6 items-center">
+                            {/* XP BAR */}
+                            {xp > 0 && (
+                                <div className="hidden md:flex items-center gap-2">
+                                    <span className="text-[10px]" style={{color: theme.accent}}>XP</span>
+                                    <div className="w-24 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full transition-all duration-1000" style={{width: `${Math.min(100, xp/5)}%`, backgroundColor: theme.accent}}></div>
+                                    </div>
+                                    <span className="font-bold">{xp}</span>
+                                </div>
+                            )}
+                            <span className="cursor-pointer hover:opacity-80 transition" onClick={() => startSession('hard')} style={{ color: stats.hard > 0 ? '#ef4444' : 'inherit' }}>
+                                <i className="fas fa-bug"></i> Mistakes ({stats.hard})
+                            </span>
+                            <span className="cursor-pointer hover:opacity-80 transition" onClick={() => setView('data')}>Data</span>
+                            <label className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: settings.contextMode ? theme.accent : '#555' }}></div>
+                                <span className="hidden md:inline">Context</span>
                                 <input type="checkbox" className="hidden" checked={settings.contextMode} onChange={() => setSettings(s => ({...s, contextMode: !s.contextMode}))} />
                             </label>
-                            <span className="hidden md:inline">Total: {stats.total}</span>
                         </div>
-                    </div>
+                    </nav>
 
-                    {/* Main Content */}
-                    <div className="z-10 w-full max-w-5xl px-4">
+                    {/* Main Stage */}
+                    <div className="relative z-10 flex-1 flex flex-col items-center justify-center p-4 w-full max-w-5xl mx-auto">
                         
-                        {/* HOME VIEW */}
+                        {/* VIEW: HOME */}
                         {view === 'home' && (
-                            <div className="flex flex-col md:flex-row gap-16 items-center justify-center animate-fade-in h-[70vh]">
-                                <div className="text-left max-w-lg">
-                                    <div className="w-12 h-1 bg-[#d4af37] mb-8"></div>
-                                    <h1 className="font-serif text-6xl md:text-8xl text-white mb-6 leading-none">
+                            <div className="text-center animate-fade-in">
+                                <div className="animate-float">
+                                    <h1 style={{ fontFamily: theme.fontTitle }} className="text-5xl md:text-8xl mb-6 leading-tight">
                                         Verbal <br/>
-                                        <span className="text-[#d4af37] italic">Mastery.</span>
+                                        <span style={{ color: theme.accent }} className="italic">Mastery</span>
                                     </h1>
-                                    <p className="text-gray-400 text-lg mb-10 font-light leading-relaxed">
-                                        基于艾宾浩斯遗忘曲线。<br/>
-                                        内置 <span className="text-white">错题自动归档</span> 与 <span className="text-white">记忆宫殿</span>。<br/>
-                                        <span className="text-xs text-[#d4af37] mt-2 block uppercase tracking-widest">Permanent Storage Enabled</span>
-                                    </p>
-                                    <button 
-                                        onClick={() => startSession('normal')}
-                                        className="group relative px-8 py-4 bg-transparent border border-gray-700 text-white font-bold tracking-widest overflow-hidden transition-all hover:border-[#d4af37]"
-                                    >
-                                        <span className="absolute inset-0 w-full h-full bg-[#d4af37] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></span>
-                                        <span className="relative group-hover:text-black transition-colors">START SESSION</span>
-                                    </button>
                                 </div>
                                 
-                                <div className="hidden md:block w-px h-64 bg-gradient-to-b from-transparent via-gray-700 to-transparent"></div>
-                                
-                                <div className="text-right space-y-8">
-                                    <div>
-                                        <div className="text-4xl text-white font-serif">{stats.due}</div>
-                                        <div className="text-xs text-[#d4af37] uppercase tracking-widest mt-1">Due Today</div>
+                                <div className="flex items-center justify-center gap-8 mb-12">
+                                    <div className="text-center">
+                                        <div className="text-4xl font-bold" style={{ color: theme.text }}>{stats.due}</div>
+                                        <div className="text-[10px] uppercase tracking-widest opacity-60">Due Today</div>
                                     </div>
-                                    <div>
-                                        <div className="text-4xl text-white font-serif">{stats.mastered}</div>
-                                        <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Mastered</div>
+                                    <div className="h-12 w-px opacity-30" style={{ backgroundColor: theme.text }}></div>
+                                    <div className="text-center">
+                                        <div className="text-4xl font-bold" style={{ color: theme.text }}>{stats.mastered}</div>
+                                        <div className="text-[10px] uppercase tracking-widest opacity-60">Mastered</div>
                                     </div>
                                 </div>
+
+                                <button 
+                                    onClick={() => startSession('normal')}
+                                    className={`px-8 py-3 transition-all duration-300 hover:scale-105 text-sm uppercase tracking-widest font-bold ${theme.btnClass}`}
+                                    style={{ color: theme.text, borderColor: theme.accent }}
+                                >
+                                    Start Session
+                                </button>
                             </div>
                         )}
 
-                        {/* STUDY VIEW */}
+                        {/* VIEW: STUDY */}
                         {view === 'study' && queue.length > 0 && (
-                            <div className="flex flex-col items-center animate-fade-in">
-                                {/* Progress */}
-                                <div className="w-full max-w-xl flex justify-between text-[10px] text-gray-500 uppercase tracking-widest mb-4">
-                                    <span>Card {currentIndex + 1}</span>
-                                    <span>Remaining {queue.length - currentIndex}</span>
+                            <div className="w-full max-w-2xl flex flex-col items-center relative">
+                                
+                                {/* COMBO COUNTER */}
+                                {combo > 1 && (
+                                    <div className="absolute -top-16 animate-bounce font-bold text-2xl tracking-widest z-50" style={{color: theme.accent, textShadow: '0 0 10px rgba(0,0,0,0.5)'}}>
+                                        COMBO x{combo} <i className="fas fa-fire"></i>
+                                    </div>
+                                )}
+
+                                {/* FEEDBACK POPUP */}
+                                {feedback && (
+                                    <div key={feedback.id} className="feedback-pop text-center">
+                                        <div className="text-4xl font-black italic" style={{color: feedback.color, textShadow: '0 2px 10px rgba(0,0,0,0.5)'}}>{feedback.main}</div>
+                                        <div className="text-sm font-bold mt-1 text-white">{feedback.sub}</div>
+                                    </div>
+                                )}
+
+                                <div className="w-full h-1 bg-gray-700/30 mb-8 rounded-full overflow-hidden">
+                                    <div className="h-full transition-all duration-500" style={{ width: `${(curr / queue.length) * 100}%`, backgroundColor: theme.accent }}></div>
                                 </div>
 
                                 <div 
-                                    className="relative w-full max-w-2xl h-[550px] perspective-1000 cursor-pointer group"
+                                    className="relative w-full h-[500px] perspective-1000 cursor-pointer group"
                                     onClick={(e) => {
                                         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
                                         setFlipped(!flipped);
                                     }}
                                 >
-                                    <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${flipped ? 'rotate-y-180' : ''}`}>
+                                    <div className={`relative w-full h-full transition-transform duration-700 preserve-3d ${flipped ? 'rotate-y-180' : ''}`}>
                                         
                                         {/* FRONT */}
-                                        <div className="absolute w-full h-full glass-card backface-hidden flex flex-col items-center justify-center p-16 text-center">
+                                        <div className="absolute inset-0 rounded-lg backface-hidden flex flex-col items-center justify-center p-12 text-center" style={cardStyle}>
                                             {settings.contextMode ? (
-                                                <div className="space-y-8">
-                                                    <span className="text-xs text-[#d4af37] tracking-[0.2em] uppercase">Context Challenge</span>
-                                                    <p className="font-serif text-3xl text-gray-200 leading-normal italic">
-                                                        "{queue[currentIndex].example.replace(new RegExp(queue[currentIndex].word, 'gi'), '_____')}"
+                                                <div className="space-y-6">
+                                                    <span className="text-[10px] uppercase tracking-widest opacity-60" style={{ color: theme.accent }}>Context Challenge</span>
+                                                    <p style={{ fontFamily: theme.fontCard }} className="text-2xl leading-relaxed opacity-90">
+                                                        "{queue[curr].example.replace(new RegExp(queue[curr].word, 'gi'), '_____')}"
                                                     </p>
-                                                    <p className="text-xs text-gray-600 mt-8">[ Tap to Reveal ]</p>
+                                                    <p className="text-[10px] uppercase tracking-widest opacity-50 mt-8">Tap to Reveal</p>
                                                 </div>
                                             ) : (
-                                                <div className="space-y-6">
-                                                    <span className="text-xs text-gray-600 tracking-[0.2em] uppercase">Word</span>
-                                                    <h2 className="font-serif text-7xl text-white tracking-tight">{queue[currentIndex].word}</h2>
-                                                    <p className="font-serif text-2xl text-[#d4af37] italic opacity-80">{queue[currentIndex].phonetic}</p>
-                                                    <p className="absolute bottom-12 text-xs text-gray-600">[ Space to Flip ]</p>
+                                                <div className="space-y-4">
+                                                    <h2 style={{ fontFamily: theme.fontCard }} className="text-6xl md:text-7xl tracking-tight">{queue[curr].word}</h2>
+                                                    <p className="text-xl italic opacity-70" style={{ color: theme.accent }}>{queue[curr].phonetic}</p>
+                                                    <p className="absolute bottom-8 text-[10px] uppercase tracking-widest opacity-50">Space to Flip</p>
                                                 </div>
                                             )}
                                         </div>
 
                                         {/* BACK */}
-                                        <div className="absolute w-full h-full glass-card backface-hidden rotate-y-180 flex flex-col p-12 bg-[#0a0a0a] border border-[#d4af37]/20">
+                                        <div className="absolute inset-0 rounded-lg backface-hidden rotate-y-180 flex flex-col p-8 md:p-10" style={{ ...cardStyle, transform: 'rotateY(180deg)' }}>
                                             <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                                                <div className="flex justify-between items-baseline border-b border-gray-800 pb-4 mb-6">
-                                                    <h2 className="text-3xl font-serif text-white">{queue[currentIndex].word}</h2>
-                                                    <span className="text-xs text-gray-500 uppercase tracking-widest">{queue[currentIndex].ease < 2.3 ? 'Hard' : 'Normal'}</span>
+                                                <div className="flex justify-between items-baseline mb-4 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                                    <h2 style={{ fontFamily: theme.fontCard }} className="text-3xl">{queue[curr].word}</h2>
+                                                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded bg-black/20 opacity-70">
+                                                        {queue[curr].ease < 2.3 ? 'Hard' : 'Review'}
+                                                    </span>
                                                 </div>
 
-                                                <div className="mb-8">
-                                                    <p className="text-xl text-gray-200 font-light mb-2">{queue[currentIndex].meaning}</p>
-                                                    {queue[currentIndex].synonyms && (
-                                                        <p className="text-sm text-gray-500"><span className="text-[#d4af37]">Syn:</span> {queue[currentIndex].synonyms}</p>
-                                                    )}
-                                                </div>
-
-                                                <div className="mb-6">
-                                                    <p className="text-sm text-gray-500 uppercase tracking-widest mb-2">Context</p>
-                                                    <p className="text-gray-300 italic border-l-2 border-[#d4af37] pl-4">"{queue[currentIndex].example}"</p>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 gap-6 mt-8 pt-6 border-t border-gray-800">
+                                                <div className="space-y-6 text-sm md:text-base">
                                                     <div>
-                                                        <label className="text-[10px] text-[#d4af37] uppercase tracking-widest mb-2 block">Memory Palace (记忆宫殿)</label>
-                                                        <input 
-                                                            type="text" 
-                                                            className="luxury-input w-full text-sm pb-2"
-                                                            placeholder="Add your mnemonic hook..."
-                                                            value={queue[currentIndex].mnemonic}
-                                                            onChange={(e) => updateCardField(queue[currentIndex].id, 'mnemonic', e.target.value)}
-                                                        />
+                                                        <p className="opacity-90 leading-relaxed" style={{fontFamily: theme.fontBody}}>{queue[curr].meaning}</p>
+                                                        {queue[curr].synonyms && <p className="text-xs opacity-60 mt-2">Syn: {queue[curr].synonyms}</p>}
                                                     </div>
-                                                    <div>
-                                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Sentence Mining (我的造句)</label>
-                                                        <input 
-                                                            type="text" 
-                                                            className="luxury-input w-full text-sm pb-2 text-gray-300 border-gray-700"
-                                                            placeholder="Create a personal sentence..."
-                                                            value={queue[currentIndex].userSentence}
-                                                            onChange={(e) => updateCardField(queue[currentIndex].id, 'userSentence', e.target.value)}
-                                                        />
+                                                    
+                                                    <div className="pl-4 border-l-2" style={{ borderColor: theme.accent }}>
+                                                        <p className="text-xs uppercase tracking-widest opacity-50 mb-1">Context</p>
+                                                        <p className="italic opacity-80" style={{fontFamily: theme.fontBody}}>"{queue[curr].example}"</p>
+                                                    </div>
+
+                                                    <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                                        <div>
+                                                            <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">Memory Palace</label>
+                                                            <input 
+                                                                type="text" 
+                                                                className="w-full bg-transparent border-b focus:outline-none py-1 text-sm transition-colors"
+                                                                style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.accent }}
+                                                                placeholder="Add visual hook..."
+                                                                value={queue[curr].mnemonic}
+                                                                onChange={(e) => updateCardField(queue[curr].id, 'mnemonic', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">My Sentence</label>
+                                                            <input 
+                                                                type="text" 
+                                                                className="w-full bg-transparent border-b focus:outline-none py-1 text-sm transition-colors"
+                                                                style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.accent }}
+                                                                placeholder="Self-reference..."
+                                                                value={queue[curr].userSentence}
+                                                                onChange={(e) => updateCardField(queue[curr].id, 'userSentence', e.target.value)}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-800">
-                                                <button onClick={(e) => {e.stopPropagation(); handleRate(0);}} className="text-[10px] uppercase text-red-400 hover:text-white py-3 hover:bg-red-900/20 transition tracking-widest">Forget</button>
-                                                <button onClick={(e) => {e.stopPropagation(); handleRate(3);}} className="text-[10px] uppercase text-orange-400 hover:text-white py-3 hover:bg-orange-900/20 transition tracking-widest">Hard</button>
-                                                <button onClick={(e) => {e.stopPropagation(); handleRate(4);}} className="text-[10px] uppercase text-blue-400 hover:text-white py-3 hover:bg-blue-900/20 transition tracking-widest">Good</button>
-                                                <button onClick={(e) => {e.stopPropagation(); handleRate(5);}} className="text-[10px] uppercase text-green-400 hover:text-white py-3 hover:bg-green-900/20 transition tracking-widest">Easy</button>
+                                            <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                                {['Forget', 'Hard', 'Good', 'Easy'].map((label, idx) => (
+                                                    <button 
+                                                        key={label}
+                                                        onClick={(e) => { e.stopPropagation(); handleRate([0,3,4,5][idx]); }}
+                                                        className={`text-[10px] uppercase py-3 transition tracking-widest opacity-80 hover:opacity-100 hover:scale-105 ${theme.btnClass}`}
+                                                        style={{ color: theme.text }}
+                                                    >
+                                                        {label}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
@@ -435,77 +635,44 @@
                             </div>
                         )}
 
-                        {/* DATA / IMPORT VIEW */}
+                        {/* VIEW: DATA */}
                         {view === 'data' && (
-                            <div className="glass-card p-12 max-w-4xl mx-auto animate-fade-in">
-                                <h2 className="font-serif text-3xl text-white mb-8 border-b border-gray-800 pb-4">Data Management</h2>
+                            <div className="max-w-3xl mx-auto p-10 rounded-lg animate-fade-in" style={cardStyle}>
+                                <h2 style={{ fontFamily: theme.fontTitle }} className="text-2xl mb-6 border-b pb-4" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>Archives</h2>
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                    {/* Import Section */}
+                                <div className="space-y-6">
                                     <div>
-                                        <h3 className="text-[#d4af37] text-sm uppercase tracking-widest mb-4">Add New Words</h3>
-                                        <p className="text-gray-500 text-xs mb-4">Paste from Excel/CSV (Word, Meaning, Example)</p>
+                                        <p className="text-[10px] uppercase tracking-widest opacity-60 mb-2">Mass Injection (Excel/CSV/Text)</p>
                                         <textarea 
-                                            className="w-full h-40 bg-[#0a0a0a] border border-gray-800 text-gray-300 p-4 font-mono text-xs focus:border-[#d4af37] outline-none resize-none mb-4 custom-scrollbar"
-                                            placeholder={`Format:\nabandon, 放弃, He abandoned the project.\n...`}
-                                            id="importArea"
+                                            id="importArea" 
+                                            className="w-full h-24 bg-black/20 border p-3 text-xs outline-none resize-none custom-scrollbar" 
+                                            style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.text }}
+                                            placeholder={`Supported formats:\n1. Excel Copy-Paste (Tab separated)\n2. JSON Array\n3. CSV (Word, Meaning, Example)`}
                                         ></textarea>
                                         <button 
-                                            onClick={() => handleImportText(document.getElementById('importArea').value)} 
-                                            className="w-full py-3 bg-gray-800 text-white font-bold hover:bg-gray-700 transition text-xs uppercase tracking-widest"
+                                            onClick={() => handleImportText(document.getElementById('importArea').value)}
+                                            className={`mt-2 w-full py-2 transition text-[10px] uppercase tracking-widest font-bold ${theme.btnClass}`}
+                                            style={{ backgroundColor: theme.accent, color: theme.id === 'meanGirls' ? '#fff' : '#000' }}
                                         >
-                                            Inject Text Data
+                                            Smart Inject Data
                                         </button>
                                     </div>
 
-                                    {/* Backup Section */}
-                                    <div className="flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-[#d4af37] text-sm uppercase tracking-widest mb-4">Backup & Restore</h3>
-                                            <p className="text-gray-500 text-xs mb-6">
-                                                Download your progress to keep it safe. Restore it on any device.
-                                            </p>
-                                            
-                                            <div className="space-y-4">
-                                                <button 
-                                                    onClick={exportData}
-                                                    className="w-full py-4 border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2"
-                                                >
-                                                    <i className="fas fa-download"></i> Download Backup (.json)
-                                                </button>
-
-                                                <input 
-                                                    type="file" 
-                                                    ref={fileInputRef} 
-                                                    onChange={handleFileImport} 
-                                                    className="hidden" 
-                                                    accept=".json"
-                                                />
-                                                <button 
-                                                    onClick={triggerFileInput}
-                                                    className="w-full py-4 border border-gray-700 text-gray-400 hover:border-white hover:text-white transition text-xs uppercase tracking-widest flex items-center justify-center gap-2"
-                                                >
-                                                    <i className="fas fa-upload"></i> Restore from Backup
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-8 pt-8 border-t border-gray-800">
-                                            <button 
-                                                onClick={resetData}
-                                                className="text-red-900 hover:text-red-500 text-xs uppercase tracking-widest transition"
-                                            >
-                                                Danger Zone: Reset All Data
-                                            </button>
-                                        </div>
+                                    <div className="flex gap-4">
+                                        <button onClick={exportData} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+                                            Backup JSON
+                                        </button>
+                                        <button onClick={() => fileInputRef.current.click()} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+                                            Restore JSON
+                                        </button>
+                                        <input type="file" ref={fileInputRef} onChange={handleFileImport} className="hidden" accept=".json" />
                                     </div>
-                                </div>
-                                
-                                <div className="mt-8 text-center">
-                                    <button onClick={() => setView('home')} className="text-gray-500 hover:text-white text-xs uppercase tracking-widest">Back to Dashboard</button>
+                                    
+                                    <button onClick={() => setView('home')} className="mt-4 w-full text-[10px] uppercase tracking-widest opacity-50 hover:opacity-100">Back</button>
                                 </div>
                             </div>
                         )}
+
                     </div>
                 </div>
             );
