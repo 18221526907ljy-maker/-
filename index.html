@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRE / MULTIVERSE TIMELINE</title>
+    <title>GRE / MULTIVERSE REMASTERED</title>
     <!-- React & Tailwind -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -33,8 +33,8 @@
 
         /* Animation Utils */
         @keyframes neonPulse {
-            0%, 100% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; }
-            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; }
+            0%, 100% { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+            50% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor; }
         }
         .neon-text { animation: neonPulse 2s infinite alternate; }
 
@@ -87,7 +87,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
-        // --- 1. THEME ENGINE (PERFECT BALANCE) ---
+        // --- 1. THEME ENGINE (COLOR REMASTERED) ---
         const THEMES = {
             obsidian: {
                 id: 'obsidian',
@@ -96,10 +96,10 @@
                 fontTitle: "'Playfair Display', serif", 
                 fontCard: "'Playfair Display', serif", 
                 fontBody: "'Inter', sans-serif",
-                accent: '#d4af37', 
+                accent: '#d4af37', // Classic Gold
                 glass: 'rgba(0, 0, 0, 0.7)',
                 text: '#e2e8f0',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(212, 175, 55, 0.3)', // Subtle Gold Border
                 overlay: 'rgba(0,0,0,0.6)',
                 btnClass: 'rounded-lg border hover:bg-white/10'
             },
@@ -110,27 +110,27 @@
                 fontTitle: "'UnifrakturMaguntia', cursive", 
                 fontCard: "'Playfair Display', serif", 
                 fontBody: "'Inter', sans-serif", 
-                accent: '#ef4444', 
-                glass: 'rgba(20, 20, 20, 0.95)', 
-                text: '#fff',
-                border: '3px solid #ef4444',
-                overlay: 'rgba(0,0,0,0.5)',
+                accent: '#ff0000', // Anarchy Red
+                glass: 'rgba(10, 10, 10, 0.95)', 
+                text: '#ffffff',
+                border: '3px solid #ff0000', // Aggressive Border
+                overlay: 'rgba(0,0,0,0.6)',
                 extraClass: 'uppercase tracking-wide',
-                btnClass: 'border-2 border-red-500 hover:bg-red-600 hover:text-white transform -skew-x-12' 
+                btnClass: 'border-2 border-red-600 hover:bg-red-600 hover:text-white transform -skew-x-12 shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]' 
             },
             harryPotter: {
                 id: 'harryPotter',
                 name: 'Wizarding World',
-                bg: 'linear-gradient(135deg, #1a0f0a 0%, #3e2723 50%, #1a1a1a 100%)', 
+                bg: 'linear-gradient(135deg, #2b1b17 0%, #4a3728 50%, #1a1a1a 100%)', // Deep Leather/Dark Wood
                 fontTitle: "'Cinzel', serif", 
                 fontCard: "'Cinzel', serif", 
                 fontBody: "'Playfair Display', serif", 
-                accent: '#fbbf24', 
-                glass: 'rgba(40, 30, 20, 0.6)', 
-                text: '#fcd34d',
-                border: '1px solid rgba(251, 191, 36, 0.3)',
-                overlay: 'rgba(0,0,0,0.2)',
-                btnClass: 'rounded-full border border-yellow-500/50 hover:bg-yellow-900/30'
+                accent: '#ffc107', // Hufflepuff/Gryffindor Gold
+                glass: 'rgba(30, 20, 10, 0.7)', 
+                text: '#f5f5dc', // Parchment Text
+                border: '1px solid rgba(255, 193, 7, 0.4)',
+                overlay: 'rgba(0,0,0,0.3)',
+                btnClass: 'rounded-full border border-amber-500/50 hover:bg-amber-900/40 hover:border-amber-400'
             },
             oldMoney: {
                 id: 'oldMoney',
@@ -139,12 +139,12 @@
                 fontTitle: "'Playfair Display', serif",
                 fontCard: "'Playfair Display', serif",
                 fontBody: "'Playfair Display', serif",
-                accent: '#1e3a8a', 
-                glass: 'rgba(245, 245, 240, 0.95)', 
-                text: '#1e293b', 
-                border: '1px solid #1e3a8a',
+                accent: '#0c2461', // Deep Navy
+                glass: 'rgba(240, 240, 235, 0.95)', // Cream/Linen
+                text: '#0c2461', // Navy Text
+                border: '1px solid #0c2461',
                 overlay: 'rgba(255,255,255,0.1)',
-                btnClass: 'rounded-sm border border-blue-900 hover:bg-blue-900 hover:text-white'
+                btnClass: 'rounded-sm border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white font-semibold'
             },
             fantasy: {
                 id: 'fantasy',
@@ -153,12 +153,12 @@
                 fontTitle: "'UnifrakturMaguntia', cursive", 
                 fontCard: "'Cinzel', serif", 
                 fontBody: "'Playfair Display', serif", 
-                accent: '#c084fc', 
-                glass: 'rgba(15, 5, 20, 0.85)',
-                text: '#e9d5ff',
-                border: '1px solid #c084fc',
+                accent: '#a855f7', // Mystical Purple
+                glass: 'rgba(15, 5, 25, 0.85)',
+                text: '#e9d5ff', // Light Purple Text
+                border: '1px solid #a855f7',
                 overlay: 'rgba(0,0,0,0.5)',
-                btnClass: 'rounded border border-purple-500 hover:shadow-[0_0_15px_#c084fc]'
+                btnClass: 'rounded border border-purple-500 hover:shadow-[0_0_20px_#a855f7] hover:bg-purple-900/30'
             },
             meanGirls: {
                 id: 'meanGirls',
@@ -167,12 +167,12 @@
                 fontTitle: "'Caveat', cursive", 
                 fontCard: "'Inter', sans-serif", 
                 fontBody: "'Inter', sans-serif", 
-                accent: '#ff007f', 
-                glass: 'rgba(255, 220, 235, 0.95)',
-                text: '#be185d',
-                border: '3px dashed #ff007f',
-                overlay: 'rgba(255,255,255,0.2)',
-                btnClass: 'rounded-xl border-2 border-pink-500 hover:bg-pink-500 hover:text-white font-bold'
+                accent: '#ff1493', // Deep Pink
+                glass: 'rgba(255, 235, 245, 0.95)',
+                text: '#db2777', // Darker Pink Text
+                border: '2px dashed #ff1493',
+                overlay: 'rgba(255,255,255,0.3)',
+                btnClass: 'rounded-xl border-2 border-pink-500 text-pink-600 hover:bg-pink-500 hover:text-white font-bold tracking-tighter'
             },
             strangerThings: {
                 id: 'strangerThings',
@@ -181,32 +181,32 @@
                 fontTitle: "'Creepster', display", 
                 fontCard: "'Inter', sans-serif", 
                 fontBody: "'Inter', sans-serif", 
-                accent: '#ff0000', 
-                glass: 'rgba(10, 10, 10, 0.9)',
-                text: '#ff0000',
-                border: '1px solid #ff0000',
-                overlay: 'rgba(0,0,0,0.8)',
+                accent: '#ff2222', // Neon Red
+                glass: 'rgba(5, 5, 5, 0.92)',
+                text: '#ff2222',
+                border: '1px solid #ff2222',
+                overlay: 'rgba(0,0,0,0.85)',
                 extraClass: 'neon-text',
-                btnClass: 'rounded border border-red-600 hover:bg-red-900/50 hover:shadow-[0_0_10px_#ff0000]',
+                btnClass: 'rounded border border-red-600 hover:bg-red-900/50 hover:shadow-[0_0_15px_#ff0000]',
                 scanlines: true
             },
             cleanGirl: {
                 id: 'cleanGirl',
                 name: 'Clean Girl',
-                bg: 'linear-gradient(135deg, #fdfbf7 0%, #e2e8f0 100%)', 
+                bg: 'linear-gradient(135deg, #f0fdf4 0%, #f7fee7 100%)', // Very Light Mint/Sage
                 fontTitle: "'Playfair Display', serif", 
                 fontCard: "'Playfair Display', serif",
                 fontBody: "'Inter', sans-serif",
-                accent: '#65a30d', 
-                glass: 'rgba(255, 255, 255, 0.85)',
-                text: '#44403c', 
+                accent: '#65a30d', // Lime/Sage Green
+                glass: 'rgba(255, 255, 255, 0.8)',
+                text: '#44403c', // Stone Grey
                 border: '1px solid #d6d3d1',
                 overlay: 'rgba(255,255,255,0)',
-                btnClass: 'rounded-full border border-stone-300 hover:bg-lime-500 hover:text-white hover:border-lime-500'
+                btnClass: 'rounded-full border border-stone-300 text-stone-600 hover:bg-[#65a30d] hover:text-white hover:border-[#65a30d] transition-colors duration-300'
             }
         };
 
-        // --- 2. DATA LAYER ---
+        // --- 2. DATA LAYER (Persisted) ---
         const INITIAL_DATA = [
             { id: 101, word: "abandon", phonetic: "/ə'bændən/", meaning: "v. 放纵；放弃", example: "The scheme's investors, fearful of bankruptcy, decided to abandon the project.", mnemonic: "a+band(乐队)+on -> 乐队在台上'放纵'演奏", userSentence: "", tags: ["再要你命3000"], nextReview: Date.now(), interval: 0, ease: 2.5 },
             { id: 102, word: "abate", phonetic: "/ə'beɪt/", meaning: "v. 减轻，减少", example: "We must wait for the storm to abate.", synonyms: "mitigate, curtail, temper, ameliorate", tags: ["六选二"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
@@ -244,18 +244,29 @@
 
         const App = () => {
             // --- STATE ---
-            const [cards, setCards] = useState(() => JSON.parse(localStorage.getItem('gre_v10_cards')) || INITIAL_DATA);
-            const [settings, setSettings] = useState(() => JSON.parse(localStorage.getItem('gre_v10_settings')) || { contextMode: false, theme: 'obsidian' });
-            // TIMELINE STATE
+            const [cards, setCards] = useState(() => JSON.parse(localStorage.getItem('gre_v11_cards')) || INITIAL_DATA);
+            const [settings, setSettings] = useState(() => JSON.parse(localStorage.getItem('gre_v11_settings')) || { contextMode: false, theme: 'obsidian' });
+            
+            // TIMELINE & DAILY STATS
             const [startDate, setStartDate] = useState(() => {
                 const saved = localStorage.getItem('gre_start_date');
                 return saved ? parseInt(saved) : Date.now();
             });
-            
+            const [dailyLog, setDailyLog] = useState(() => {
+                const saved = localStorage.getItem('gre_daily_log');
+                const today = new Date().toDateString();
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.date === today) return parsed;
+                }
+                return { date: today, newCount: 0 };
+            });
+
             const [view, setView] = useState('home'); 
             const [queue, setQueue] = useState([]);
             const [curr, setCurr] = useState(0);
             const [flipped, setFlipped] = useState(false);
+            const [sessionType, setSessionType] = useState('mix'); // 'new', 'review', 'hard'
             
             // GAMIFICATION STATE
             const [combo, setCombo] = useState(0);
@@ -267,24 +278,36 @@
             const theme = THEMES[settings.theme] || THEMES.obsidian;
 
             // Persistence
-            useEffect(() => localStorage.setItem('gre_v10_cards', JSON.stringify(cards)), [cards]);
-            useEffect(() => localStorage.setItem('gre_v10_settings', JSON.stringify(settings)), [settings]);
+            useEffect(() => localStorage.setItem('gre_v11_cards', JSON.stringify(cards)), [cards]);
+            useEffect(() => localStorage.setItem('gre_v11_settings', JSON.stringify(settings)), [settings]);
             useEffect(() => localStorage.setItem('gre_start_date', startDate), [startDate]);
+            useEffect(() => localStorage.setItem('gre_daily_log', JSON.stringify(dailyLog)), [dailyLog]);
 
-            // Stats
+            // Daily Reset Check on Load
+            useEffect(() => {
+                const today = new Date().toDateString();
+                if (dailyLog.date !== today) {
+                    setDailyLog({ date: today, newCount: 0 });
+                }
+            }, []);
+
+            // Stats Calculation
             const stats = useMemo(() => {
                 const now = Date.now();
                 return {
                     total: cards.length,
-                    due: cards.filter(c => c.nextReview <= now).length,
+                    due: cards.filter(c => c.nextReview <= now && c.interval > 0).length,
+                    newAvailable: cards.filter(c => c.interval === 0).length,
                     mastered: cards.filter(c => c.interval > 21).length,
                     hard: cards.filter(c => c.ease < 2.3 && c.reviewCount > 0).length
                 };
             }, [cards]);
 
-            // Timeline Calc
+            // Timeline Logic
             const currentDay = Math.floor((Date.now() - startDate) / (1000 * 60 * 60 * 24)) + 1;
             const totalDays = 60;
+            const dailyNewQuota = currentDay <= 45 ? 50 : 0;
+            const newWordsLeftToday = Math.max(0, dailyNewQuota - dailyLog.newCount);
 
             // Keyboard
             useEffect(() => {
@@ -303,16 +326,35 @@
             }, [view, flipped, curr, queue]);
 
             // Handlers
-            const startSession = (mode = 'normal') => {
+            const startSession = (mode) => {
                 const now = Date.now();
                 let q = [];
-                if (mode === 'normal') q = cards.filter(c => c.nextReview <= now).sort((a,b) => a.nextReview - b.nextReview);
-                else if (mode === 'hard') q = cards.filter(c => c.ease < 2.3 && c.reviewCount > 0);
-                
-                if (q.length === 0) {
-                    alert(mode === 'hard' ? "No mistakes found. Perfect!" : "All caught up!");
-                    return;
+                setSessionType(mode);
+
+                if (mode === 'new') {
+                    if (newWordsLeftToday <= 0) {
+                        alert("Daily new word quota reached! Good job. Focus on review.");
+                        return;
+                    }
+                    q = cards.filter(c => c.interval === 0).slice(0, newWordsLeftToday);
+                    if (q.length === 0) {
+                        alert("No new words available in database! Import more data.");
+                        return;
+                    }
+                } else if (mode === 'review') {
+                    q = cards.filter(c => c.nextReview <= now && c.interval > 0).sort((a,b) => a.nextReview - b.nextReview);
+                    if (q.length === 0) {
+                        alert("No reviews due right now!");
+                        return;
+                    }
+                } else if (mode === 'hard') {
+                    q = cards.filter(c => c.ease < 2.3 && c.reviewCount > 0);
+                    if (q.length === 0) {
+                        alert("No mistakes found. Perfect!");
+                        return;
+                    }
                 }
+                
                 setQueue(q);
                 setCurr(0);
                 setFlipped(false);
@@ -323,17 +365,21 @@
 
             const handleRate = (quality) => {
                 const currentCard = queue[curr];
+                const wasNew = currentCard.interval === 0;
                 const updated = calculateNextReview(currentCard, quality);
                 setCards(prev => prev.map(c => c.id === updated.id ? updated : c));
                 
-                // GAMIFICATION LOGIC
-                if (quality >= 4) { // Good or Easy
+                if (sessionType === 'new' && wasNew && quality > 0) {
+                    setDailyLog(prev => ({ ...prev, newCount: prev.newCount + 1 }));
+                }
+
+                if (quality >= 4) {
                     const newCombo = combo + 1;
                     setCombo(newCombo);
                     const gain = 10 + (newCombo * 2);
                     setXp(p => p + gain);
                     triggerFeedback(quality === 5 ? "PERFECT" : "GOOD", `+${gain} XP`, theme.accent);
-                } else { // Hard or Forget
+                } else {
                     setCombo(0);
                     triggerFeedback(quality === 3 ? "HARD" : "FORGET", "Keep Going", "#ef4444");
                 }
@@ -468,11 +514,9 @@
                         </div>
                         
                         <div className="flex gap-6 items-center">
-                            {/* PLAN BUTTON */}
                             <span className="cursor-pointer hover:opacity-80 transition flex items-center gap-1" onClick={() => setView('plan')} style={{ color: view === 'plan' ? theme.accent : 'inherit' }}>
-                                <i className="fas fa-calendar-alt"></i> Plan ({currentDay}/{totalDays})
+                                <i className="fas fa-calendar-alt"></i> Plan
                             </span>
-
                             {/* XP BAR */}
                             {xp > 0 && (
                                 <div className="hidden md:flex items-center gap-2">
@@ -500,33 +544,47 @@
                         
                         {/* VIEW: HOME */}
                         {view === 'home' && (
-                            <div className="text-center animate-fade-in">
-                                <div className="animate-float">
-                                    <h1 style={{ fontFamily: theme.fontTitle }} className="text-5xl md:text-8xl mb-6 leading-tight">
+                            <div className="text-center animate-fade-in w-full">
+                                <div className="animate-float mb-8">
+                                    <h1 style={{ fontFamily: theme.fontTitle }} className="text-5xl md:text-8xl leading-tight">
                                         Verbal <br/>
                                         <span style={{ color: theme.accent }} className="italic">Mastery</span>
                                     </h1>
                                 </div>
                                 
-                                <div className="flex items-center justify-center gap-8 mb-12">
-                                    <div className="text-center">
-                                        <div className="text-4xl font-bold" style={{ color: theme.text }}>{stats.due}</div>
-                                        <div className="text-[10px] uppercase tracking-widest opacity-60">Due Today</div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-12">
+                                    {/* LEARN NEW BUTTON */}
+                                    <div 
+                                        onClick={() => startSession('new')}
+                                        className={`glass p-6 rounded-lg cursor-pointer transition-all hover:transform hover:scale-105 group relative overflow-hidden ${newWordsLeftToday === 0 ? 'opacity-50 pointer-events-none' : ''}`}
+                                        style={{borderColor: theme.border}}
+                                    >
+                                        <div className="absolute top-0 left-0 w-1 h-full" style={{backgroundColor: theme.accent}}></div>
+                                        <h3 className="text-xl font-bold mb-1 transition-colors" style={{fontFamily: theme.fontTitle, color: theme.text}}>Learn New</h3>
+                                        <div className="flex justify-between items-end">
+                                            <span className="text-xs uppercase tracking-widest opacity-60">Daily Quota</span>
+                                            <span className="text-2xl font-bold">{dailyLog.newCount} / {dailyNewQuota}</span>
+                                        </div>
                                     </div>
-                                    <div className="h-12 w-px opacity-30" style={{ backgroundColor: theme.text }}></div>
-                                    <div className="text-center">
-                                        <div className="text-4xl font-bold" style={{ color: theme.text }}>{stats.mastered}</div>
-                                        <div className="text-[10px] uppercase tracking-widest opacity-60">Mastered</div>
+
+                                    {/* REVIEW BUTTON */}
+                                    <div 
+                                        onClick={() => startSession('review')}
+                                        className="glass p-6 rounded-lg cursor-pointer transition-all hover:transform hover:scale-105 group relative overflow-hidden"
+                                        style={{borderColor: theme.border}}
+                                    >
+                                        <div className="absolute top-0 left-0 w-1 h-full" style={{backgroundColor: theme.accent}}></div>
+                                        <h3 className="text-xl font-bold mb-1 transition-colors" style={{fontFamily: theme.fontTitle, color: theme.text}}>Review Due</h3>
+                                        <div className="flex justify-between items-end">
+                                            <span className="text-xs uppercase tracking-widest opacity-60">To Review</span>
+                                            <span className="text-2xl font-bold" style={{color: stats.due > 0 ? theme.accent : 'inherit'}}>{stats.due}</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <button 
-                                    onClick={() => startSession('normal')}
-                                    className={`px-8 py-3 transition-all duration-300 hover:scale-105 text-sm uppercase tracking-widest font-bold ${theme.btnClass}`}
-                                    style={{ color: theme.text, borderColor: theme.accent }}
-                                >
-                                    Start Session
-                                </button>
+                                <div className="text-center opacity-50 text-[10px] uppercase tracking-widest">
+                                    Day {currentDay} of 60
+                                </div>
                             </div>
                         )}
 
@@ -564,6 +622,9 @@
                                         
                                         {/* FRONT */}
                                         <div className="absolute inset-0 rounded-lg backface-hidden flex flex-col items-center justify-center p-12 text-center" style={cardStyle}>
+                                            <div className="absolute top-6 right-6 text-[10px] uppercase tracking-widest opacity-50 px-2 py-1 border rounded" style={{borderColor: theme.border}}>
+                                                {sessionType === 'new' ? 'New Word' : 'Review'}
+                                            </div>
                                             {settings.contextMode ? (
                                                 <div className="space-y-6">
                                                     <span className="text-[10px] uppercase tracking-widest opacity-60" style={{ color: theme.accent }}>Context Challenge</span>
@@ -584,7 +645,7 @@
                                         {/* BACK */}
                                         <div className="absolute inset-0 rounded-lg backface-hidden rotate-y-180 flex flex-col p-8 md:p-10" style={{ ...cardStyle, transform: 'rotateY(180deg)' }}>
                                             <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                                                <div className="flex justify-between items-baseline mb-4 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                                <div className="flex justify-between items-baseline mb-4 pb-4 border-b" style={{ borderColor: theme.border }}>
                                                     <h2 style={{ fontFamily: theme.fontCard }} className="text-3xl">{queue[curr].word}</h2>
                                                     <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded bg-black/20 opacity-70">
                                                         {queue[curr].ease < 2.3 ? 'Hard' : 'Review'}
@@ -602,13 +663,13 @@
                                                         <p className="italic opacity-80" style={{fontFamily: theme.fontBody}}>"{queue[curr].example}"</p>
                                                     </div>
 
-                                                    <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                                    <div className="space-y-4 pt-4 border-t" style={{ borderColor: theme.border }}>
                                                         <div>
                                                             <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">Memory Palace</label>
                                                             <input 
                                                                 type="text" 
                                                                 className="w-full bg-transparent border-b focus:outline-none py-1 text-sm transition-colors"
-                                                                style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.accent }}
+                                                                style={{ borderColor: theme.border, color: theme.accent }}
                                                                 placeholder="Add visual hook..."
                                                                 value={queue[curr].mnemonic}
                                                                 onChange={(e) => updateCardField(queue[curr].id, 'mnemonic', e.target.value)}
@@ -619,7 +680,7 @@
                                                             <input 
                                                                 type="text" 
                                                                 className="w-full bg-transparent border-b focus:outline-none py-1 text-sm transition-colors"
-                                                                style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.accent }}
+                                                                style={{ borderColor: theme.border, color: theme.accent }}
                                                                 placeholder="Self-reference..."
                                                                 value={queue[curr].userSentence}
                                                                 onChange={(e) => updateCardField(queue[curr].id, 'userSentence', e.target.value)}
@@ -629,7 +690,7 @@
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                            <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t" style={{ borderColor: theme.border }}>
                                                 {['Forget', 'Hard', 'Good', 'Easy'].map((label, idx) => (
                                                     <button 
                                                         key={label}
@@ -650,7 +711,7 @@
                         {/* VIEW: PLAN */}
                         {view === 'plan' && (
                             <div className="glass p-10 max-w-4xl mx-auto animate-fade-in" style={cardStyle}>
-                                <h2 style={{fontFamily: theme.fontTitle}} className="text-3xl mb-6 border-b pb-4" style={{borderColor: 'rgba(255,255,255,0.1)'}}>Battle Plan</h2>
+                                <h2 style={{fontFamily: theme.fontTitle}} className="text-3xl mb-6 border-b pb-4" style={{borderColor: theme.border}}>Battle Plan</h2>
                                 
                                 <div className="mb-8 text-center">
                                     <div className="text-[10px] uppercase tracking-widest opacity-60">Current Progress</div>
@@ -665,12 +726,12 @@
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="p-6 border rounded-lg bg-black/20" style={{borderColor: theme.accent}}>
+                                    <div className="p-6 border rounded-lg bg-black/20" style={{borderColor: theme.border}}>
                                         <h3 className="text-xl mb-4 font-bold" style={{fontFamily: theme.fontTitle}}>Today's Mission</h3>
                                         <ul className="space-y-4 text-sm">
                                             <li className="flex justify-between items-center border-b border-white/10 pb-2">
                                                 <span className="opacity-70 uppercase tracking-widest text-[10px]">New Words Goal</span>
-                                                <span className="font-mono text-lg font-bold" style={{color: theme.accent}}>{currentDay <= 45 ? '70' : '0'}</span>
+                                                <span className="font-mono text-lg font-bold" style={{color: theme.accent}}>{dailyLog.newCount} / {dailyNewQuota}</span>
                                             </li>
                                             <li className="flex justify-between items-center border-b border-white/10 pb-2">
                                                 <span className="opacity-70 uppercase tracking-widest text-[10px]">Review Due</span>
@@ -690,12 +751,12 @@
                                         )}
                                     </div>
                                     
-                                    <div className="p-6 rounded-lg bg-white/5 border border-white/5">
+                                    <div className="p-6 rounded-lg bg-white/5 border" style={{borderColor: theme.border}}>
                                         <h3 className="text-xl mb-4 font-bold" style={{fontFamily: theme.fontTitle}}>60-Day Roadmap</h3>
                                         <div className="space-y-6 text-sm">
                                             <div className={`p-3 rounded ${currentDay <= 45 ? "bg-white/10 border-l-2" : "opacity-30"}`} style={{borderColor: theme.accent}}>
                                                 <strong style={{color: theme.accent, fontFamily: theme.fontTitle}}>Phase 1 (Day 1-45)</strong> 
-                                                <p className="opacity-70 mt-1 text-xs leading-relaxed">Aggressive intake. Learn 70 new words daily. Complete SRS reviews.</p>
+                                                <p className="opacity-70 mt-1 text-xs leading-relaxed">Aggressive intake. Learn 50 new words daily. Complete SRS reviews.</p>
                                             </div>
                                             <div className={`p-3 rounded ${currentDay > 45 ? "bg-white/10 border-l-2" : "opacity-30"}`} style={{borderColor: theme.accent}}>
                                                 <strong style={{color: theme.accent, fontFamily: theme.fontTitle}}>Phase 2 (Day 46-60)</strong>
@@ -719,7 +780,7 @@
                         {/* VIEW: DATA */}
                         {view === 'data' && (
                             <div className="max-w-3xl mx-auto p-10 rounded-lg animate-fade-in" style={cardStyle}>
-                                <h2 style={{ fontFamily: theme.fontTitle }} className="text-2xl mb-6 border-b pb-4" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>Archives</h2>
+                                <h2 style={{ fontFamily: theme.fontTitle }} className="text-2xl mb-6 border-b pb-4" style={{ borderColor: theme.border }}>Archives</h2>
                                 
                                 <div className="space-y-6">
                                     <div>
@@ -727,7 +788,7 @@
                                         <textarea 
                                             id="importArea" 
                                             className="w-full h-24 bg-black/20 border p-3 text-xs outline-none resize-none custom-scrollbar" 
-                                            style={{ borderColor: 'rgba(255,255,255,0.2)', color: theme.text }}
+                                            style={{ borderColor: theme.border, color: theme.text }}
                                             placeholder={`Supported formats:\n1. Excel Copy-Paste (Tab separated)\n2. JSON Array\n3. CSV (Word, Meaning, Example)`}
                                         ></textarea>
                                         <button 
@@ -740,10 +801,10 @@
                                     </div>
 
                                     <div className="flex gap-4">
-                                        <button onClick={exportData} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+                                        <button onClick={exportData} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: theme.border }}>
                                             Backup JSON
                                         </button>
-                                        <button onClick={() => fileInputRef.current.click()} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+                                        <button onClick={() => fileInputRef.current.click()} className="flex-1 py-3 border hover:bg-white/5 transition text-[10px] uppercase tracking-widest" style={{ borderColor: theme.border }}>
                                             Restore JSON
                                         </button>
                                         <input type="file" ref={fileInputRef} onChange={handleFileImport} className="hidden" accept=".json" />
