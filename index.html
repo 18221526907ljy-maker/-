@@ -3,719 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gossip Study: The Hailey Edit</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
+    <title>GRE / OBSIDIAN ULTIMATE</title>
+    <!-- React & Tailwind -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Google Fonts: Playfair Display -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts & Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --bg-deep: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #d4af37; /* Champagne Gold */
+            --accent-glow: rgba(212, 175, 55, 0.15);
+        }
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background-color: var(--bg-deep);
+            color: #e0e0e0;
+            overflow: hidden; 
+        }
         .font-serif { font-family: 'Playfair Display', serif; }
+        
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Inputs */
+        .luxury-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            color: #d4af37;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            transition: all 0.3s;
+        }
+        .luxury-input:focus {
+            outline: none;
+            border-bottom: 1px solid #d4af37;
+            background: linear-gradient(to top, rgba(212,175,55,0.05), transparent);
+        }
+
+        /* 3D Flip */
         .perspective-1000 { perspective: 1000px; }
-        .preserve-3d { transform-style: preserve-3d; }
+        .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #F5F5F7; }
-        ::-webkit-scrollbar-thumb { background: #D1D1D1; }
-        ::-webkit-scrollbar-thumb:hover { background: #8E8E93; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-in {
-            animation: fadeIn 0.9s ease-out forwards;
-        }
-
-        /* High Fashion Comfort Typography */
-        .question-text { font-size: 3rem; line-height: 1.2; font-weight: 300; }
-        .body-text { font-size: 1.25rem; line-height: 1.8; }
-        .small-caps { font-variant: small-caps; letter-spacing: 0.2em; }
+        /* Animations */
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 500ms ease-out, transform 500ms ease-out; }
     </style>
 </head>
-<body class="bg-[#F5F5F7] text-[#1D1D1F] font-sans selection:bg-[#E5E5E5] overflow-x-hidden">
+<body>
     <div id="root"></div>
 
-    <!-- Firebase Bridge - Public Access Mode -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
-        window.FirebaseSDK = {
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
-            getFirestore, doc, setDoc, getDoc, onSnapshot, collection
-        };
-    </script>
-
     <script type="text/babel">
-        const { useState, useEffect, useMemo, useRef } = React;
+        const { useState, useEffect, useMemo, useCallback, useRef } = React;
 
-        const Icon = ({ name, size = 20, className = "" }) => {
-            const icons = {
-                plus: <path d="M12 5v14M5 12h14" />,
-                play: <path d="m5 3 14 9-14 9V3z" />,
-                trash: <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />,
-                chevronLeft: <path d="m15 18-6-6 6-6" />,
-                check: <path d="M20 6 9 17l-5-5" />,
-                sparkles: <path d="m12 3 1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3Z" />,
-                eye: (
-                    <React.Fragment>
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
-                    </React.Fragment>
-                ),
-                layers: (
-                    <React.Fragment>
-                        <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
-                        <path d="m2.6 10.33 8.58 3.9a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0 1.83l-8.58 3.91a2 2 0 0 1-1.66 0l-8.58-3.9a1 1 0 0 1 0-1.83Z"/>
-                        <path d="m2.6 14.58 8.58 3.9a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0 1.83l-8.58 3.91a2 2 0 0 1-1.66 0l-8.58-3.9a1 1 0 0 1 0-1.83Z"/>
-                    </React.Fragment>
-                ),
-                globe: (
-                    <React.Fragment>
-                        <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20" />
-                    </React.Fragment>
-                ),
-                wallet: (
-                    <React.Fragment>
-                        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
-                        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
-                    </React.Fragment>
-                ),
-                arrowRight: <path d="M5 12h14m-7-7 7 7-7 7" />,
-                circle: <circle cx="12" cy="12" r="10" />,
-                square: <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />,
-                newspaper: <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2M18 14h-8M15 18h-5M10 6h8v4h-8V6Z" />,
-                edit: (
-                    <React.Fragment>
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </React.Fragment>
-                )
-            };
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                    {icons[name]}
-                </svg>
-            );
-        };
-
-        const apiKey = ""; 
-
-        const fetchWithRetry = async (url, options, retries = 5, backoff = 1000) => {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, backoff));
-                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                }
-                throw error;
-            }
-        };
-
-        const SUBJECTS = [
-            { id: 'brand', name: '品牌管理', label: 'THE LABEL', color: 'from-[#2D2D2D] to-[#1A1A1A]', icon: 'layers', chapters: 10 },
-            { id: 'marketing', name: '营销渠道', label: 'DISTRIBUTION', color: 'from-[#8E8E93] to-[#636366]', icon: 'globe', chapters: 8 },
-            { id: 'finance', name: '财务管理', label: 'CAPITAL', color: 'from-[#D4C3B3] to-[#A08E7D]', icon: 'wallet', chapters: 12 }
+        // --- Data Handling ---
+        const INITIAL_DATA = [
+            // A - E
+            { id: 101, word: "abandon", phonetic: "/ə'bændən/", meaning: "v. 放纵；放弃", example: "The scheme's investors, fearful of bankruptcy, decided to abandon the project.", mnemonic: "a+band(乐队)+on -> 乐队在台上'放纵'演奏", userSentence: "", tags: ["再要你命3000"], nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 102, word: "abate", phonetic: "/ə'beɪt/", meaning: "v. 减轻，减少", example: "We must wait for the storm to abate.", synonyms: "mitigate, curtail, temper, ameliorate", tags: ["六选二"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 103, word: "aberrant", phonetic: "/æ'berənt/", meaning: "adj. 异常的，非常规的", example: "Aberrant behavior can be a sign of stress.", synonyms: "anomaly", tags: ["再要你命3000"], mnemonic: "ab(离)+err(错误)+ant -> 离家出走犯错 -> 异常的", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 104, word: "cacophony", phonetic: "/kə'kɒfəni/", meaning: "n. 刺耳的声音", example: "A cacophony of deafening alarm bells.", tags: ["GRE核心"], mnemonic: "caco(坏)+phon(声音)", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 105, word: "enervate", phonetic: "/'enəveɪt/", meaning: "v. 使衰弱", example: "The heat enervated us all.", tags: ["易混淆"], mnemonic: "e(出)+nerv(神经) -> 神经出来了 -> 衰弱", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 106, word: "ephemeral", phonetic: "/ɪ'femərəl/", meaning: "adj. 短暂的", example: "Fashions are ephemeral, changing with every season.", synonyms: "transient, evanescent", tags: ["高频"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            
+            // F - P
+            { id: 107, word: "garrulous", phonetic: "/'ɡærələs/", meaning: "adj. 唠叨的，多嘴的", example: "He became positively garrulous after a few glasses of wine.", synonyms: "loquacious, verbose", tags: ["阅读机经"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 108, word: "iconoclast", phonetic: "/aɪ'kɒnəklæst/", meaning: "n. 特立独行的人；打破旧习者", example: "Ideally, the press should be an iconoclast.", tags: ["镇考3000"], mnemonic: "icon(偶像)+clast(打碎) -> 打碎偶像的人", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 109, word: "mitigate", phonetic: "/'mɪtɪɡeɪt/", meaning: "v. 缓和，减轻", example: "Emergency funds are being provided to mitigate the effects of the disaster.", synonyms: "abate, curtail, temper, ameliorate", tags: ["六选二同义词"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 110, word: "proliferate", phonetic: "/prə'lɪfəreɪt/", meaning: "v. 激增，繁殖", example: "Small businesses have proliferated in the last ten years.", synonyms: "abound", tags: ["六选二同义词"], mnemonic: "pro(前)+life(生命)+rate -> 生命力向前的速率 -> 繁殖", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            
+            // Q - Z
+            { id: 111, word: "quiescent", phonetic: "/kwi'esnt/", meaning: "adj. 静止的，不活动的", example: "Strikes were headed by groups of workers who had previously been quiescent.", synonyms: "abeyant, calm", tags: ["六选二同义词"], mnemonic: "quiet+scent", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 112, word: "tacit", phonetic: "/'tæsɪt/", meaning: "adj. 缄默的；不言而喻的", example: "There was a tacit agreement that he would pay for the meal.", tags: ["阅读机经"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 113, word: "unanimous", phonetic: "/ju'nænɪməs/", meaning: "adj. 一致同意的", example: "The decision was unanimous.", tags: ["再要你命3000"], mnemonic: "uni(一)+anim(精神) -> 一个精神 -> 一致", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 114, word: "vile", phonetic: "/vaɪl/", meaning: "adj. 丑陋的；卑鄙的", example: "A vile smell.", tags: ["再要你命3000"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 115, word: "wrest", phonetic: "/rest/", meaning: "v. 抢夺；费力取得", example: "They attempted to wrest control of the town.", tags: ["镇考3000"], mnemonic: "wrestle(摔跤) -> 抢夺", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 116, word: "xenophobic", phonetic: "/ˌzenəˈfəʊbɪk/", meaning: "adj. 排外的，恐惧外国人的", example: "The French are proud and highly xenophobic when it comes to cooking.", tags: ["镇考3000"], mnemonic: "xeno(外)+phobia(恐惧)", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 117, word: "yearn", phonetic: "/jɜːn/", meaning: "v. 渴望，向往", example: "The people yearned for peace.", tags: ["镇考3000"], mnemonic: "", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
+            { id: 118, word: "zealot", phonetic: "/'zelət/", meaning: "n. 狂热者", example: "I am an index believer, but not a zealot.", synonyms: "extremist, ideologue", tags: ["镇考3000"], mnemonic: "zeal(热情)+lot(多) -> 热情太多 -> 狂热者", userSentence: "", nextReview: Date.now(), interval: 0, ease: 2.5 },
         ];
 
-        const TEMPLATES = {
-            question: "题目：[多选] 品牌定位的核心要素有哪些？\nA. 目标受众\nB. 品牌理念\nC. 竞争差异\nD. 营销预算\n答案：ABC\n解析：预算属于执行层面而非定位核心。",
-            card: "正面：Hailey Bieber Style\n背面：Minimalist, sophisticated, and clean.\n解析：It's all about that quiet luxury."
+        // SRS Logic (Ebbinghaus)
+        const calculateNextReview = (card, quality) => {
+            let { interval, ease, reviewCount = 0 } = card;
+            if (quality === 0) {
+                interval = 0;
+                reviewCount = 0;
+            } else {
+                if (reviewCount === 0) interval = 1;
+                else if (reviewCount === 1) interval = 3; 
+                else interval = Math.round(interval * ease);
+                reviewCount++;
+            }
+            ease = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+            // Realtime calc
+            let nextReviewTime = interval === 0 ? Date.now() + 60000 : Date.now() + (interval * 24 * 60 * 60 * 1000); 
+            return { ...card, interval, ease, reviewCount, nextReview: nextReviewTime };
         };
 
         const App = () => {
-            const [user, setUser] = useState(null);
+            const [cards, setCards] = useState(() => {
+                const saved = localStorage.getItem('gre_luxury_cards_v5');
+                return saved ? JSON.parse(saved) : INITIAL_DATA;
+            });
             const [view, setView] = useState('home'); 
-            const [activeSubject, setActiveSubject] = useState(SUBJECTS[0]);
-            const [db, setDb] = useState({ brand: { questions: [], cards: [] }, marketing: { questions: [], cards: [] }, finance: { questions: [], cards: [] } });
-            const [mistakes, setMistakes] = useState([]);
-            const [activeItems, setActiveItems] = useState([]);
-            const [currentIdx, setCurrentIdx] = useState(0);
-            const [isFlipped, setIsFlipped] = useState(false);
-            const [quizAnswered, setQuizAnswered] = useState(false);
-            const [selectedIdx, setSelectedIdx] = useState(null);
-            const [rawText, setRawText] = useState('');
-            const [isParsing, setIsParsing] = useState(false);
-            const [importType, setImportType] = useState('question');
-            const [statusMsg, setStatusMsg] = useState('');
+            const [queue, setQueue] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [flipped, setFlipped] = useState(false);
+            const [settings, setSettings] = useState(() => {
+                const saved = localStorage.getItem('gre_luxury_settings_v5');
+                return saved ? JSON.parse(saved) : { contextMode: false };
+            });
             
-            const [activeChapter, setActiveChapter] = useState(1);
-            const [sessionTargetType, setSessionTargetType] = useState('questions'); 
+            const fileInputRef = useRef(null);
 
-            const [aiSummary, setAiSummary] = useState(null);
-            const [isGeneratingAi, setIsGeneratingAi] = useState(false);
-            const [expertInsight, setExpertInsight] = useState(null);
+            // Persist Data & Settings
+            useEffect(() => localStorage.setItem('gre_luxury_cards_v5', JSON.stringify(cards)), [cards]);
+            useEffect(() => localStorage.setItem('gre_luxury_settings_v5', JSON.stringify(settings)), [settings]);
 
-            const [manualMistake, setManualMistake] = useState({ question: '', correct: '', logic: '' });
+            // Stats
+            const stats = useMemo(() => {
+                const now = Date.now();
+                return {
+                    total: cards.length,
+                    due: cards.filter(c => c.nextReview <= now).length,
+                    mastered: cards.filter(c => c.interval > 21).length,
+                    hard: cards.filter(c => c.ease < 2.3 && c.reviewCount > 0).length // "Mistake Notebook" logic
+                };
+            }, [cards]);
 
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'gossip-study-hailey';
-
-            // --- Authentication Setup (Rule 3 - FIRST) ---
+            // Keyboard Shortcuts
             useEffect(() => {
-                let sdkInited = false;
-                const checkAndInit = async () => {
-                    if (window.FirebaseSDK && !sdkInited) {
-                        sdkInited = true;
-                        const sdk = window.FirebaseSDK;
-                        const firebaseConfig = JSON.parse(__firebase_config);
-                        const app = sdk.initializeApp(firebaseConfig);
-                        const auth = sdk.getAuth(app);
-
-                        try {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await sdk.signInWithCustomToken(auth, __initial_auth_token);
-                            } else {
-                                await sdk.signInAnonymously(auth);
-                            }
-                            
-                            sdk.onAuthStateChanged(auth, (u) => {
-                                if (u) setUser(u);
-                            });
-                        } catch (err) {
-                            console.error("Auth failed:", err);
-                        }
+                const handleKey = (e) => {
+                    if (view !== 'study') return;
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        setFlipped(prev => !prev);
+                    }
+                    if (flipped) {
+                        if (e.key === '1') handleRate(0); 
+                        if (e.key === '2') handleRate(3); 
+                        if (e.key === '3') handleRate(4); 
+                        if (e.key === '4') handleRate(5); 
                     }
                 };
+                window.addEventListener('keydown', handleKey);
+                return () => window.removeEventListener('keydown', handleKey);
+            }, [view, flipped, currentIndex, queue]);
 
-                const interval = setInterval(() => {
-                    if (window.FirebaseSDK) {
-                        checkAndInit();
-                        clearInterval(interval);
-                    }
-                }, 200);
-
-                return () => clearInterval(interval);
-            }, []);
-
-            // --- Real-time Cloud Sync (Rule 1 Path Fix) ---
-            useEffect(() => {
-                if (!user || !window.FirebaseSDK) return;
-                const sdk = window.FirebaseSDK;
-                const fs = sdk.getFirestore();
-
-                // Path Fix: Ensure 6 segments for document reference
-                const dataRef = sdk.doc(fs, 'artifacts', appId, 'public', 'data', 'archives', 'global_archive');
-                
-                const unsubscribe = sdk.onSnapshot(dataRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const cloudData = docSnap.data();
-                        if (cloudData.db) setDb(cloudData.db);
-                        if (cloudData.mistakes) setMistakes(cloudData.mistakes);
-                    }
-                }, (error) => {
-                    console.error("Firestore Sync Error:", error);
-                    if (error.code === 'permission-denied') {
-                        setStatusMsg("Connecting to global archive... 🕊️");
-                    }
-                });
-
-                return () => unsubscribe();
-            }, [user]);
-
-            const saveToCloud = async (updatedDb, updatedMistakes) => {
-                if (!user || !window.FirebaseSDK) return;
-                const sdk = window.FirebaseSDK;
-                const fs = sdk.getFirestore();
-
-                const dataRef = sdk.doc(fs, 'artifacts', appId, 'public', 'data', 'archives', 'global_archive');
-                try {
-                    await sdk.setDoc(dataRef, {
-                        db: updatedDb || db,
-                        mistakes: updatedMistakes || mistakes,
-                        updatedAt: Date.now()
-                    }, { merge: true });
-                } catch (e) {
-                    console.error("Cloud Save Failed:", e);
+            const startSession = (mode = 'normal') => {
+                const now = Date.now();
+                let q = [];
+                if (mode === 'normal') {
+                    q = cards.filter(c => c.nextReview <= now).sort((a,b) => a.nextReview - b.nextReview);
+                } else if (mode === 'hard') {
+                    q = cards.filter(c => c.ease < 2.3 && c.reviewCount > 0);
                 }
-            };
-
-            const parseData = async () => {
-                if (!rawText.trim()) return;
-                setIsParsing(true);
-                setStatusMsg('正在通过 AI 编码您的资料... 🕊️');
                 
-                const systemPrompt = importType === 'question' 
-                    ? `将文本解析为考试题目JSON数组。单选: {type: 'single', question, options: [A, B, C, D], correct: 索引(0-3), logic} 多选: {type: 'multiple', question, options: [A, B, C, D], correct: [索引数组], logic} 问答: {type: 'open', question, correct: '参考答案', logic}`
-                    : `将文本解析为闪卡JSON数组: [{front, back, logic}]。`;
-                
-                try {
-                    const result = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: `解析以下${importType}内容：\n${rawText}` }] }],
-                            systemInstruction: { parts: [{ text: systemPrompt }] },
-                            generationConfig: { responseMimeType: "application/json" }
-                        })
-                    });
-
-                    const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    const parsed = JSON.parse(responseText || "[]");
-                    const newItems = parsed.map(item => ({ ...item, id: Math.random().toString(36).substr(2, 9), status: null, chapter: activeChapter }));
-                    
-                    const updatedDb = {
-                        ...db,
-                        [activeSubject.id]: {
-                            ...db[activeSubject.id],
-                            [importType === 'question' ? 'questions' : 'cards']: [...(db[activeSubject.id][importType === 'question' ? 'questions' : 'cards'] || []), ...newItems]
-                        }
-                    };
-                    
-                    setDb(updatedDb);
-                    await saveToCloud(updatedDb, mistakes);
-                    setRawText('');
-                    setStatusMsg('Edit Complete. 共享档案已更新。');
-                    setTimeout(() => setStatusMsg(''), 3000);
-                    setView('home');
-                } catch (e) { 
-                    setStatusMsg('解码失败。请检查输入格式。💅');
-                } finally { setIsParsing(false); }
-            };
-
-            const startSession = (mode, type, chapterFilter = 'all') => {
-                const subjectData = db[activeSubject.id] || { questions: [], cards: [] };
-                let pool = type === 'cards' ? (subjectData.cards || []) : (subjectData.questions || []);
-                
-                if (chapterFilter === 'mock') {
-                    pool = [...pool].sort(() => Math.random() - 0.5).slice(0, 15);
-                } else if (chapterFilter !== 'all') {
-                    pool = pool.filter(item => item.chapter === parseInt(chapterFilter));
-                }
-
-                if (!pool || pool.length === 0) {
-                    setStatusMsg('No content found for this selection. 🕊️');
-                    setTimeout(() => setStatusMsg(''), 2000);
+                if (q.length === 0) {
+                    alert(mode === 'hard' ? "错题本空空如也，太棒了！" : "当前没有复习任务！");
                     return;
                 }
-                if (mode === 'forgotten') pool = pool.filter(c => c.status === 'forgotten');
-                if (mode === 'blurred') pool = pool.filter(c => c.status === 'blurred');
-
-                const shuffled = [...pool].sort(() => Math.random() - 0.5);
-                setActiveItems(shuffled);
-                setCurrentIdx(0);
-                setIsFlipped(false);
-                setQuizAnswered(false);
-                setSelectedIdx(shuffled[0].type === 'multiple' ? [] : null);
-                setExpertInsight(null);
-                setView(type === 'cards' ? 'cards' : 'questions');
+                setQueue(q);
+                setCurrentIndex(0);
+                setFlipped(false);
+                setView('study');
             };
 
-            const handleQuizAnswer = (idx) => {
-                if (quizAnswered) return;
-                const currentQ = activeItems[currentIdx];
-                if (currentQ.type === 'multiple') {
-                    setSelectedIdx(prev => {
-                        const currentArr = Array.isArray(prev) ? prev : [];
-                        return currentArr.includes(idx) ? currentArr.filter(i => i !== idx) : [...currentArr, idx];
-                    });
-                } else {
-                    setSelectedIdx(idx);
-                    finishQuestion(idx);
-                }
-            };
+            const handleRate = (quality) => {
+                const currentCard = queue[currentIndex];
+                const updated = calculateNextReview(currentCard, quality);
+                setCards(prev => prev.map(c => c.id === updated.id ? updated : c));
 
-            const finishQuestion = async (finalSelection) => {
-                const q = activeItems[currentIdx];
-                setQuizAnswered(true);
-                
-                let isCorrect = false;
-                if (q.type === 'multiple') {
-                    isCorrect = JSON.stringify([...finalSelection].sort()) === JSON.stringify([...q.correct].sort());
-                } else if (q.type === 'single') {
-                    isCorrect = finalSelection === q.correct;
-                }
-
-                if (!isCorrect && q.type !== 'open') {
-                    const newMistakes = mistakes.find(m => m.id === q.id) ? mistakes : [...mistakes, q];
-                    setMistakes(newMistakes);
-                    await saveToCloud(db, newMistakes);
-                }
-            };
-
-            const updateCardStatus = async (status) => {
-                const currentItem = activeItems[currentIdx];
-                if (!currentItem) return;
-
-                const updatedDb = {
-                    ...db,
-                    [activeSubject.id]: {
-                        ...db[activeSubject.id],
-                        cards: db[activeSubject.id].cards.map(c => c.id === currentItem.id ? { ...c, status } : c)
-                    }
-                };
-                setDb(updatedDb);
-                await saveToCloud(updatedDb, mistakes);
-                goToNext();
-            };
-
-            const goToNext = () => {
-                if (currentIdx + 1 < activeItems.length) {
-                    const nextItem = activeItems[currentIdx + 1];
-                    setCurrentIdx(c => c + 1);
-                    setQuizAnswered(false);
-                    setSelectedIdx(nextItem.type === 'multiple' ? [] : null);
-                    setIsFlipped(false);
-                    setExpertInsight(null);
+                if (currentIndex < queue.length - 1) {
+                    setFlipped(false);
+                    setTimeout(() => setCurrentIndex(prev => prev + 1), 200); 
                 } else {
                     setView('home');
                 }
             };
 
-            const addManualMistake = async () => {
-                if (!manualMistake.question || !manualMistake.correct) return;
-                const newM = { ...manualMistake, id: 'm-' + Date.now(), type: 'open', logic: manualMistake.logic, subjectId: activeSubject.id };
-                const newMistakes = [...mistakes, newM];
-                setMistakes(newMistakes);
-                await saveToCloud(db, newMistakes);
-                setManualMistake({ question: '', correct: '', logic: '' });
-                setView('burnbook');
+            // Update Mnemonic/Sentence
+            const updateCardField = (id, field, value) => {
+                const updatedQueue = [...queue];
+                updatedQueue[currentIndex] = { ...updatedQueue[currentIndex], [field]: value };
+                setQueue(updatedQueue); 
+                setCards(prev => prev.map(c => c.id === id ? { ...c, [field]: value } : c)); 
             };
 
-            const generateSubjectSummary = async (subjectId) => {
-                const subject = SUBJECTS.find(s => s.id === subjectId);
-                const items = db[subjectId]?.questions || [];
-                if (items.length === 0) return;
-                
-                setIsGeneratingAi(true);
-                setView('ai-summary');
-                try {
-                    const itemsText = items.map(i => i.question).join('\n');
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: `作为顶级时尚评论家，请根据以下${subject.name}科目的题目列表生成一份极简总结。题目列表:\n${itemsText}` }] }]
-                        })
-                    });
-                    const result = await response.json();
-                    setAiSummary(result.candidates?.[0]?.content?.parts?.[0]?.text);
-                } catch (e) { console.error(e); } finally { setIsGeneratingAi(false); }
+            const handleImportText = (text) => {
+                const lines = text.split('\n').filter(l => l.trim());
+                const newCards = lines.map((line, idx) => {
+                    const parts = line.split(/,|\t/); 
+                    return {
+                        id: Date.now() + idx,
+                        word: parts[0]?.trim() || "Unknown",
+                        meaning: parts[1]?.trim() || "No definition",
+                        example: parts[2]?.trim() || "No context provided.",
+                        mnemonic: "",
+                        userSentence: "",
+                        tags: ["Imported"],
+                        nextReview: Date.now(),
+                        interval: 0,
+                        ease: 2.5
+                    };
+                });
+                setCards([...cards, ...newCards]);
+                alert(`成功注入 ${newCards.length} 条数据到记忆库。`);
+                setView('home');
             };
 
-            const generateExpertInsight = async (questionData) => {
-                setIsGeneratingAi(true); setExpertInsight(null);
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: `为本题提供一段极简行业专家分析（150字内，Hailey风）。题目:${questionData.question}` }] }]
-                        })
-                    });
-                    const result = await response.json();
-                    setExpertInsight(result.candidates?.[0]?.content?.parts?.[0]?.text);
-                } catch (e) { console.error(e); } finally { setIsGeneratingAi(false); }
+            // --- Backup & Restore Functions ---
+            const exportData = () => {
+                const dataStr = JSON.stringify(cards);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = `gre_backup_${new Date().toISOString().slice(0,10)}.json`;
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
             };
 
-            const removeFromArchive = async (id) => {
-                const newMistakes = mistakes.filter(m => m.id !== id);
-                setMistakes(newMistakes);
-                await saveToCloud(db, newMistakes);
+            const triggerFileInput = () => {
+                fileInputRef.current.click();
             };
+
+            const handleFileImport = (e) => {
+                const fileReader = new FileReader();
+                fileReader.readAsText(e.target.files[0], "UTF-8");
+                fileReader.onload = (e) => {
+                    try {
+                        const importedCards = JSON.parse(e.target.result);
+                        if (Array.isArray(importedCards)) {
+                            if(confirm(`检测到备份文件包含 ${importedCards.length} 个单词。\n是否覆盖当前进度？`)) {
+                                setCards(importedCards);
+                                alert("数据恢复成功！");
+                                setView('home');
+                            }
+                        } else {
+                            alert("文件格式错误，请使用本应用导出的 JSON 文件。");
+                        }
+                    } catch (error) {
+                        alert("解析失败: " + error);
+                    }
+                };
+            };
+
+            const resetData = () => {
+                if(confirm("警告：确定要重置所有数据吗？这将清空所有进度和笔记！")) {
+                    setCards(INITIAL_DATA);
+                    localStorage.removeItem('gre_luxury_cards_v5');
+                    alert("已重置为初始状态。");
+                    setView('home');
+                }
+            }
 
             return (
-                <div className="min-h-screen">
-                    <div className="fixed inset-0 pointer-events-none z-0">
-                        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-gray-200/20 to-transparent blur-[120px]"></div>
-                        <div className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-gradient-to-tr from-[#D4C3B3]/10 to-transparent blur-[120px]"></div>
+                <div className="h-screen w-full flex flex-col items-center justify-center relative bg-black text-gray-200">
+                    {/* Background Texture */}
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50"></div>
+
+                    {/* Navbar */}
+                    <div className="absolute top-0 w-full p-6 flex justify-between items-center z-20 text-gray-500 text-xs tracking-[0.2em] uppercase font-sans">
+                        <div className="flex gap-6">
+                            <span className={`cursor-pointer hover:text-[#d4af37] transition ${view === 'home' ? 'text-white' : ''}`} onClick={() => setView('home')}>GRE / Obsidian</span>
+                            <span className="cursor-pointer hover:text-white transition flex items-center gap-2" onClick={() => startSession('hard')}>
+                                <i className="fas fa-exclamation-circle text-red-500"></i> 错题本 ({stats.hard})
+                            </span>
+                            <span className="cursor-pointer hover:text-white transition" onClick={() => setView('data')}>数据管理</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <label className="flex items-center gap-2 cursor-pointer hover:text-white transition" title="语境模式：正面显示例句，背面显示单词">
+                                <div className={`w-3 h-3 border border-gray-600 ${settings.contextMode ? 'bg-[#d4af37] border-[#d4af37]' : ''}`}></div>
+                                <span>Context Mode</span>
+                                <input type="checkbox" className="hidden" checked={settings.contextMode} onChange={() => setSettings(s => ({...s, contextMode: !s.contextMode}))} />
+                            </label>
+                            <span className="hidden md:inline">Total: {stats.total}</span>
+                        </div>
                     </div>
 
-                    <nav className="relative z-10 flex justify-between items-center p-10 px-16 border-b border-gray-200 bg-white/40 backdrop-blur-xl">
-                        <div className="flex items-center gap-10 cursor-pointer" onClick={() => setView('home')}>
-                            <h1 className="text-3xl font-light tracking-[0.5em] uppercase border-b border-black pb-2 text-gray-900">Archive</h1>
-                            <span className="text-xs font-bold tracking-[0.3em] text-gray-400 mt-2 uppercase">The Global Edit</span>
-                        </div>
-                        <button onClick={() => setView('burnbook')} className="text-xs font-bold tracking-widest uppercase hover:opacity-50 transition-opacity flex items-center gap-3">
-                            The Archive ({mistakes.length})
-                        </button>
-                    </nav>
-
-                    <main className="relative z-10 max-w-7xl mx-auto px-8 py-20">
-                        {statusMsg && (
-                            <div className="mb-12 p-5 bg-black text-white text-xs uppercase tracking-[0.4em] text-center animate-in shadow-2xl">
-                                {statusMsg}
-                            </div>
-                        )}
-
-                        {!user && (
-                            <div className="flex flex-col items-center justify-center py-40 text-gray-300">
-                                <Icon name="sparkles" className="animate-spin mb-8" size={40} />
-                                <span className="text-xs uppercase tracking-[0.8em]">Opening Shared Portal...</span>
-                            </div>
-                        )}
-
-                        {user && view === 'home' && (
-                            <div className="space-y-32 animate-in">
-                                <header className="space-y-10 text-center">
-                                    <h2 className="text-8xl md:text-[10rem] font-light tracking-tighter leading-none italic font-serif text-gray-900">Effortless.</h2>
-                                    <p className="text-sm font-bold uppercase tracking-[0.8em] text-gray-400">Collaborative Masterpiece</p>
-                                </header>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-                                    {SUBJECTS.map((sub) => (
-                                        <div key={sub.id} className="group relative space-y-12 p-2 transition-all hover:-translate-y-3">
-                                            <div className={`aspect-[3/4] rounded-sm bg-gradient-to-br ${sub.color} shadow-[30px_30px_60px_rgba(0,0,0,0.1)] relative overflow-hidden flex flex-col justify-end p-10 text-white`}>
-                                                <div className="absolute top-10 right-10 opacity-30"><Icon name={sub.icon} size={30} /></div>
-                                                <div className="relative z-10 space-y-3 text-white">
-                                                    <span className="text-xs font-bold tracking-[0.5em] opacity-60 uppercase">{sub.label}</span>
-                                                    <h3 className="text-5xl font-light tracking-tight italic font-serif leading-tight">{sub.name}</h3>
-                                                    <div className="text-[10px] font-bold tracking-[0.3em] opacity-40 uppercase pt-4">{sub.chapters} CHAPTERS</div>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-8 px-4">
-                                                <div className="grid grid-cols-2 gap-6">
-                                                    <button onClick={() => { setActiveSubject(sub); setSessionTargetType('questions'); setView('chapter-select'); }} className="py-6 bg-black text-white text-xs font-bold tracking-widest uppercase hover:bg-gray-800 transition shadow-xl">Practice</button>
-                                                    <button onClick={() => { setActiveSubject(sub); setSessionTargetType('cards'); setView('chapter-select'); }} className="py-6 border border-black text-black text-xs font-bold tracking-widest uppercase hover:bg-black hover:text-white transition">Cards</button>
-                                                </div>
-                                                <button onClick={() => { setActiveSubject(sub); startSession('all', 'questions', 'mock'); }} className="w-full py-5 bg-stone-100 text-stone-600 text-[10px] font-bold tracking-[0.5em] uppercase hover:bg-black hover:text-white transition">✨ Mock Exam</button>
-                                                <div className="flex justify-between items-center pt-2">
-                                                    <button onClick={() => { setActiveSubject(sub); setView('input'); }} className="text-[10px] font-bold tracking-widest text-gray-400 hover:text-black transition uppercase">Import</button>
-                                                    <button onClick={() => generateSubjectSummary(sub.id)} className="text-[10px] font-bold tracking-widest text-stone-300 hover:text-stone-900 transition uppercase">✨ Summary</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {view === 'chapter-select' && (
-                            <div className="max-w-4xl mx-auto space-y-16 animate-in">
-                                <button onClick={() => setView('home')} className="flex items-center gap-6 text-gray-400 font-bold uppercase text-xs tracking-widest transition hover:text-black"><Icon name="chevronLeft" size={20} /> Back to Library</button>
-                                <div className="bg-white p-16 md:p-24 border border-gray-100 shadow-sm space-y-16">
-                                    <div className="space-y-4">
-                                        <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">{activeSubject.name}</span>
-                                        <h2 className="text-6xl font-light italic font-serif text-gray-900">The Segments</h2>
-                                    </div>
-                                    <div className="grid grid-cols-1 gap-12">
-                                        <button onClick={() => startSession('all', sessionTargetType, 'all')} className="w-full py-10 border border-gray-100 text-xs font-bold tracking-[0.5em] uppercase hover:bg-black hover:text-white transition font-bold text-center">Entire Anthology</button>
-                                        <div className="space-y-8">
-                                            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em] block border-b border-gray-50 pb-4 text-center">Chapter Selection</span>
-                                            <div className="grid grid-cols-5 md:grid-cols-6 gap-5">
-                                                {Array.from({ length: activeSubject.chapters }).map((_, i) => (
-                                                    <button key={i} onClick={() => startSession('all', sessionTargetType, (i + 1).toString())} className="aspect-square border border-gray-100 flex items-center justify-center text-sm font-bold hover:bg-black hover:text-white transition">
-                                                        {i + 1}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {view === 'ai-summary' && (
-                            <div className="max-w-3xl mx-auto space-y-12 animate-in">
-                                <button onClick={() => setView('home')} className="flex items-center gap-6 text-gray-400 font-bold uppercase text-xs tracking-widest transition hover:text-black"><Icon name="chevronLeft" size={20} /> Back</button>
-                                <div className="bg-white p-16 md:p-24 border border-gray-100 shadow-sm space-y-10 relative text-center">
-                                    {isGeneratingAi ? (
-                                        <div className="flex flex-col items-center py-20 text-stone-300 gap-4">
-                                            <Icon name="sparkles" className="animate-spin" />
-                                            <span className="text-[10px] uppercase tracking-[0.4em]">Curating Editorial...</span>
-                                        </div>
-                                    ) : (
-                                        <div className="prose prose-stone max-w-none">
-                                            <Icon name="newspaper" className="mx-auto mb-10 text-stone-200" size={40} />
-                                            <div className="font-serif italic text-gray-900 leading-relaxed text-2xl" dangerouslySetInnerHTML={{ __html: aiSummary?.replace(/\n/g, '<br/>') }} />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {view === 'input' && (
-                            <div className="max-w-4xl mx-auto animate-in">
-                                <button onClick={() => setView('home')} className="mb-12 flex items-center gap-6 text-gray-400 font-bold uppercase text-xs tracking-widest hover:text-black"><Icon name="chevronLeft" size={20} /> Abort</button>
-                                <div className="bg-white p-16 border border-gray-100 shadow-sm space-y-16">
-                                    <div className="flex justify-between items-end">
-                                        <div className="space-y-2">
-                                            <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Global Entry</span>
-                                            <h2 className="text-5xl font-light italic font-serif text-gray-900 leading-tight pr-10">Add: {activeSubject.name}</h2>
-                                        </div>
-                                        <div className="flex border border-gray-100 p-1">
-                                            {['question', 'card'].map(t => (
-                                                <button key={t} onClick={() => setImportType(t)} className={`px-10 py-4 text-xs font-bold tracking-widest uppercase transition-all ${importType === t ? 'bg-black text-white shadow-xl' : 'text-gray-300'}`}>{t}s</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="space-y-6">
-                                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Assign to Chapter</span>
-                                        <div className="flex flex-wrap gap-3">
-                                            {Array.from({ length: activeSubject.chapters }).map((_, i) => (
-                                                <button key={i} onClick={() => setActiveChapter(i + 1)} className={`px-5 py-3 text-[10px] font-bold border transition-all ${activeChapter === i + 1 ? 'bg-black text-white border-black' : 'border-gray-100 text-gray-400'}`}>Ch. {i + 1}</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <textarea value={rawText} onChange={(e) => setRawText(e.target.value)} placeholder="Paste shared knowledge here..." className="w-full h-[500px] bg-[#FAFAFA] border-none p-12 outline-none text-base font-medium leading-relaxed resize-none shadow-inner placeholder:text-gray-200" />
-                                    <button disabled={isParsing || !rawText} onClick={parseData} className="w-full py-8 bg-black text-white text-xs font-bold tracking-[0.5em] uppercase hover:bg-gray-800 transition-all flex items-center justify-center gap-6 shadow-2xl font-bold">
-                                        {isParsing ? <Icon name="sparkles" className="animate-spin" /> : <Icon name="sparkles" />} Decode Intel
+                    {/* Main Content */}
+                    <div className="z-10 w-full max-w-5xl px-4">
+                        
+                        {/* HOME VIEW */}
+                        {view === 'home' && (
+                            <div className="flex flex-col md:flex-row gap-16 items-center justify-center animate-fade-in h-[70vh]">
+                                <div className="text-left max-w-lg">
+                                    <div className="w-12 h-1 bg-[#d4af37] mb-8"></div>
+                                    <h1 className="font-serif text-6xl md:text-8xl text-white mb-6 leading-none">
+                                        Verbal <br/>
+                                        <span className="text-[#d4af37] italic">Mastery.</span>
+                                    </h1>
+                                    <p className="text-gray-400 text-lg mb-10 font-light leading-relaxed">
+                                        基于艾宾浩斯遗忘曲线。<br/>
+                                        内置 <span className="text-white">错题自动归档</span> 与 <span className="text-white">记忆宫殿</span>。<br/>
+                                        <span className="text-xs text-[#d4af37] mt-2 block uppercase tracking-widest">Permanent Storage Enabled</span>
+                                    </p>
+                                    <button 
+                                        onClick={() => startSession('normal')}
+                                        className="group relative px-8 py-4 bg-transparent border border-gray-700 text-white font-bold tracking-widest overflow-hidden transition-all hover:border-[#d4af37]"
+                                    >
+                                        <span className="absolute inset-0 w-full h-full bg-[#d4af37] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></span>
+                                        <span className="relative group-hover:text-black transition-colors">START SESSION</span>
                                     </button>
                                 </div>
-                            </div>
-                        )}
-
-                        {view === 'questions' && activeItems.length > 0 && (
-                            <div className="max-w-5xl mx-auto animate-in">
-                                <div className="flex justify-between items-end mb-16 relative">
-                                    <div className="flex flex-col gap-2">
-                                        <span className="text-xs font-bold uppercase tracking-[0.6em] text-gray-300">Look {currentIdx + 1} / {activeItems.length}</span>
-                                        <span className="text-xs font-bold text-stone-300 uppercase tracking-[0.2em] italic">Chapter {activeItems[currentIdx].chapter || 'Mock'}</span>
-                                    </div>
-                                    <button onClick={() => setView('home')} className="text-xs text-gray-300 hover:text-black uppercase font-bold tracking-widest transition">Terminate</button>
-                                </div>
-                                <div className="bg-white border border-gray-100 p-20 md:p-28 space-y-20 shadow-2xl relative">
-                                    <div className="absolute top-0 left-0 h-1.5 bg-black transition-all duration-1000" style={{ width: `${((currentIdx+1)/activeItems.length)*100}%` }}></div>
-                                    <p className="question-text italic font-serif text-gray-900 leading-tight">{activeItems[currentIdx].question}</p>
-                                    
-                                    <div className="space-y-6">
-                                        {activeItems[currentIdx].type !== 'open' ? (
-                                            (activeItems[currentIdx].options || []).map((opt, i) => {
-                                                const isCorrect = Array.isArray(activeItems[currentIdx].correct) ? activeItems[currentIdx].correct.includes(i) : i === activeItems[currentIdx].correct;
-                                                const isSel = Array.isArray(selectedIdx) ? selectedIdx.includes(i) : selectedIdx === i;
-                                                let style = "border-gray-50 bg-[#FAFAFA] hover:bg-gray-100";
-                                                if (quizAnswered) {
-                                                    if (isCorrect) style = "border-black bg-black text-white shadow-2xl scale-[1.02]";
-                                                    else if (isSel) style = "border-gray-200 bg-gray-50 text-gray-300 scale-[0.98]";
-                                                    else style = "opacity-10";
-                                                } else if (isSel) style = "border-black bg-gray-100";
-
-                                                return (
-                                                    <button key={i} disabled={quizAnswered} onClick={() => handleQuizAnswer(i)} className={`w-full text-left p-10 border body-text font-medium transition-all flex justify-between items-center ${style}`}>
-                                                        <span className="flex items-center gap-8">
-                                                            {activeItems[currentIdx].type === 'multiple' && <Icon name={isSel ? "check" : "square"} size={18} />}
-                                                            {opt}
-                                                        </span>
-                                                        {quizAnswered && isCorrect && <Icon name="check" size={24} />}
-                                                    </button>
-                                                )
-                                            })
-                                        ) : (
-                                            <div className="space-y-12 text-center">
-                                                {!quizAnswered ? (
-                                                    <button onClick={() => setQuizAnswered(true)} className="w-full py-32 border border-dashed border-gray-200 text-gray-300 font-bold uppercase tracking-[0.5em] hover:text-black hover:border-black transition-all flex flex-col items-center gap-6 group"><Icon name="eye" size={40} className="group-hover:scale-110 transition-transform" /> Access Archive</button>
-                                                ) : (
-                                                    <div className="p-16 bg-[#FAFAFA] border border-gray-100 animate-in italic font-serif text-3xl text-gray-600 leading-relaxed shadow-inner">
-                                                        {activeItems[currentIdx].correct}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {activeItems[currentIdx].type === 'multiple' && !quizAnswered && (
-                                        <button onClick={() => finishQuestion(selectedIdx)} disabled={selectedIdx.length === 0} className="w-full py-8 bg-black text-white text-xs font-bold tracking-[0.6em] uppercase hover:bg-gray-800 transition shadow-2xl font-bold">Confirm Selection</button>
-                                    )}
-
-                                    {quizAnswered && (
-                                        <div className="pt-20 border-t border-gray-50 space-y-12 animate-in">
-                                            <div className="flex justify-between items-start gap-16">
-                                                <div className="body-text text-gray-400 italic flex-1">"Perspective: {activeItems[currentIdx].logic}"</div>
-                                                <button onClick={() => generateExpertInsight(activeItems[currentIdx])} className="text-xs font-bold uppercase tracking-widest text-stone-500 hover:text-black transition whitespace-nowrap">✨ Insight</button>
-                                            </div>
-                                            {expertInsight && <div className="p-12 bg-white border-l border-black text-base leading-loose text-stone-500 font-medium animate-in shadow-sm italic">{expertInsight}</div>}
-                                            <button onClick={goToNext} className="w-full py-8 bg-black text-white text-xs font-bold tracking-[0.6em] uppercase hover:bg-gray-800 transition flex items-center justify-center gap-6 shadow-2xl font-bold">Next Episode <Icon name="arrowRight" size={20}/></button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {view === 'cards' && activeItems.length > 0 && (
-                            <div className="max-w-4xl mx-auto animate-in">
-                                <div className="flex justify-between items-center mb-16 relative">
-                                    <div className="flex flex-col gap-2 text-center w-full">
-                                        <span className="text-xs font-bold uppercase tracking-[0.6em] text-gray-300 font-medium">Focus {currentIdx + 1} / {activeItems.length}</span>
-                                        <span className="text-[10px] text-stone-300 uppercase tracking-widest italic">Chapter {activeItems[currentIdx].chapter || 'Global'}</span>
-                                    </div>
-                                    <button onClick={() => setView('home')} className="absolute right-0 text-xs text-gray-300 hover:text-black uppercase font-bold tracking-widest transition">Close</button>
-                                </div>
-                                <div className="perspective-1000">
-                                    <div onClick={() => setIsFlipped(!isFlipped)} className={`relative h-[650px] w-full transition-all duration-1000 preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`}>
-                                        <div className="absolute inset-0 backface-hidden bg-white border border-gray-100 shadow-2xl p-20 flex flex-col items-center justify-center text-center">
-                                            <div className="absolute top-16 left-1/2 -translate-x-1/2"><Icon name="circle" size={16} className="text-gray-100 animate-pulse" /></div>
-                                            <p className="text-5xl font-light italic font-serif text-gray-900 leading-snug">{activeItems[currentIdx].front}</p>
-                                            <span className="absolute bottom-20 font-bold text-[10px] text-gray-200 tracking-[0.8em] uppercase font-bold">Decode</span>
-                                        </div>
-                                        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black border border-black p-20 flex flex-col items-center justify-center text-center shadow-2xl">
-                                            <p className="text-5xl font-light italic font-serif text-white leading-tight mb-12">{activeItems[currentIdx].back}</p>
-                                            <p className="body-text text-gray-500 italic max-w-lg leading-relaxed">"{activeItems[currentIdx].logic}"</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={`mt-20 flex gap-8 transition-all duration-1000 ${isFlipped ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95 pointer-events-none'}`}>
-                                    <button onClick={() => updateCardStatus('forgotten')} className="flex-1 py-7 border border-gray-100 text-xs font-bold tracking-[0.4em] uppercase hover:bg-black hover:text-white transition shadow-sm font-bold">Forgotten</button>
-                                    <button onClick={() => updateCardStatus('blurred')} className="flex-1 py-7 border border-gray-100 text-xs font-bold tracking-[0.4em] uppercase hover:bg-black hover:text-white transition shadow-sm font-bold">Blurred</button>
-                                    <button onClick={() => updateCardStatus('mastered')} className="flex-1 py-7 bg-black text-white text-xs font-bold tracking-[0.4em] uppercase transition shadow-2xl font-bold">Mastered</button>
-                                </div>
-                            </div>
-                        )}
-
-                        {(view === 'burnbook' || view === 'manual-entry') && (
-                            <div className="max-w-6xl mx-auto animate-in space-y-20">
-                                <header className="flex justify-between items-end border-b border-gray-200 pb-12">
-                                    <div className="space-y-4">
-                                        <h2 className="text-7xl font-light italic font-serif text-gray-900">The Archive</h2>
-                                        <button onClick={() => setView('manual-entry')} className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-300 hover:text-black transition flex items-center gap-3"><Icon name="edit" size={14} /> Manual Contribution</button>
-                                    </div>
-                                    <button onClick={() => setView('home')} className="text-xs font-bold uppercase tracking-[0.6em] hover:opacity-50 transition font-bold">Return</button>
-                                </header>
                                 
-                                {view === 'manual-entry' && (
-                                    <div className="bg-white p-16 border border-gray-100 shadow-sm space-y-12 shadow-2xl animate-in">
-                                        <h3 className="text-3xl font-light italic font-serif">Create Manual Entry</h3>
-                                        <div className="space-y-12">
-                                            <input value={manualMistake.question} onChange={e => setManualMistake({...manualMistake, question: e.target.value})} placeholder="The Question" className="w-full py-8 bg-transparent border-b border-gray-100 outline-none text-4xl font-serif italic" />
-                                            <input value={manualMistake.correct} onChange={e => setManualMistake({...manualMistake, correct: e.target.value})} placeholder="The Truth (Answer)" className="w-full py-8 bg-transparent border-b border-gray-100 outline-none text-2xl font-medium" />
-                                            <textarea value={manualMistake.logic} onChange={e => setManualMistake({...manualMistake, logic: e.target.value})} placeholder="The Perspective (Logic)" className="w-full h-40 bg-transparent border-b border-gray-100 outline-none body-text italic resize-none" />
-                                            <div className="flex gap-8 pt-6">
-                                                <button onClick={addManualMistake} className="flex-1 py-8 bg-black text-white text-xs font-bold uppercase tracking-[0.6em] shadow-2xl font-bold">Archive it</button>
-                                                <button onClick={() => setView('burnbook')} className="px-12 py-8 border border-gray-100 text-xs font-bold uppercase tracking-[0.4em] font-bold">Cancel</button>
-                                            </div>
-                                        </div>
+                                <div className="hidden md:block w-px h-64 bg-gradient-to-b from-transparent via-gray-700 to-transparent"></div>
+                                
+                                <div className="text-right space-y-8">
+                                    <div>
+                                        <div className="text-4xl text-white font-serif">{stats.due}</div>
+                                        <div className="text-xs text-[#d4af37] uppercase tracking-widest mt-1">Due Today</div>
                                     </div>
-                                )}
+                                    <div>
+                                        <div className="text-4xl text-white font-serif">{stats.mastered}</div>
+                                        <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Mastered</div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                                {view === 'burnbook' && (
-                                    mistakes.length === 0 ? (
-                                        <div className="text-center py-60 border border-dashed border-gray-100 text-gray-200 uppercase tracking-[0.8em] font-medium text-sm small-caps">Pure Record // No Distortions Found</div>
-                                    ) : (
-                                        <div className="grid gap-20">
-                                            {(mistakes || []).map((m, i) => (
-                                                <div key={m.id || i} className="bg-white border border-gray-50 p-16 transition-all hover:shadow-2xl group relative overflow-hidden">
-                                                    <div className="flex justify-between mb-12 relative z-10 text-gray-900">
-                                                        <span className="text-[10px] font-bold tracking-[0.6em] text-gray-300 uppercase font-medium">Archive Entry {i+1}</span>
-                                                        <button onClick={() => removeFromArchive(m.id)} className="text-gray-200 hover:text-black transition"><Icon name="trash" size={20} /></button>
+                        {/* STUDY VIEW */}
+                        {view === 'study' && queue.length > 0 && (
+                            <div className="flex flex-col items-center animate-fade-in">
+                                {/* Progress */}
+                                <div className="w-full max-w-xl flex justify-between text-[10px] text-gray-500 uppercase tracking-widest mb-4">
+                                    <span>Card {currentIndex + 1}</span>
+                                    <span>Remaining {queue.length - currentIndex}</span>
+                                </div>
+
+                                <div 
+                                    className="relative w-full max-w-2xl h-[550px] perspective-1000 cursor-pointer group"
+                                    onClick={(e) => {
+                                        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                                        setFlipped(!flipped);
+                                    }}
+                                >
+                                    <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${flipped ? 'rotate-y-180' : ''}`}>
+                                        
+                                        {/* FRONT */}
+                                        <div className="absolute w-full h-full glass-card backface-hidden flex flex-col items-center justify-center p-16 text-center">
+                                            {settings.contextMode ? (
+                                                <div className="space-y-8">
+                                                    <span className="text-xs text-[#d4af37] tracking-[0.2em] uppercase">Context Challenge</span>
+                                                    <p className="font-serif text-3xl text-gray-200 leading-normal italic">
+                                                        "{queue[currentIndex].example.replace(new RegExp(queue[currentIndex].word, 'gi'), '_____')}"
+                                                    </p>
+                                                    <p className="text-xs text-gray-600 mt-8">[ Tap to Reveal ]</p>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-6">
+                                                    <span className="text-xs text-gray-600 tracking-[0.2em] uppercase">Word</span>
+                                                    <h2 className="font-serif text-7xl text-white tracking-tight">{queue[currentIndex].word}</h2>
+                                                    <p className="font-serif text-2xl text-[#d4af37] italic opacity-80">{queue[currentIndex].phonetic}</p>
+                                                    <p className="absolute bottom-12 text-xs text-gray-600">[ Space to Flip ]</p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* BACK */}
+                                        <div className="absolute w-full h-full glass-card backface-hidden rotate-y-180 flex flex-col p-12 bg-[#0a0a0a] border border-[#d4af37]/20">
+                                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                                                <div className="flex justify-between items-baseline border-b border-gray-800 pb-4 mb-6">
+                                                    <h2 className="text-3xl font-serif text-white">{queue[currentIndex].word}</h2>
+                                                    <span className="text-xs text-gray-500 uppercase tracking-widest">{queue[currentIndex].ease < 2.3 ? 'Hard' : 'Normal'}</span>
+                                                </div>
+
+                                                <div className="mb-8">
+                                                    <p className="text-xl text-gray-200 font-light mb-2">{queue[currentIndex].meaning}</p>
+                                                    {queue[currentIndex].synonyms && (
+                                                        <p className="text-sm text-gray-500"><span className="text-[#d4af37]">Syn:</span> {queue[currentIndex].synonyms}</p>
+                                                    )}
+                                                </div>
+
+                                                <div className="mb-6">
+                                                    <p className="text-sm text-gray-500 uppercase tracking-widest mb-2">Context</p>
+                                                    <p className="text-gray-300 italic border-l-2 border-[#d4af37] pl-4">"{queue[currentIndex].example}"</p>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 gap-6 mt-8 pt-6 border-t border-gray-800">
+                                                    <div>
+                                                        <label className="text-[10px] text-[#d4af37] uppercase tracking-widest mb-2 block">Memory Palace (记忆宫殿)</label>
+                                                        <input 
+                                                            type="text" 
+                                                            className="luxury-input w-full text-sm pb-2"
+                                                            placeholder="Add your mnemonic hook..."
+                                                            value={queue[currentIndex].mnemonic}
+                                                            onChange={(e) => updateCardField(queue[currentIndex].id, 'mnemonic', e.target.value)}
+                                                        />
                                                     </div>
-                                                    <p className="text-5xl font-light italic font-serif text-gray-900 mb-16 relative z-10 leading-tight pr-12">{m.question}</p>
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 relative z-10">
-                                                        <div className="space-y-6 border-l border-black pl-10">
-                                                            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] block font-medium">The Detail</span>
-                                                            <p className="text-2xl font-medium text-gray-700 italic leading-relaxed">
-                                                                {m.type === 'open' ? m.correct : (Array.isArray(m.correct) ? m.correct.map(idx => (m.options && m.options[idx]) || 'N/A').join(', ') : (m.options && m.options[m.correct] !== undefined ? m.options[m.correct] : 'N/A'))}
-                                                            </p>
-                                                        </div>
-                                                        <div className="space-y-6 text-base text-gray-400 italic font-medium leading-loose">
-                                                            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] block not-italic">The Perspective</span>
-                                                            <p>"{m.logic}"</p>
-                                                        </div>
+                                                    <div>
+                                                        <label className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Sentence Mining (我的造句)</label>
+                                                        <input 
+                                                            type="text" 
+                                                            className="luxury-input w-full text-sm pb-2 text-gray-300 border-gray-700"
+                                                            placeholder="Create a personal sentence..."
+                                                            value={queue[currentIndex].userSentence}
+                                                            onChange={(e) => updateCardField(queue[currentIndex].id, 'userSentence', e.target.value)}
+                                                        />
                                                     </div>
                                                 </div>
-                                            ))}
+                                            </div>
+
+                                            <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-800">
+                                                <button onClick={(e) => {e.stopPropagation(); handleRate(0);}} className="text-[10px] uppercase text-red-400 hover:text-white py-3 hover:bg-red-900/20 transition tracking-widest">Forget</button>
+                                                <button onClick={(e) => {e.stopPropagation(); handleRate(3);}} className="text-[10px] uppercase text-orange-400 hover:text-white py-3 hover:bg-orange-900/20 transition tracking-widest">Hard</button>
+                                                <button onClick={(e) => {e.stopPropagation(); handleRate(4);}} className="text-[10px] uppercase text-blue-400 hover:text-white py-3 hover:bg-blue-900/20 transition tracking-widest">Good</button>
+                                                <button onClick={(e) => {e.stopPropagation(); handleRate(5);}} className="text-[10px] uppercase text-green-400 hover:text-white py-3 hover:bg-green-900/20 transition tracking-widest">Easy</button>
+                                            </div>
                                         </div>
-                                    )
-                                )}
+                                    </div>
+                                </div>
                             </div>
                         )}
-                    </main>
+
+                        {/* DATA / IMPORT VIEW */}
+                        {view === 'data' && (
+                            <div className="glass-card p-12 max-w-4xl mx-auto animate-fade-in">
+                                <h2 className="font-serif text-3xl text-white mb-8 border-b border-gray-800 pb-4">Data Management</h2>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                    {/* Import Section */}
+                                    <div>
+                                        <h3 className="text-[#d4af37] text-sm uppercase tracking-widest mb-4">Add New Words</h3>
+                                        <p className="text-gray-500 text-xs mb-4">Paste from Excel/CSV (Word, Meaning, Example)</p>
+                                        <textarea 
+                                            className="w-full h-40 bg-[#0a0a0a] border border-gray-800 text-gray-300 p-4 font-mono text-xs focus:border-[#d4af37] outline-none resize-none mb-4 custom-scrollbar"
+                                            placeholder={`Format:\nabandon, 放弃, He abandoned the project.\n...`}
+                                            id="importArea"
+                                        ></textarea>
+                                        <button 
+                                            onClick={() => handleImportText(document.getElementById('importArea').value)} 
+                                            className="w-full py-3 bg-gray-800 text-white font-bold hover:bg-gray-700 transition text-xs uppercase tracking-widest"
+                                        >
+                                            Inject Text Data
+                                        </button>
+                                    </div>
+
+                                    {/* Backup Section */}
+                                    <div className="flex flex-col justify-between">
+                                        <div>
+                                            <h3 className="text-[#d4af37] text-sm uppercase tracking-widest mb-4">Backup & Restore</h3>
+                                            <p className="text-gray-500 text-xs mb-6">
+                                                Download your progress to keep it safe. Restore it on any device.
+                                            </p>
+                                            
+                                            <div className="space-y-4">
+                                                <button 
+                                                    onClick={exportData}
+                                                    className="w-full py-4 border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2"
+                                                >
+                                                    <i className="fas fa-download"></i> Download Backup (.json)
+                                                </button>
+
+                                                <input 
+                                                    type="file" 
+                                                    ref={fileInputRef} 
+                                                    onChange={handleFileImport} 
+                                                    className="hidden" 
+                                                    accept=".json"
+                                                />
+                                                <button 
+                                                    onClick={triggerFileInput}
+                                                    className="w-full py-4 border border-gray-700 text-gray-400 hover:border-white hover:text-white transition text-xs uppercase tracking-widest flex items-center justify-center gap-2"
+                                                >
+                                                    <i className="fas fa-upload"></i> Restore from Backup
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-8 pt-8 border-t border-gray-800">
+                                            <button 
+                                                onClick={resetData}
+                                                className="text-red-900 hover:text-red-500 text-xs uppercase tracking-widest transition"
+                                            >
+                                                Danger Zone: Reset All Data
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-8 text-center">
+                                    <button onClick={() => setView('home')} className="text-gray-500 hover:text-white text-xs uppercase tracking-widest">Back to Dashboard</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             );
         };
