@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&#29980;&#36771;&#26174;&#21270;&#34915;&#24125;&#38388;&#65372;Manifest Atelier</title>
+  <title>&#28201;&#26580;&#26174;&#21270;&#32451;&#20064;&#23460;&#65372;Manifest Atelier</title>
   <style>
     :root {
       color-scheme: dark;
       --cream: #fff7ed;
       --muted: rgba(255, 247, 237, .72);
-      --gold: #ffd36e;
-      --rose: #ff6fae;
-      --hot: #ff2f7d;
-      --cherry: #ff174d;
-      --violet: #b693ff;
-      --ink: #11040d;
+      --gold: #e9c46a;
+      --rose: #e8a7ba;
+      --hot: #c77d93;
+      --cherry: #9d5268;
+      --violet: #a99cc8;
+      --ink: #1a1118;
       --glass: rgba(255, 255, 255, .12);
       --line: rgba(255, 255, 255, .17);
     }
@@ -28,11 +28,11 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       color: var(--cream);
       background:
-        radial-gradient(circle at 9% 8%, rgba(255, 111, 174, 0.58), transparent 30rem),
-        radial-gradient(circle at 78% 2%, rgba(255, 211, 110, 0.42), transparent 32rem),
-        radial-gradient(circle at 58% 72%, rgba(255, 47, 125, 0.24), transparent 28rem),
-        radial-gradient(circle at 92% 88%, rgba(182, 147, 255, 0.28), transparent 30rem),
-        linear-gradient(135deg, #11040d 0%, #3a0c25 42%, #120f2f 100%);
+        radial-gradient(circle at 9% 8%, rgba(232, 167, 186, 0.34), transparent 30rem),
+        radial-gradient(circle at 78% 2%, rgba(233, 196, 106, 0.24), transparent 32rem),
+        radial-gradient(circle at 58% 72%, rgba(157, 130, 112, 0.18), transparent 28rem),
+        radial-gradient(circle at 92% 88%, rgba(169, 156, 200, 0.22), transparent 30rem),
+        linear-gradient(135deg, #171018 0%, #2a1a25 46%, #151b20 100%);
       overflow-x: hidden;
     }
 
@@ -62,7 +62,7 @@
     button, input, textarea { font: inherit; }
     button { cursor: pointer; }
     input, textarea { caret-color: var(--gold); }
-    ::selection { background: rgba(255,47,125,.42); color: white; }
+    ::selection { background: rgba(199,125,147,.38); color: white; }
 
     .shell {
       position: relative;
@@ -101,7 +101,7 @@
       inset: -1px;
       padding: 1px;
       border-radius: inherit;
-      background: linear-gradient(120deg, rgba(255,211,110,.95), rgba(255,47,125,.88), rgba(255,111,174,.78), rgba(182,147,255,.78), rgba(255,211,110,.9));
+      background: linear-gradient(120deg, rgba(233,196,106,.72), rgba(199,125,147,.58), rgba(232,167,186,.58), rgba(169,156,200,.56), rgba(233,196,106,.68));
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -109,8 +109,8 @@
     }
 
     .lipstick {
-      background: linear-gradient(135deg, #ff2f7d, #ff174d 52%, #ffd36e);
-      box-shadow: 0 18px 52px rgba(255, 47, 125, .34), inset 0 1px 0 rgba(255,255,255,.28);
+      background: linear-gradient(135deg, #c77d93, #9d5268 54%, #e9c46a);
+      box-shadow: 0 18px 52px rgba(157, 82, 104, .24), inset 0 1px 0 rgba(255,255,255,.24);
     }
 
     .topbar {
@@ -145,7 +145,7 @@
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .32em;
+      letter-spacing: .08em;
       color: rgba(255, 255, 255, .52);
     }
 
@@ -170,12 +170,12 @@
       color: rgba(255,247,237,.74);
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: .18em;
+      letter-spacing: .08em;
       transition: transform .2s ease, background .2s ease, border-color .2s ease;
     }
 
     .mood-pill:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.34); }
-    .mood-pill.active { background: var(--gold); border-color: var(--gold); color: #21040f; box-shadow: 0 0 30px rgba(255,211,110,.25); }
+    .mood-pill.active { background: var(--gold); border-color: var(--gold); color: #21040f; box-shadow: 0 0 30px rgba(233,196,106,.18); }
 
     .hero-grid {
       display: grid;
@@ -199,7 +199,7 @@
       bottom: -8px;
       height: 14px;
       border-radius: 999px;
-      background: linear-gradient(90deg, transparent, rgba(255,47,125,.58), transparent);
+      background: linear-gradient(90deg, transparent, rgba(199,125,147,.34), transparent);
       filter: blur(10px);
       z-index: -1;
     }
@@ -224,7 +224,7 @@
       filter: blur(18px);
       opacity: .64;
       animation: drift 14s ease-in-out infinite alternate;
-      background: conic-gradient(from 120deg, rgba(255,211,110,.82), rgba(255,47,125,.58), rgba(255,111,174,.55), rgba(182,147,255,.55), rgba(255,211,110,.82));
+      background: conic-gradient(from 120deg, rgba(233,196,106,.48), rgba(199,125,147,.34), rgba(232,167,186,.34), rgba(169,156,200,.34), rgba(233,196,106,.48));
     }
 
     @keyframes drift {
@@ -239,14 +239,14 @@
       border: 1px solid rgba(255,255,255,.22);
       border-radius: 22px;
       background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-      box-shadow: 0 22px 50px rgba(255,47,125,.16);
+      box-shadow: 0 22px 50px rgba(157,82,104,.12);
       transform: rotate(-2deg);
       padding: 16px 20px;
       text-align: center;
     }
 
     .sticker-icon { margin: 0; font-size: 34px; }
-    .sticker-text { margin: 4px 0 0; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .22em; color: rgba(255,255,255,.76); }
+    .sticker-text { margin: 4px 0 0; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.76); }
 
     .circle-line {
       position: absolute;
@@ -266,7 +266,7 @@
     }
 
     .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
-    .chip { border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.1); padding: 9px 14px; font-size: 12px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,230,170,.86); }
+    .chip { border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.1); padding: 9px 14px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,230,170,.86); }
     .chip.pink { color: rgba(255,198,222,.88); }
 
     .hero-kicker {
@@ -274,7 +274,7 @@
       font-size: 14px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .38em;
+      letter-spacing: .2em;
       color: rgba(255,255,255,.42);
     }
 
@@ -284,12 +284,12 @@
       font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
       font-size: clamp(58px, 8vw, 128px);
       line-height: .9;
-      letter-spacing: -.07em;
-      text-shadow: 0 0 52px rgba(255,47,125,.34), 0 0 30px rgba(255,211,110,.22);
+      letter-spacing: -.035em;
+      text-shadow: 0 0 52px rgba(199,125,147,.22), 0 0 30px rgba(233,196,106,.16);
     }
 
     .shine {
-      background: linear-gradient(90deg, #fff7ed, #ffd36e, #ff2f7d, #ff9ac8, #fff7ed);
+      background: linear-gradient(90deg, #fff7ed, #e9c46a, #e8a7ba, #a99cc8, #fff7ed);
       background-size: 240% auto;
       -webkit-background-clip: text;
       background-clip: text;
@@ -324,7 +324,7 @@
     .confidence-card:hover {
       transform: translateY(-4px) rotate(.6deg);
       border-color: rgba(255,255,255,.34);
-      background: linear-gradient(145deg, rgba(255,111,174,.2), rgba(255,255,255,.09));
+      background: linear-gradient(145deg, rgba(232,167,186,.14), rgba(255,255,255,.09));
     }
 
     .confidence-card p { margin: 0; }
@@ -348,7 +348,7 @@
       color: rgba(255,230,170,.64);
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .24em;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
@@ -396,8 +396,8 @@
       animation: breathe 5.6s ease-in-out infinite;
       background:
         radial-gradient(circle at 34% 26%, rgba(255,255,255,.95), rgba(255,255,255,.26) 22%, transparent 34%),
-        conic-gradient(from 210deg, #ffd36e, #ff2f7d, #ff9ac8, #b693ff, #ffd36e);
-      box-shadow: 0 0 96px rgba(255,47,125,.44), 0 0 58px rgba(255,211,110,.28), inset 0 0 35px rgba(255,255,255,.25);
+        conic-gradient(from 210deg, #e9c46a, #c77d93, #e8a7ba, #a99cc8, #e9c46a);
+      box-shadow: 0 0 78px rgba(199,125,147,.24), 0 0 48px rgba(233,196,106,.18), inset 0 0 35px rgba(255,255,255,.22);
     }
 
     .orbit-dot {
@@ -407,7 +407,7 @@
       transform: translateX(112px);
       border-radius: 999px;
       background: var(--gold);
-      box-shadow: 0 0 22px rgba(255,211,110,.8);
+      box-shadow: 0 0 22px rgba(233,196,106,.55);
     }
 
     @keyframes breathe { 0%, 100% { transform: scale(1); filter: saturate(1); } 50% { transform: scale(1.085); filter: saturate(1.24); } }
@@ -441,7 +441,7 @@
     .energy-number { margin: 0; color: var(--gold); font-size: 42px; font-weight: 900; }
     .energy-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
     .progress { margin-top: 20px; height: 12px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
-    .progress-bar { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #ffd36e, #ff6fae, #b693ff); transition: width .3s ease; }
+    .progress-bar { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #e9c46a, #e8a7ba, #a99cc8); transition: width .3s ease; }
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; text-align: center; color: rgba(255,247,237,.66); font-size: 12px; }
     .stat { border-radius: 18px; padding: 12px 8px; }
     .stat b { display: block; color: white; font-size: 18px; }
@@ -462,7 +462,7 @@
       font-size: 14px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .28em;
+      letter-spacing: .14em;
       animation: marquee 26s linear infinite;
     }
 
@@ -497,14 +497,14 @@
     .list-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
     .list-header h3 { margin: 8px 0 0; font-family: Georgia, "Times New Roman", "Noto Serif SC", serif; font-size: 26px; }
     .color-block { width: 48px; height: 48px; border-radius: 18px; box-shadow: 0 0 34px rgba(255,255,255,.16); }
-    .pink { background: linear-gradient(135deg, #ff9ac8, #ff174d); }
-    .gold { background: linear-gradient(135deg, #ffd36e, #ff9ac8); }
-    .red { background: linear-gradient(135deg, #ff7ad6, #ff174d); }
-    .peach { background: linear-gradient(135deg, #ffc2d6, #ffbd70); }
+    .pink { background: linear-gradient(135deg, #e8a7ba, #9d5268); }
+    .gold { background: linear-gradient(135deg, #e9c46a, #e8a7ba); }
+    .red { background: linear-gradient(135deg, #c89bb2, #9d5268); }
+    .peach { background: linear-gradient(135deg, #e8c8ba, #d9b56f); }
     .items { display: grid; gap: 12px; }
     .item { display: flex; align-items: flex-start; gap: 12px; border-radius: 24px; padding: 14px; transition: transform .2s ease, background .2s ease; }
     .item:hover { transform: translateY(-2px); background: rgba(255,255,255,.14); }
-    .dot { width: 10px; height: 10px; flex: 0 0 auto; margin-top: 7px; border-radius: 999px; box-shadow: 0 0 18px rgba(255,211,110,.54); }
+    .dot { width: 10px; height: 10px; flex: 0 0 auto; margin-top: 7px; border-radius: 999px; box-shadow: 0 0 18px rgba(233,196,106,.38); }
     .item p { flex: 1; margin: 0; color: rgba(255,247,237,.88); font-size: 14px; line-height: 1.65; }
     .delete-btn { border: 0; background: transparent; color: rgba(255,230,210,.42); font-size: 20px; line-height: 1; transition: color .2s ease; }
     .delete-btn:hover { color: white; }
@@ -563,7 +563,7 @@
           <div class="brand-mark lipstick">&#10022;</div>
           <div>
             <p class="eyebrow">Manifest Atelier</p>
-            <p class="brand-subtitle">&#29980;&#36771;&#33258;&#20449; &#183; &#26174;&#21270; &#183; &#24515;&#24773;&#21464;&#22909;</p>
+            <p class="brand-subtitle">&#28201;&#26580;&#33258;&#20449; &#183; &#26174;&#21270; &#183; &#24515;&#24773;&#23433;&#23450;</p>
           </div>
         </div>
         <div class="mood-row" id="moodRow"></div>
@@ -574,7 +574,7 @@
           <div class="aurora"></div>
           <div class="sticker">
             <p class="sticker-icon">&#128139;</p>
-            <p class="sticker-text">soft but savage</p>
+            <p class="sticker-text">soft but certain</p>
           </div>
           <div class="circle-line"></div>
           <div class="circle-line small"></div>
@@ -585,19 +585,19 @@
                 <span class="chip" id="todayChip"></span>
                 <span class="chip pink" id="focusChip"></span>
               </div>
-              <p class="hero-kicker">Pretty, powerful, magnetic</p>
-              <h1 class="hero-title"><span class="shine">&#29980;&#19968;&#28857;&#65292;</span><br />&#36771;&#19968;&#28857;&#65292;&#33258;&#20449;&#21040;&#24213;&#12290;</h1>
-              <p class="hero-copy"><span id="heroName">&#20146;&#29233;&#30340;&#25105;</span>&#65292;&#36825;&#37324;&#26159;&#20320;&#30340;&#29980;&#36771;&#26174;&#21270;&#34915;&#24125;&#38388;&#12290;&#36827;&#26469;&#23601;&#35201;&#24515;&#24773;&#21464;&#22909;&#65306;&#28418;&#20142;&#22320;&#35768;&#24895;&#65292;&#28165;&#37266;&#22320;&#34892;&#21160;&#65292;&#33258;&#20449;&#22320;&#25509;&#20303;&#29233;&#19982;&#20016;&#30427;&#12290;</p>
+              <p class="hero-kicker">Gentle, grounded, magnetic</p>
+              <h1 class="hero-title"><span class="shine">&#28201;&#26580;&#19968;&#28857;&#65292;</span><br />&#31491;&#23450;&#19968;&#28857;&#65292;&#24930;&#24930;&#21457;&#20809;&#12290;</h1>
+              <p class="hero-copy"><span id="heroName">&#20146;&#29233;&#30340;&#25105;</span>&#65292;&#36825;&#37324;&#26159;&#20320;&#30340;&#31169;&#20154;&#26174;&#21270;&#32451;&#20064;&#23460;&#12290;&#25226;&#24895;&#26395;&#20889;&#24471;&#28165;&#26970;&#65292;&#25226;&#34892;&#21160;&#20570;&#24471;&#36731;&#30408;&#65292;&#25226;&#27880;&#24847;&#21147;&#25918;&#22238;&#35753;&#20320;&#23433;&#23450;&#21644;&#21457;&#20809;&#30340;&#29983;&#27963;&#12290;</p>
               <div class="confidence-grid" id="confidenceGrid"></div>
             </div>
 
             <div class="field-grid">
               <label class="field-card panel">
-                <span>&#20170;&#22825;&#30340;&#22899;&#20027;&#35282;</span>
+                <span>&#20170;&#22825;&#30340;&#25105;</span>
                 <input id="nameInput" autocomplete="off" />
               </label>
               <label class="field-card panel">
-                <span>&#20170;&#26085;&#29980;&#36771;&#20027;&#39064;</span>
+                <span>&#20170;&#26085;&#20851;&#27880;</span>
                 <input id="focusInput" autocomplete="off" />
               </label>
             </div>
@@ -606,11 +606,11 @@
 
         <aside class="side-stack">
           <section class="section-card glass" style="position: relative; overflow: hidden;">
-            <div style="position:absolute; left:50%; top:80px; width:240px; height:240px; transform:translateX(-50%); border-radius:999px; background:rgba(255,111,174,.18); filter:blur(48px);"></div>
+            <div style="position:absolute; left:50%; top:80px; width:240px; height:240px; transform:translateX(-50%); border-radius:999px; background:rgba(232,167,186,.14); filter:blur(48px);"></div>
             <div class="section-head">
-              <p class="eyebrow" style="color:rgba(255,230,170,.72);">Girl Magic</p>
+              <p class="eyebrow" style="color:rgba(255,230,170,.72);">Daily Anchor</p>
               <h2>&#20170;&#26085;&#30830;&#35748;&#35821;</h2>
-              <p>&#35835;&#23436;&#23601;&#25226;&#32937;&#33152;&#25171;&#24320;&#65306;&#20320;&#24456;&#28418;&#20142;&#65292;&#20063;&#24456;&#26377;&#21147;&#37327;&#12290;</p>
+              <p>&#24930;&#24930;&#35835;&#19968;&#36941;&#65306;&#19981;&#30528;&#24613;&#65292;&#20063;&#19981;&#35752;&#22909;&#65292;&#20320;&#27491;&#22312;&#38752;&#36817;&#33258;&#24049;&#24819;&#35201;&#30340;&#29983;&#27963;&#12290;</p>
             </div>
             <div class="orb-wrap">
               <div class="orbit"></div>
@@ -618,7 +618,7 @@
               <div class="orbit-dot"></div>
             </div>
             <p class="affirmation" id="currentAffirmation"></p>
-            <button class="primary-btn lipstick" id="ritualButton">&#24320;&#21551; 60 &#31186;&#29980;&#36771;&#26174;&#21270; &#10024;</button>
+            <button class="primary-btn lipstick" id="ritualButton">&#23436;&#25104; 60 &#31186;&#26174;&#21270;&#32451;&#20064; &#10024;</button>
             <p class="ritual-feedback" id="ritualFeedback"></p>
           </section>
 
@@ -626,14 +626,14 @@
             <div class="energy-row">
               <div>
                 <p class="eyebrow">Energy Index</p>
-                <h2 style="margin:8px 0 0; font-family:Georgia,'Times New Roman','Noto Serif SC',serif; font-size:26px;">&#29980;&#36771;&#33021;&#37327;&#20540;</h2>
+                <h2 style="margin:8px 0 0; font-family:Georgia,'Times New Roman','Noto Serif SC',serif; font-size:26px;">&#20170;&#26085;&#33021;&#37327;&#20540;</h2>
               </div>
               <p class="energy-number" id="energyNumber">0</p>
             </div>
             <div class="progress"><div class="progress-bar" id="energyBar"></div></div>
             <div class="stats-grid">
               <div class="stat panel"><b id="ritualCount">0</b>&#20202;&#24335;</div>
-              <div class="stat panel"><b id="winsCount">0</b>&#32988;&#21033;</div>
+              <div class="stat panel"><b id="winsCount">0</b>&#36827;&#23637;</div>
               <div class="stat panel"><b id="gratitudeCount">0</b>&#24863;&#24681;</div>
             </div>
           </section>
@@ -642,8 +642,8 @@
 
       <div class="marquee glass">
         <div class="marquee-track">
-          <span><span>&#10022; Pretty girls keep promises to themselves</span><span>&#10022; &#29980;&#32654;&#20294;&#19981;&#35752;&#22909;</span><span>&#10022; &#36771;&#22969;&#26377;&#36793;&#30028;&#20063;&#26377;&#37326;&#24515;</span><span>&#10022; &#24515;&#24773;&#22909;&#65292;&#22909;&#20107;&#26469;</span><span>&#10022; Confidence is the outfit</span></span>
-          <span><span>&#10022; Pretty girls keep promises to themselves</span><span>&#10022; &#29980;&#32654;&#20294;&#19981;&#35752;&#22909;</span><span>&#10022; &#36771;&#22969;&#26377;&#36793;&#30028;&#20063;&#26377;&#37326;&#24515;</span><span>&#10022; &#24515;&#24773;&#22909;&#65292;&#22909;&#20107;&#26469;</span><span>&#10022; Confidence is the outfit</span></span>
+          <span><span>&#10022; Gentle focus creates evidence</span><span>&#10022; &#28201;&#26580;&#20294;&#26377;&#36793;&#30028;</span><span>&#10022; &#28165;&#37266;&#12289;&#26494;&#24347;&#12289;&#26377;&#34892;&#21160;</span><span>&#10022; &#25226;&#27880;&#24847;&#21147;&#25918;&#22238;&#22909;&#20107;</span><span>&#10022; Confidence can be quiet</span></span>
+          <span><span>&#10022; Gentle focus creates evidence</span><span>&#10022; &#28201;&#26580;&#20294;&#26377;&#36793;&#30028;</span><span>&#10022; &#28165;&#37266;&#12289;&#26494;&#24347;&#12289;&#26377;&#34892;&#21160;</span><span>&#10022; &#25226;&#27880;&#24847;&#21147;&#25918;&#22238;&#22909;&#20107;</span><span>&#10022; Confidence can be quiet</span></span>
         </div>
       </div>
 
@@ -652,7 +652,7 @@
           <div class="section-head">
             <p class="eyebrow" style="color:rgba(255,230,170,.72);">Intention</p>
             <h2>&#26680;&#24515;&#24847;&#22270;</h2>
-            <p>&#20889;&#32473;&#37027;&#20010;&#28418;&#20142;&#12289;&#28165;&#37266;&#12289;&#25954;&#35201;&#20063;&#25954;&#25343;&#30340;&#33258;&#24049;&#12290;</p>
+            <p>&#20889;&#32473;&#37027;&#20010;&#28201;&#26580;&#12289;&#28165;&#37266;&#12289;&#31283;&#23450;&#21521;&#21069;&#30340;&#33258;&#24049;&#12290;</p>
           </div>
           <textarea class="intention-area" id="intentionInput"></textarea>
         </div>
@@ -660,13 +660,13 @@
         <div class="section-card glass" style="border-radius:38px;">
           <div class="section-head">
             <p class="eyebrow" style="color:rgba(255,230,170,.72);">60s Ritual</p>
-            <h2>&#29980;&#36771;&#20805;&#30005;&#27969;&#31243;</h2>
+            <h2>&#28201;&#26580;&#20805;&#30005;&#27969;&#31243;</h2>
           </div>
           <ol class="ritual-list">
-            <li class="panel"><b>01 / &#21628;&#21560;</b>&#21560;&#27668; 4 &#31186;&#65292;&#21628;&#27668; 6 &#31186;&#65292;&#37325;&#22797;&#19977;&#27425;&#65292;&#25226;&#27668;&#22330;&#35843;&#25104;&#8220;&#25105;&#20540;&#24471;&#8221;&#12290;</li>
-            <li class="panel"><b>02 / &#30011;&#38754;</b>&#38381;&#30524;&#30475;&#35265;&#24895;&#26395;&#23454;&#29616;&#21518;&#30340;&#20320;&#65306;&#29366;&#24577;&#22909;&#12289;&#34915;&#26381;&#32654;&#12289;&#36134;&#25143;&#31283;&#12289;&#31505;&#23481;&#29980;&#12290;</li>
-            <li class="panel"><b>03 / &#34892;&#21160;</b>&#38382;&#33258;&#24049;&#65306;&#20170;&#22825;&#26368;&#23567;&#12289;&#26368;&#28418;&#20142;&#12289;&#26368;&#26377;&#22899;&#20027;&#24863;&#30340;&#19968;&#27493;&#26159;&#20160;&#20040;&#65311;</li>
-            <li class="panel"><b>04 / &#35760;&#24405;</b>&#28857;&#20987;&#23436;&#25104;&#65292;&#32473;&#20170;&#22825;&#30340;&#33258;&#24049;&#19968;&#20010;&#26126;&#30830;&#30340;&#8220;&#25105;&#36229;&#26834;&#8221;&#12290;</li>
+            <li class="panel"><b>01 / &#21628;&#21560;</b>&#21560;&#27668; 4 &#31186;&#65292;&#21628;&#27668; 6 &#31186;&#65292;&#37325;&#22797;&#19977;&#27425;&#65292;&#25226;&#36523;&#20307;&#35843;&#22238;&#23433;&#20840;&#21644;&#31283;&#23450;&#12290;</li>
+            <li class="panel"><b>02 / &#30011;&#38754;</b>&#38381;&#30524;&#30475;&#35265;&#24895;&#26395;&#23454;&#29616;&#21518;&#30340;&#26085;&#24120;&#65306;&#29366;&#24577;&#31283;&#23450;&#12289;&#20851;&#31995;&#33298;&#26381;&#12289;&#36134;&#25143;&#36367;&#23454;&#12289;&#31505;&#23481;&#33258;&#28982;&#12290;</li>
+            <li class="panel"><b>03 / &#34892;&#21160;</b>&#38382;&#33258;&#24049;&#65306;&#20170;&#22825;&#26368;&#23567;&#12289;&#26368;&#36731;&#30408;&#12289;&#26368;&#33021;&#25512;&#36827;&#29616;&#23454;&#30340;&#19968;&#27493;&#26159;&#20160;&#20040;&#65311;</li>
+            <li class="panel"><b>04 / &#35760;&#24405;</b>&#28857;&#20987;&#23436;&#25104;&#65292;&#32473;&#20170;&#22825;&#30340;&#33258;&#24049;&#19968;&#20010;&#28201;&#26580;&#32780;&#26126;&#30830;&#30340;&#30830;&#35748;&#12290;</li>
           </ol>
         </div>
       </section>
@@ -679,8 +679,8 @@
   <script>
     const STORAGE_KEY = "manifest_atelier_v3";
     const OLD_STORAGE_KEYS = ["manifest_atelier_v2", "manifest_studio_v1"];
-    const MOODS = ["\u751C\u5FC3\u7C89", "\u8FA3\u59B9\u7EA2", "\u5BCC\u8D35\u91D1"];
-    const CONFIDENCE_BOOSTS = ["\u6211\u4ECA\u5929\u4E5F\u5F88\u597D\u770B", "\u6211\u5141\u8BB8\u81EA\u5DF1\u88AB\u504F\u7231", "\u6211\u8D8A\u884C\u52A8\u8D8A\u6709\u9B45\u529B"];
+    const MOODS = ["\u6668\u96FE\u7C89", "\u6708\u5149\u674F", "\u9F20\u5C3E\u8349\u7EFF"];
+    const CONFIDENCE_BOOSTS = ["\u6211\u53EF\u4EE5\u6162\u6162\u6765", "\u6211\u5141\u8BB8\u81EA\u5DF1\u88AB\u652F\u6301", "\u6211\u8D8A\u7A33\u5B9A\u8D8A\u6709\u529B\u91CF"];
 
     const DEFAULT_DATA = {
       name: "\u4EB2\u7231\u7684\u6211",
@@ -688,27 +688,27 @@
       focus: "\u5065\u5EB7\u3001\u4E8B\u4E1A\u3001\u7231\u4E0E\u81EA\u7531",
       mood: MOODS[0],
       affirmations: [
-        "\u6211\u6F02\u4EAE\u3001\u6E05\u9192\u3001\u4F1A\u9009\u62E9\uFF0C\u597D\u4E8B\u4E3B\u52A8\u6765\u627E\u6211\u3002",
-        "\u6211\u751C\u5F97\u6709\u5438\u5F15\u529B\uFF0C\u8FA3\u5F97\u6709\u8FB9\u754C\u611F\u3002",
-        "\u6211\u503C\u5F97\u88AB\u504F\u7231\u3001\u88AB\u652F\u6301\u3001\u88AB\u4E30\u76DB\u5730\u7231\u7740\u3002",
-        "\u4ECA\u5929\u7684\u6BCF\u4E00\u6B65\uFF0C\u90FD\u8BA9\u6211\u66F4\u81EA\u4FE1\u3001\u66F4\u95EA\u8000\u3002"
+        "\u6211\u6E05\u9192\u3001\u677E\u5F1B\u3001\u4F1A\u9009\u62E9\uFF0C\u597D\u4E8B\u6B63\u5728\u9760\u8FD1\u6211\u3002",
+        "\u6211\u6E29\u67D4\u4F46\u6709\u8FB9\u754C\uFF0C\u7A33\u5B9A\u4E5F\u6709\u5438\u5F15\u529B\u3002",
+        "\u6211\u503C\u5F97\u88AB\u652F\u6301\u3001\u88AB\u5C0A\u91CD\u3001\u88AB\u4E30\u76DB\u5730\u7231\u7740\u3002",
+        "\u4ECA\u5929\u7684\u6BCF\u4E00\u6B65\uFF0C\u90FD\u8BA9\u6211\u66F4\u5B89\u5B9A\u3001\u66F4\u6709\u529B\u91CF\u3002"
       ],
       gratitude: ["\u6211\u611F\u8C22\u5F53\u4E0B\u62E5\u6709\u7684\u80FD\u91CF\u4E0E\u9009\u62E9\u3002", "\u6211\u611F\u8C22\u81EA\u5DF1\u6CA1\u6709\u653E\u5F03\u3002"],
-      wins: ["\u5B8C\u6210\u4E86\u4ECA\u5929\u6700\u91CD\u8981\u7684\u4E00\u4EF6\u4E8B\uFF0C\u4E5F\u5938\u4E86\u81EA\u5DF1\u3002"],
+      wins: ["\u5B8C\u6210\u4E86\u4ECA\u5929\u6700\u91CD\u8981\u7684\u4E00\u4EF6\u4E8B\uFF0C\u4E5F\u597D\u597D\u80AF\u5B9A\u4E86\u81EA\u5DF1\u3002"],
       vision: [
-        "\u6E05\u6668\u9192\u6765\uFF0C\u76AE\u80A4\u53D1\u5149\uFF0C\u8EAB\u4F53\u8F7B\u76C8\uFF0C\u5185\u5FC3\u5B89\u5B9A\u3002",
-        "\u505A\u70ED\u7231\u7684\u4E8B\uFF0C\u6F02\u4EAE\u5730\u8D5A\u94B1\uFF0C\u677E\u5F1B\u5730\u88AB\u7231\u3002",
-        "\u548C\u540C\u9891\u7684\u4EBA\u4E00\u8D77\u521B\u9020\u3001\u73A9\u800D\u3001\u53D8\u7F8E\u3001\u6210\u957F\u3002"
+        "\u6E05\u6668\u9192\u6765\uFF0C\u8EAB\u4F53\u8F7B\u76C8\uFF0C\u5185\u5FC3\u5B89\u5B9A\uFF0C\u751F\u6D3B\u6709\u5E8F\u5C55\u5F00\u3002",
+        "\u505A\u70ED\u7231\u7684\u4E8B\uFF0C\u7A33\u5B9A\u5730\u8D5A\u94B1\uFF0C\u677E\u5F1B\u5730\u88AB\u7231\u3002",
+        "\u548C\u540C\u9891\u7684\u4EBA\u4E00\u8D77\u521B\u9020\u3001\u4F11\u606F\u3001\u63A2\u7D22\u3001\u6210\u957F\u3002"
       ],
       ritualCount: 0,
       lastRitualDate: ""
     };
 
     const LIST_META = {
-      affirmations: { title: "\u751C\u8FA3\u786E\u8BA4\u8BED", eyebrow: "Sweet Fire", color: "pink", placeholder: "\u4F8B\u5982\uFF1A\u6211\u6F02\u4EAE\u3001\u5BCC\u8DB3\u3001\u88AB\u504F\u7231\uFF0C\u4E5F\u5F88\u6709\u6267\u884C\u529B" },
-      gratitude: { title: "\u5F00\u5FC3\u611F\u6069\u7C3F", eyebrow: "Joy Receipts", color: "gold", placeholder: "\u6211\u611F\u8C22\u4ECA\u5929\u8BA9\u6211\u5FC3\u60C5\u53D8\u597D\u7684\u2026\u2026" },
-      wins: { title: "\u81EA\u4FE1\u6218\u7EE9", eyebrow: "Main Character", color: "red", placeholder: "\u4ECA\u5929\u6211\u5F88\u68D2\uFF0C\u56E0\u4E3A\u2026\u2026" },
-      vision: { title: "\u7C89\u91D1\u613F\u666F\u8863\u6A71", eyebrow: "Dream Closet", color: "peach", placeholder: "\u4F8B\u5982\uFF1A\u6211\u7A7F\u7740\u559C\u6B22\u7684\u8863\u670D\uFF0C\u6F02\u4EAE\u8D5A\u94B1\uFF0C\u72B6\u6001\u7A33\u5B9A\u53D1\u5149\u2026\u2026" }
+      affirmations: { title: "\u6E29\u67D4\u786E\u8BA4\u8BED", eyebrow: "Affirm", color: "pink", placeholder: "\u4F8B\u5982\uFF1A\u6211\u7A33\u5B9A\u3001\u5BCC\u8DB3\u3001\u88AB\u652F\u6301\uFF0C\u4E5F\u5F88\u6709\u6267\u884C\u529B" },
+      gratitude: { title: "\u5B89\u5B9A\u611F\u6069\u7C3F", eyebrow: "Gratitude", color: "gold", placeholder: "\u6211\u611F\u8C22\u4ECA\u5929\u8BA9\u6211\u66F4\u5B89\u5B9A\u7684\u2026\u2026" },
+      wins: { title: "\u884C\u52A8\u8BC1\u636E", eyebrow: "Evidence", color: "red", placeholder: "\u4ECA\u5929\u6211\u5411\u524D\u4E86\u4E00\u6B65\uFF0C\u56E0\u4E3A\u2026\u2026" },
+      vision: { title: "\u67D4\u5149\u613F\u666F\u677F", eyebrow: "Vision", color: "peach", placeholder: "\u4F8B\u5982\uFF1A\u6211\u5728\u8212\u670D\u7684\u7A7A\u95F4\u91CC\u5DE5\u4F5C\uFF0C\u7A33\u5B9A\u8FDB\u8D26\uFF0C\u72B6\u6001\u5B89\u5B9A\u53D1\u5149\u2026\u2026" }
     };
 
     let data = loadData();
@@ -913,7 +913,7 @@
         renderStats();
         document.getElementById("currentAffirmation").textContent = `\u201C${currentAffirmation()}\u201D`;
         const feedback = document.getElementById("ritualFeedback");
-        feedback.textContent = "\u5DF2\u8BB0\u5F55\uFF1A\u6F02\u4EAE\u5B9D\u8D1D\uFF0C\u4ECA\u5929\u7684\u4F60\u66F4\u81EA\u4FE1\u4E86\u3002";
+        feedback.textContent = "\u5DF2\u8BB0\u5F55\uFF1A\u4ECA\u5929\u7684\u4F60\uFF0C\u6B63\u5728\u66F4\u7A33\u5B9A\u5730\u9760\u8FD1\u613F\u671B\u3002";
         clearTimeout(feedbackTimer);
         feedbackTimer = setTimeout(() => { feedback.textContent = ""; }, 2600);
       });
