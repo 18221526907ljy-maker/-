@@ -4,215 +4,128 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Magic Queen Manifest</title>
+  <title>Joyce Magic App - Private Edition</title>
   <style>
     :root {
       color-scheme: light;
-      --lavender: #d6a1ff;
-      --sky: #a1d1ff;
-      --beige: #f7efe5;
-      --gray: #f5f6fb;
+      --bg: #fffaf4;
+      --bg-2: #f5f1ea;
+      --surface: rgba(255,255,255,.86);
       --ink: #2b2440;
-      --muted: #776f88;
-      --gold: #f7c948;
-      --pink: #ff8fd3;
-      --white: rgba(255,255,255,.86);
-      --line: rgba(80, 68, 120, .12);
-      --shadow: 0 22px 60px rgba(83, 74, 122, .14);
+      --muted: #746d80;
+      --primary: #d6a1ff;
+      --secondary: #a1d1ff;
+      --accent: #f7c948;
+      --accent-2: #ff8fd3;
+      --line: rgba(72, 59, 99, .12);
+      --shadow: 0 24px 68px rgba(80, 65, 120, .14);
       --radius-xl: 34px;
       --radius-md: 22px;
+      --heading-font: "Brush Script MT", "Segoe Script", Georgia, serif;
+      --body-font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    [data-mode="queen_boss"] {
+      --bg: #150b15;
+      --bg-2: #23101f;
+      --surface: rgba(255,250,246,.9);
+      --ink: #251526;
+      --muted: #6d5d6c;
+      --primary: #4a173d;
+      --secondary: #1a0d18;
+      --accent: #d4af37;
+      --accent-2: #d9a6b6;
+      --line: rgba(212,175,55,.2);
+      --shadow: 0 24px 72px rgba(20, 6, 20, .28);
+    }
+
+    [data-mode="sweet_spicy"] {
+      --bg: #fff4f5;
+      --bg-2: #fff8ef;
+      --surface: rgba(255,255,255,.86);
+      --ink: #3c1f2b;
+      --muted: #7b5c66;
+      --primary: #d71945;
+      --secondary: #ff4fa3;
+      --accent: #f4d8da;
+      --accent-2: #cfd4d8;
+      --line: rgba(215,25,69,.14);
+      --shadow: 0 24px 68px rgba(215,25,69,.14);
+    }
+
+    [data-mode="clean_dreamy"] {
+      --bg: #fffdf8;
+      --bg-2: #f1eee5;
+      --surface: rgba(255,255,255,.84);
+      --ink: #28312d;
+      --muted: #6f7a74;
+      --primary: #c9d8c2;
+      --secondary: #d8cff2;
+      --accent: #f2cdd4;
+      --accent-2: #b7d7ef;
+      --line: rgba(80, 110, 92, .12);
+      --shadow: 0 24px 64px rgba(92, 119, 105, .13);
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-family: var(--body-font);
       color: var(--ink);
       background:
-        radial-gradient(circle at 8% 8%, rgba(214,161,255,.38), transparent 24rem),
-        radial-gradient(circle at 88% 4%, rgba(161,209,255,.42), transparent 26rem),
-        linear-gradient(135deg, #fff 0%, var(--gray) 45%, var(--beige) 100%);
+        radial-gradient(circle at 8% 8%, color-mix(in srgb, var(--primary) 32%, transparent), transparent 26rem),
+        radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--secondary) 36%, transparent), transparent 26rem),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      transition: background .45s ease, color .35s ease;
       overflow-x: hidden;
     }
 
     button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
-    ::selection { background: rgba(255,143,211,.36); }
-
+    ::selection { background: color-mix(in srgb, var(--accent-2) 36%, transparent); }
     .shell { min-height: 100vh; padding: 18px; }
     .container { width: min(1220px, 100%); margin: 0 auto; }
+    .glass { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(22px) saturate(135%); }
 
-    .glass {
-      background: var(--white);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(22px) saturate(135%);
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      border-radius: 999px;
-      padding: 12px 18px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-radius: 999px; padding: 12px 18px; margin-bottom: 18px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-mark {
-      width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--lavender), var(--sky));
-      box-shadow: 0 14px 36px rgba(166, 158, 255, .38);
-      font-size: 24px;
-      animation: floaty 4s ease-in-out infinite;
-    }
-
-    .app-title {
-      margin: 0;
-      font-family: "Brush Script MT", "Segoe Script", Georgia, serif;
-      font-style: italic;
-      font-weight: 500;
-      font-size: clamp(26px, 4vw, 42px);
-      line-height: 1;
-      letter-spacing: .01em;
-    }
-
+    .brand-mark { width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 14px 36px color-mix(in srgb, var(--primary) 30%, transparent); font-size: 24px; animation: floaty 4s ease-in-out infinite; }
+    .app-title { margin: 0; font-family: var(--heading-font); font-style: italic; font-weight: 500; font-size: clamp(26px, 4vw, 42px); line-height: 1; letter-spacing: .01em; }
     .subtitle { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
+    .mode-switch { display: flex; gap: 8px; flex-wrap: wrap; }
+    .mode-btn, .btn { border: 0; border-radius: 999px; padding: 10px 14px; color: var(--ink); background: rgba(255,255,255,.72); box-shadow: 0 8px 22px rgba(116,103,161,.1); transition: transform .18s ease, box-shadow .18s ease, background .18s ease, filter .18s ease; font-weight: 800; }
+    .mode-btn:hover, .btn:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 14px 30px rgba(116,103,161,.18); }
+    .mode-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
 
-    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .pill {
-      border: 0;
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: rgba(255,255,255,.7);
-      color: var(--ink);
-      box-shadow: 0 8px 22px rgba(116, 103, 161, .1);
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-    .pill:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(116,103,161,.16); }
-    .pill.active { background: linear-gradient(135deg, #fff6c7, #ffe0f4); }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .hero-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      padding: clamp(24px, 5vw, 46px);
-      min-height: 420px;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute; inset: -30% -20% auto auto;
-      width: 360px; height: 360px; border-radius: 999px;
-      background: conic-gradient(from 160deg, var(--lavender), var(--sky), #fff6c7, var(--pink), var(--lavender));
-      opacity: .38; filter: blur(6px); animation: slowSpin 18s linear infinite;
-    }
-
-    .kicker {
-      display: inline-flex; align-items: center; gap: 8px;
-      border-radius: 999px;
-      padding: 9px 13px;
-      background: rgba(255,255,255,.62);
-      color: #645980;
-      font-size: 13px;
-      font-weight: 800;
-      margin: 0 0 22px;
-    }
-
-    h1 {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      font-family: "Brush Script MT", "Segoe Script", Georgia, serif;
-      font-style: italic;
-      font-weight: 500;
-      font-size: clamp(54px, 9vw, 104px);
-      line-height: .9;
-      letter-spacing: -.02em;
-    }
-
-    .gradient-text {
-      background: linear-gradient(110deg, #9a69d4, #6ba8de, #f1b8de);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
+    .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; margin-bottom: 18px; }
+    .hero-card { position: relative; overflow: hidden; border-radius: var(--radius-xl); padding: clamp(24px, 5vw, 46px); min-height: 420px; }
+    .hero-card::before { content: ""; position: absolute; inset: -30% -20% auto auto; width: 360px; height: 360px; border-radius: 999px; background: conic-gradient(from 160deg, var(--primary), var(--secondary), var(--accent), var(--accent-2), var(--primary)); opacity: .34; filter: blur(6px); animation: slowSpin 18s linear infinite; }
+    .kicker { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 9px 13px; background: rgba(255,255,255,.62); color: var(--muted); font-size: 13px; font-weight: 800; margin: 0 0 22px; }
+    h1 { position: relative; z-index: 1; margin: 0; font-family: var(--heading-font); font-style: italic; font-weight: 500; font-size: clamp(54px, 9vw, 104px); line-height: .9; letter-spacing: -.02em; }
+    .gradient-text { background: linear-gradient(110deg, var(--primary), var(--secondary), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .hero-copy { position: relative; z-index: 1; max-width: 620px; color: var(--muted); font-size: 17px; line-height: 1.8; }
     .hero-actions { position: relative; z-index: 1; display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+    .btn { border-radius: 18px; padding: 13px 16px; }
+    .btn.primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+    .btn.gold { background: linear-gradient(135deg, #fff7c7, var(--accent)); }
+    .btn.pink { background: linear-gradient(135deg, #ffe8f6, var(--accent-2)); color: var(--ink); }
 
-    .btn {
-      border: 0;
-      border-radius: 18px;
-      padding: 13px 16px;
-      font-weight: 900;
-      color: var(--ink);
-      background: white;
-      box-shadow: 0 12px 28px rgba(116,103,161,.14);
-      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
-    }
-    .btn:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 16px 34px rgba(116,103,161,.2); }
-    .btn.primary { background: linear-gradient(135deg, var(--lavender), var(--sky)); color: white; }
-    .btn.gold { background: linear-gradient(135deg, #fff7c7, #ffd66d); }
-    .btn.pink { background: linear-gradient(135deg, #ffe1f3, var(--pink)); color: #4e2440; }
-
-    .dashboard {
-      border-radius: var(--radius-xl);
-      padding: 22px;
-    }
-
+    .dashboard, .module { border-radius: var(--radius-xl); padding: 22px; }
     .section-title { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-    .section-title h2, .section-title h3 { margin: 0; font-size: 24px; line-height: 1.1; }
+    .section-title h2, .section-title h3 { margin: 0; font-size: clamp(24px, 3vw, 32px); line-height: 1.1; }
     .section-title p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
-
     .top3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .top-card {
-      min-height: 128px;
-      border-radius: 24px;
-      padding: 16px;
-      background: linear-gradient(135deg, rgba(214,161,255,.28), rgba(161,209,255,.28));
-      border: 1px solid rgba(255,255,255,.7);
-      transition: transform .18s ease;
-    }
+    .top-card { min-height: 128px; border-radius: 24px; padding: 16px; background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 22%, white), color-mix(in srgb, var(--secondary) 22%, white)); border: 1px solid rgba(255,255,255,.7); transition: transform .18s ease; }
     .top-card:hover { transform: translateY(-4px); }
     .top-card .emoji { font-size: 26px; }
     .top-card h4 { margin: 10px 0 6px; }
     .top-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
     .full { grid-column: 1 / -1; }
-    .module { border-radius: var(--radius-xl); padding: 22px; }
 
-    .vision-board {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 14px;
-      min-height: 220px;
-    }
-
-    .vision-card {
-      position: relative;
-      resize: both;
-      overflow: auto;
-      min-width: 170px;
-      min-height: 150px;
-      border-radius: 26px;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,.7);
-      box-shadow: 0 16px 36px rgba(116,103,161,.12);
-      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
-    }
+    .vision-board { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 14px; min-height: 220px; }
+    .vision-card { position: relative; resize: both; overflow: auto; min-width: 170px; min-height: 150px; border-radius: 26px; padding: 16px; border: 1px solid rgba(255,255,255,.7); box-shadow: 0 16px 36px rgba(116,103,161,.12); transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
     .vision-card:hover { transform: translateY(-4px); filter: saturate(1.05); }
     .vision-card.dragging { opacity: .55; transform: scale(.98); }
     .vision-card h4 { margin: 8px 0 6px; font-size: 17px; }
@@ -220,500 +133,133 @@
     .card-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
     .emoji-big { font-size: 30px; }
     .tag { border-radius: 999px; padding: 5px 9px; background: rgba(255,255,255,.6); font-size: 12px; font-weight: 800; }
-    .card-tools { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .card-tools, .form-row, .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .mini-btn { border: 0; border-radius: 999px; padding: 7px 9px; background: rgba(255,255,255,.68); color: #54476b; font-weight: 800; font-size: 12px; }
-
-    .form-row { display: grid; grid-template-columns: .7fr 1fr 1fr auto; gap: 10px; margin-top: 16px; }
-    input, textarea, select {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.7);
-      border-radius: 16px;
-      outline: 0;
-      padding: 12px 13px;
-      color: var(--ink);
-    }
-    textarea { min-height: 96px; resize: vertical; line-height: 1.6; }
+    .form-row { display: grid; grid-template-columns: .55fr 1fr 1fr .7fr auto; margin-top: 16px; }
+    input, textarea, select { border: 1px solid var(--line); background: rgba(255,255,255,.7); border-radius: 16px; outline: 0; padding: 12px 13px; color: var(--ink); }
+    textarea { min-height: 96px; resize: vertical; line-height: 1.6; width: 100%; }
 
     .mood-options { display: flex; gap: 10px; flex-wrap: wrap; }
-    .emoji-btn {
-      width: 52px; height: 52px; border: 0; border-radius: 18px; background: rgba(255,255,255,.7);
-      font-size: 25px; box-shadow: 0 10px 24px rgba(116,103,161,.1);
-      transition: transform .16s ease, box-shadow .16s ease;
-    }
-    .emoji-btn:hover, .emoji-btn.active { transform: translateY(-4px) rotate(-2deg); box-shadow: 0 14px 28px rgba(116,103,161,.18); background: linear-gradient(135deg, #fff, #f5e8ff); }
-
+    .emoji-btn { width: 52px; height: 52px; border: 0; border-radius: 18px; background: rgba(255,255,255,.7); font-size: 25px; box-shadow: 0 10px 24px rgba(116,103,161,.1); transition: transform .16s ease, box-shadow .16s ease; }
+    .emoji-btn:hover, .emoji-btn.active { transform: translateY(-4px) rotate(-2deg); box-shadow: 0 14px 28px rgba(116,103,161,.18); background: linear-gradient(135deg, #fff, color-mix(in srgb, var(--primary) 16%, white)); }
     .tracker { margin-top: 18px; display: grid; gap: 10px; }
     .streak-bar { height: 12px; background: rgba(130,120,160,.12); border-radius: 999px; overflow: hidden; }
-    .streak-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--lavender), var(--sky), var(--gold)); transition: width .5s ease; }
+    .streak-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); transition: width .5s ease; }
     .mini-chart { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; height: 72px; margin-top: 12px; }
-    .chart-bar { border-radius: 999px 999px 8px 8px; min-height: 8px; background: linear-gradient(180deg, var(--lavender), var(--sky)); opacity: .85; }
-
+    .chart-bar { border-radius: 999px 999px 8px 8px; min-height: 8px; background: linear-gradient(180deg, var(--primary), var(--secondary)); opacity: .85; }
     .mission-list { display: grid; gap: 10px; }
-    .mission {
-      display: flex; align-items: center; gap: 12px; padding: 13px; border-radius: 20px; background: rgba(255,255,255,.68);
-      border: 1px solid var(--line);
-    }
-    .mission.done { background: linear-gradient(135deg, rgba(214,161,255,.22), rgba(255,247,199,.5)); }
+    .mission { display: flex; align-items: center; gap: 12px; padding: 13px; border-radius: 20px; background: rgba(255,255,255,.68); border: 1px solid var(--line); }
+    .mission.done { background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 20%, white), color-mix(in srgb, var(--accent) 28%, white)); }
     .mission input { width: 20px; height: 20px; }
     .mission span { flex: 1; line-height: 1.5; }
-
-    .pep-card {
-      min-height: 190px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border-radius: 28px;
-      padding: 24px;
-      background: linear-gradient(135deg, rgba(255,255,255,.82), rgba(214,161,255,.18), rgba(161,209,255,.18));
-    }
+    .pep-card { min-height: 190px; display: grid; place-items: center; text-align: center; border-radius: 28px; padding: 24px; background: linear-gradient(135deg, rgba(255,255,255,.82), color-mix(in srgb, var(--primary) 14%, transparent), color-mix(in srgb, var(--secondary) 14%, transparent)); }
     .pep-card p { margin: 10px 0 0; font-size: 20px; line-height: 1.6; font-weight: 900; }
-
     .badges { display: flex; gap: 10px; flex-wrap: wrap; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 10px 12px;
-      background: rgba(255,255,255,.7); border: 1px solid var(--line); font-weight: 900;
-      filter: grayscale(1); opacity: .55;
-    }
+    .badge { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 10px 12px; background: rgba(255,255,255,.7); border: 1px solid var(--line); font-weight: 900; filter: grayscale(1); opacity: .55; }
     .badge.unlocked { filter: none; opacity: 1; background: linear-gradient(135deg, #fff6c7, #ffe0f4); }
-
-    .confetti {
-      position: fixed;
-      width: 10px; height: 10px; border-radius: 999px;
-      pointer-events: none; z-index: 20;
-      animation: confettiFall .95s ease-out forwards;
-    }
+    .confetti { position: fixed; width: 10px; height: 10px; border-radius: 999px; pointer-events: none; z-index: 20; animation: confettiFall .95s ease-out forwards; }
     .emoji-burst { position: fixed; z-index: 21; pointer-events: none; font-size: 24px; animation: burst .9s ease-out forwards; }
-    .toast {
-      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
-      max-width: min(520px, calc(100% - 28px)); border-radius: 22px; padding: 14px 18px;
-      background: rgba(43,36,64,.92); color: white; box-shadow: 0 18px 42px rgba(43,36,64,.24);
-      z-index: 30; opacity: 0; animation: toast .28s ease-out forwards;
-    }
-
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: min(520px, calc(100% - 28px)); border-radius: 22px; padding: 14px 18px; background: rgba(43,36,64,.92); color: white; box-shadow: 0 18px 42px rgba(43,36,64,.24); z-index: 30; opacity: 0; animation: toast .28s ease-out forwards; }
     @keyframes floaty { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-5px); } }
     @keyframes slowSpin { to { transform: rotate(360deg); } }
     @keyframes confettiFall { to { transform: translate(var(--x), var(--y)) rotate(280deg); opacity: 0; } }
     @keyframes burst { to { transform: translate(var(--x), var(--y)) scale(1.5); opacity: 0; } }
     @keyframes toast { to { opacity: 1; transform: translateX(-50%) translateY(-8px); } }
-
-    @media (max-width: 920px) {
-      .hero, .grid { grid-template-columns: 1fr; }
-      .top3, .vision-board { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .topbar { border-radius: 26px; }
-    }
+    @media (max-width: 920px) { .hero, .grid { grid-template-columns: 1fr; } .top3, .vision-board { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } .topbar { border-radius: 26px; } }
   </style>
 </head>
-<body>
+<body data-mode="clean_dreamy">
   <main class="shell">
     <div class="container">
       <nav class="topbar glass">
-        <div class="brand">
-          <div class="brand-mark">&#128081;</div>
-          <div>
-            <p class="app-title">Magic Queen Manifest</p>
-            <p class="subtitle">&#25226;&#24895;&#26395;&#21464;&#25104;&#27599;&#26085;&#35777;&#25454;&#65306;&#19968;&#28857;&#39764;&#27861;&#65292;&#19968;&#28857;&#34892;&#21160;&#65292;&#19968;&#28857; queen energy&#12290;</p>
-          </div>
-        </div>
-        <div class="pill-row" id="badgePreview"></div>
+        <div class="brand"><div class="brand-mark">&#128081;</div><div><p class="app-title">Joyce Magic App</p><p class="subtitle">Private Edition &#183; &#26412;&#22320;&#20445;&#23384; &#183; &#31163;&#32447;&#20248;&#20808; &#183; &#21333;&#20154;&#31169;&#23494;&#20351;&#29992;</p></div></div>
+        <div class="mode-switch" id="modeSwitch"></div>
       </nav>
-
       <section class="hero">
         <div class="hero-card glass">
-          <p class="kicker">&#10024; dashboard &#183; private ritual</p>
-          <h1><span class="gradient-text">Magic Queen</span><br />Manifest</h1>
-          <p class="hero-copy">&#20170;&#22825;&#19981;&#38752;&#31354;&#21898;&#21475;&#21495;&#12290;&#20320;&#21482;&#38656;&#35201;&#36873;&#19968;&#20010;&#24895;&#26223;&#12289;&#35760;&#24405;&#30495;&#23454;&#29366;&#24577;&#12289;&#23436;&#25104;&#19968;&#20010;&#23567;&#21040;&#19981;&#20250;&#25302;&#24310;&#30340;&#21160;&#20316;&#12290;Girl, don&#8217;t cheat yourself &#128527;</p>
-          <div class="hero-actions">
-            <button class="btn primary" id="completeRitualBtn">&#23436;&#25104;&#20170;&#26085;&#24494;&#20219;&#21153; &#10024;</button>
-            <button class="btn gold" id="drawPepBtn">&#26469;&#19968;&#21477; bestie pep talk</button>
-            <button class="btn pink" id="addQuickVisionBtn">&#24555;&#36895;&#21152;&#24895;&#26223;&#21345;</button>
-          </div>
+          <p class="kicker" id="modeKicker">&#10024; clean dreamy ritual</p>
+          <h1><span class="gradient-text">Joyce Magic</span><br />Private Edition</h1>
+          <p class="hero-copy" id="modeIntro">&#25171;&#24320; app &#20808;&#30475; Top 3 &#24895;&#26223;&#65292;&#20877;&#35760;&#24405;&#24515;&#24773;&#65292;&#26368;&#21518;&#23436;&#25104;&#19968;&#20010;&#23567;&#20219;&#21153;&#12290;Soft life, sharp focus.</p>
+          <div class="hero-actions"><button class="btn primary" id="completeRitualBtn">&#23436;&#25104;&#20170;&#26085;&#24494;&#20219;&#21153; &#10024;</button><button class="btn gold" id="drawPepBtn">&#26469;&#19968;&#21477; pep talk</button><button class="btn pink" id="addQuickVisionBtn">&#24555;&#36895;&#21152;&#24895;&#26223;&#21345;</button></div>
         </div>
-
         <div class="dashboard glass">
-          <div class="section-title">
-            <div>
-              <h2>&#20170;&#26085; Top 3 &#24895;&#26223;</h2>
-              <p>&#25302;&#21160;&#19979;&#26041;&#24895;&#26223;&#21345;&#25490;&#24207;&#65292;&#21069;&#19977;&#24352;&#20250;&#22312;&#36825;&#37324;&#20986;&#29616;&#12290;</p>
-            </div>
-          </div>
+          <div class="section-title"><div><h2>Dashboard Top 3</h2><p>&#25302;&#21160;&#24895;&#26223;&#21345;&#25490;&#24207;&#65292;&#21069;&#19977;&#24352;&#22312;&#36825;&#37324;&#23637;&#31034;&#12290;</p></div></div>
           <div class="top3" id="top3"></div>
-          <div class="tracker">
-            <div class="section-title">
-              <div>
-                <h3>&#25104;&#38271;&#26354;&#32447;</h3>
-                <p id="streakText">&#35760;&#24405;&#19968;&#27425;&#29366;&#24577;&#65292;&#23601;&#35753;&#36827;&#24230;&#26356;&#28165;&#26970;&#12290;</p>
-              </div>
-            </div>
-            <div class="streak-bar"><div class="streak-fill" id="streakFill"></div></div>
-            <div class="mini-chart" id="miniChart"></div>
-          </div>
+          <div class="tracker"><div class="section-title"><div><h3>Streak & Mood Curve</h3><p id="streakText">&#35760;&#24405;&#19968;&#27425;&#29366;&#24577;&#65292;&#23601;&#35753;&#36827;&#24230;&#26356;&#28165;&#26970;&#12290;</p></div></div><div class="streak-bar"><div class="streak-fill" id="streakFill"></div></div><div class="mini-chart" id="miniChart"></div></div>
         </div>
       </section>
-
       <section class="grid">
-        <div class="module glass full">
-          <div class="section-title">
-            <div>
-              <h2>Vision Board</h2>
-              <p>&#24895;&#26223;&#21345;&#21487;&#25302;&#25341;&#12289;&#21487;&#25913;&#20248;&#20808;&#32423;&#12289;&#21487;&#35774;&#20026; Top 3&#12290;&#25991;&#23383; + emoji + &#39068;&#33394;&#26631;&#31614;&#37117;&#33021;&#33258;&#23450;&#20041;&#12290;</p>
-            </div>
-          </div>
-          <div class="vision-board" id="visionBoard"></div>
-          <div class="form-row">
-            <input id="visionEmoji" placeholder="emoji" value="&#127769;" />
-            <input id="visionTitle" placeholder="&#24895;&#26223;&#26631;&#39064;&#65292;&#20363;&#22914;&#65306;&#31283;&#23450;&#36827;&#36134;" />
-            <input id="visionText" placeholder="&#20855;&#20307;&#30011;&#38754;&#65306;&#22312;&#21738;&#37324;&#12289;&#21644;&#35841;&#12289;&#20160;&#20040;&#24863;&#21463;" />
-            <button class="btn primary" id="addVisionBtn">&#21152;&#20837;&#24895;&#26223;</button>
-          </div>
-        </div>
-
-        <div class="module glass">
-          <div class="section-title">
-            <div>
-              <h2>Mood & Habit</h2>
-              <p>&#29992; emoji &#35760;&#24405;&#20170;&#22825;&#65292;&#19981;&#38656;&#35201;&#34920;&#28436;&#24320;&#24515;&#12290;</p>
-            </div>
-          </div>
-          <div class="mood-options" id="moodOptions"></div>
-          <textarea id="moodNote" placeholder="&#20170;&#22825;&#25105;&#30495;&#23454;&#30340;&#29366;&#24577;&#26159;&#8230;&#8230;"></textarea>
-          <div class="hero-actions">
-            <button class="btn primary" id="saveMoodBtn">&#20445;&#23384;&#20170;&#26085;&#29366;&#24577;</button>
-          </div>
-        </div>
-
-        <div class="module glass">
-          <div class="section-title">
-            <div>
-              <h2>Daily Micro Missions</h2>
-              <p>&#20219;&#21153;&#21487;&#36873;&#65292;&#20294;&#23436;&#25104;&#20250;&#25481;&#33853;&#23567;&#22870;&#21169;&#12290;&#21035;&#39575;&#33258;&#24049;&#65292;&#20570;&#19968;&#28857;&#23601;&#36194;&#12290;</p>
-            </div>
-          </div>
-          <div class="mission-list" id="missionList"></div>
-          <div class="form-row" style="grid-template-columns:1fr auto;">
-            <input id="missionInput" placeholder="&#33258;&#23450;&#20041;&#19968;&#20010; 10 &#20998;&#38047;&#23567;&#20219;&#21153;" />
-            <button class="btn gold" id="addMissionBtn">&#28155;&#21152;</button>
-          </div>
-        </div>
-
-        <div class="module glass">
-          <div class="section-title">
-            <div>
-              <h2>Personal Pep Feed</h2>
-              <p>sassy bestie&#65292;&#20294;&#20250;&#35753;&#20320;&#34892;&#21160;&#12290;</p>
-            </div>
-          </div>
-          <div class="pep-card" id="pepCard"></div>
-          <div class="hero-actions">
-            <button class="btn pink" id="nextPepBtn">&#25442;&#19968;&#21477;</button>
-            <button class="btn gold" id="savePepMissionBtn">&#21464;&#25104;&#24494;&#20219;&#21153;</button>
-          </div>
-        </div>
-
-        <div class="module glass">
-          <div class="section-title">
-            <div>
-              <h2>Rewards</h2>
-              <p>&#24509;&#31456;&#19981;&#26159;&#21387;&#21147;&#65292;&#26159;&#20320;&#35748;&#30495;&#23545;&#24453;&#33258;&#24049;&#30340;&#35777;&#25454;&#12290;</p>
-            </div>
-          </div>
-          <div class="badges" id="badges"></div>
-        </div>
+        <div class="module glass full"><div class="section-title"><div><h2>Vision Board</h2><p>&#24895;&#26223;&#21345;&#21487;&#25302;&#25341;&#12289;&#21487;&#32534;&#36753;&#12289;&#21487;&#25442;&#33394;&#12289;&#21487;&#35774;&#20026; Top 3&#65307;&#25903;&#25345; emoji / &#22270;&#29255; URL / &#20248;&#20808;&#32423;&#12290;</p></div></div><div class="vision-board" id="visionBoard"></div><div class="form-row"><input id="visionEmoji" placeholder="emoji" value="&#127769;" /><input id="visionTitle" placeholder="&#24895;&#26223;&#26631;&#39064;" /><input id="visionText" placeholder="&#20855;&#20307;&#30011;&#38754;&#65306;&#22312;&#21738;&#37324;&#12289;&#21644;&#35841;&#12289;&#20160;&#20040;&#24863;&#21463;" /><input id="visionImage" placeholder="image / gif URL&#65288;&#21487;&#36873;&#65289;" /><button class="btn primary" id="addVisionBtn">&#21152;&#20837;&#24895;&#26223;</button></div></div>
+        <div class="module glass"><div class="section-title"><div><h2>Mood & Habit Tracker</h2><p>&#29992; emoji &#21644;&#30701;&#21477;&#35760;&#24405;&#20170;&#22825;&#65292;&#19981;&#38656;&#35201;&#34920;&#28436;&#24320;&#24515;&#12290;</p></div></div><div class="mood-options" id="moodOptions"></div><textarea id="moodNote" placeholder="&#20170;&#22825;&#25105;&#30495;&#23454;&#30340;&#29366;&#24577;&#26159;&#8230;&#8230;"></textarea><div class="hero-actions"><button class="btn primary" id="saveMoodBtn">&#20445;&#23384;&#20170;&#26085;&#29366;&#24577;</button><button class="btn gold" id="habitBtn">&#23436;&#25104;&#20170;&#26085;&#20064;&#24815;</button></div></div>
+        <div class="module glass"><div class="section-title"><div><h2>Daily Micro Missions</h2><p id="missionTone">&#20219;&#21153;&#21487;&#36873;&#65292;&#20294;&#23436;&#25104;&#20250;&#25481;&#33853;&#23567;&#22870;&#21169;&#12290;</p></div></div><div class="mission-list" id="missionList"></div><div class="form-row" style="grid-template-columns:1fr auto;"><input id="missionInput" placeholder="&#33258;&#23450;&#20041;&#19968;&#20010; 10 &#20998;&#38047;&#23567;&#20219;&#21153;" /><button class="btn gold" id="addMissionBtn">&#28155;&#21152;</button></div></div>
+        <div class="module glass"><div class="section-title"><div><h2>Personal Pep Feed</h2><p>&#25353;&#24403;&#21069;&#27169;&#24335;&#29983;&#25104;&#19981;&#21516;&#35821;&#27668;&#30340;&#40723;&#21169;&#12290;</p></div></div><div class="pep-card" id="pepCard"></div><div class="hero-actions"><button class="btn pink" id="nextPepBtn">&#25442;&#19968;&#21477;</button><button class="btn gold" id="savePepMissionBtn">&#21464;&#25104;&#24494;&#20219;&#21153;</button></div></div>
+        <div class="module glass"><div class="section-title"><div><h2>Rewards</h2><p>&#24509;&#31456;&#19981;&#26159;&#21387;&#21147;&#65292;&#26159;&#20320;&#35748;&#30495;&#23545;&#24453;&#33258;&#24049;&#30340;&#35777;&#25454;&#12290;</p></div></div><div class="badges" id="badges"></div></div>
       </section>
     </div>
   </main>
-
-  <script>
-    const STORAGE_KEY = "magic_queen_manifest_v1";
-    const OLD_STORAGE_KEYS = ["manifest_atelier_v3", "manifest_atelier_v2", "manifest_studio_v1"];
-    const MOODS = ["\uD83D\uDE0C", "\uD83E\uDD79", "\u2728", "\uD83D\uDD25", "\uD83C\uDF27\uFE0F", "\uD83D\uDC85"];
-    const CARD_GRADIENTS = [
-      "linear-gradient(135deg, #f4e7ff, #e2f2ff)",
-      "linear-gradient(135deg, #fff2cf, #ffe7f7)",
-      "linear-gradient(135deg, #e9fff4, #eef0ff)",
-      "linear-gradient(135deg, #f7f3ff, #e8fbff)"
-    ];
-    const PEP_QUOTES = [
-      "\u4F60\u4E0D\u662F\u6CA1\u6709\u52A8\u529B\uFF0C\u4F60\u53EA\u662F\u9700\u8981\u628A\u76EE\u6807\u5207\u5230\u5C0F\u5230\u65E0\u6CD5\u62D2\u7EDD\u3002\u73B0\u5728\uFF0C\u505A 10 \u5206\u949F\u5C31\u597D\u3002",
-      "Queen energy \u4E0D\u662F\u786C\u6491\uFF0C\u662F\u77E5\u9053\u4ECA\u5929\u6700\u503C\u5F97\u4FDD\u62A4\u7684\u6CE8\u610F\u529B\u5728\u54EA\u91CC\u3002",
-      "Girl, don\u2019t cheat yourself \uD83D\uDE0F \u4F60\u8BF4\u60F3\u8981\u7684\u751F\u6D3B\uFF0C\u4ECA\u5929\u4E5F\u9700\u8981\u4E00\u4E2A\u5C0F\u8BC1\u636E\u3002",
-      "\u4F60\u53EF\u4EE5\u6162\u6162\u6765\uFF0C\u4F46\u522B\u7AD9\u5728\u539F\u5730\u9A97\u81EA\u5DF1\u8BF4\u5DF2\u7ECF\u5F00\u59CB\u3002\u9009\u4E00\u6B65\uFF0C\u8D70\u4E00\u4E0B\u3002",
-      "You slayed today \u7684\u524D\u63D0\u4E0D\u662F\u5B8C\u7F8E\uFF0C\u662F\u4F60\u771F\u7684\u5B8C\u6210\u4E86\u4E00\u4E2A\u5C0F\u52A8\u4F5C\u3002"
-    ];
-    const BADGES = [
-      { key: "slayStar", icon: "\u2B50", name: "Slay Star", condition: () => completedCount() >= 1 },
-      { key: "queenEnergy", icon: "\uD83D\uDC51", name: "Queen Energy", condition: () => streakDays() >= 3 },
-      { key: "bossMode", icon: "\uD83D\uDCBC", name: "Boss Mode", condition: () => completedCount() >= 5 }
-    ];
-
-    const DEFAULT_DATA = {
-      mood: "\u2728",
-      moodNote: "",
-      pepIndex: 0,
-      visionCards: [
-        { id: id(), emoji: "\uD83C\uDF19", title: "\u7A33\u5B9A\u8FDB\u8D26", text: "\u7528\u559C\u6B22\u7684\u65B9\u5F0F\u521B\u9020\u4EF7\u503C\uFF0C\u8D26\u6237\u8E0F\u5B9E\u589E\u957F\u3002", tag: "career", top: true, color: CARD_GRADIENTS[0] },
-        { id: id(), emoji: "\uD83E\uDE9E", title: "\u72B6\u6001\u53D1\u5149", text: "\u8EAB\u4F53\u8F7B\u76C8\uFF0C\u4F5C\u606F\u8212\u670D\uFF0C\u5FC3\u91CC\u6709\u4F59\u88D5\u3002", tag: "self", top: true, color: CARD_GRADIENTS[1] },
-        { id: id(), emoji: "\uD83E\uDEF6", title: "\u8212\u670D\u5173\u7CFB", text: "\u88AB\u5C0A\u91CD\u3001\u88AB\u652F\u6301\uFF0C\u4E5F\u80FD\u6E05\u695A\u8868\u8FBE\u8FB9\u754C\u3002", tag: "love", top: true, color: CARD_GRADIENTS[2] }
-      ],
-      missions: [
-        { id: id(), text: "\u5199\u4E0B\u4ECA\u5929\u6700\u91CD\u8981\u7684\u4E00\u6B65", done: false },
-        { id: id(), text: "\u6574\u7406\u4E00\u4E2A\u80FD\u8BA9\u5FC3\u60C5\u53D8\u597D\u7684\u5C0F\u89D2\u843D", done: false }
-      ],
-      moodLog: {},
-      completedDates: [],
-      unlocked: []
-    };
-
-    let data = loadData();
-    let draggedId = null;
-
-    function id() { return `mq_${Date.now()}_${Math.random().toString(16).slice(2)}`; }
-    function todayKey() { return new Date().toISOString().slice(0, 10); }
-    function escapeHtml(value) {
-      return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    function migrateOld(raw) {
-      const old = raw && typeof raw === "object" ? raw : {};
-      if (Array.isArray(old.visionCards)) return old;
-      const vision = Array.isArray(old.vision) ? old.vision : DEFAULT_DATA.visionCards.map((card) => card.text);
-      return {
-        ...DEFAULT_DATA,
-        visionCards: vision.slice(0, 6).map((text, index) => ({
-          id: id(), emoji: ["\uD83C\uDF19", "\uD83E\uDE9E", "\uD83E\uDEF6", "\uD83C\uDF31", "\uD83D\uDC8C", "\uD83D\uDC8E"][index % 6], title: `\u613F\u666F ${index + 1}`, text, tag: "vision", top: index < 3, color: CARD_GRADIENTS[index % CARD_GRADIENTS.length]
-        })),
-        missions: Array.isArray(old.wins) ? old.wins.map((text) => ({ id: id(), text, done: false })) : DEFAULT_DATA.missions
-      };
-    }
-
-    function normalize(value) {
-      const source = migrateOld(value);
-      return {
-        ...DEFAULT_DATA,
-        ...source,
-        visionCards: Array.isArray(source.visionCards) ? source.visionCards : DEFAULT_DATA.visionCards,
-        missions: Array.isArray(source.missions) ? source.missions : DEFAULT_DATA.missions,
-        moodLog: source.moodLog && typeof source.moodLog === "object" ? source.moodLog : {},
-        completedDates: Array.isArray(source.completedDates) ? source.completedDates : [],
-        unlocked: Array.isArray(source.unlocked) ? source.unlocked : []
-      };
-    }
-
-    function loadData() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY) || OLD_STORAGE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
-        return saved ? normalize(JSON.parse(saved)) : structuredClone(DEFAULT_DATA);
-      } catch (error) {
-        return structuredClone(DEFAULT_DATA);
-      }
-    }
-
-    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-    function completedCount() { return data.missions.filter((mission) => mission.done).length; }
-    function streakDays() { return new Set(data.completedDates).size; }
-
-    function showToast(message) {
-      document.querySelectorAll(".toast").forEach((toast) => toast.remove());
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2200);
-    }
-
-    function burst(x = window.innerWidth / 2, y = window.innerHeight / 2) {
-      const colors = ["#d6a1ff", "#a1d1ff", "#f7c948", "#ff8fd3"];
-      for (let i = 0; i < 28; i++) {
-        const dot = document.createElement("span");
-        dot.className = "confetti";
-        dot.style.left = `${x}px`;
-        dot.style.top = `${y}px`;
-        dot.style.background = colors[i % colors.length];
-        dot.style.setProperty("--x", `${Math.random() * 220 - 110}px`);
-        dot.style.setProperty("--y", `${Math.random() * 180 - 130}px`);
-        document.body.appendChild(dot);
-        setTimeout(() => dot.remove(), 1000);
-      }
-      ["\uD83D\uDC51", "\u2728", "\uD83D\uDCAB", "\u2B50", "\uD83D\uDC85"].forEach((emoji, index) => {
-        const item = document.createElement("span");
-        item.className = "emoji-burst";
-        item.textContent = emoji;
-        item.style.left = `${x}px`;
-        item.style.top = `${y}px`;
-        item.style.setProperty("--x", `${(index - 2) * 34}px`);
-        item.style.setProperty("--y", `${-80 - Math.random() * 40}px`);
-        document.body.appendChild(item);
-        setTimeout(() => item.remove(), 950);
-      });
-    }
-
-    function renderAll() {
-      renderBadges();
-      renderTop3();
-      renderVisionBoard();
-      renderMood();
-      renderMissions();
-      renderPep();
-      renderProgress();
-      saveData();
-    }
-
-    function renderBadges() {
-      data.unlocked = Array.from(new Set([...data.unlocked, ...BADGES.filter((badge) => badge.condition()).map((badge) => badge.key)]));
-      document.getElementById("badgePreview").innerHTML = BADGES.map((badge) => `<span class="badge ${data.unlocked.includes(badge.key) ? "unlocked" : ""}">${badge.icon} ${badge.name}</span>`).join("");
-      document.getElementById("badges").innerHTML = BADGES.map((badge) => `<span class="badge ${data.unlocked.includes(badge.key) ? "unlocked" : ""}">${badge.icon} ${badge.name}</span>`).join("");
-    }
-
-    function renderTop3() {
-      const cards = data.visionCards.filter((card) => card.top).slice(0, 3);
-      document.getElementById("top3").innerHTML = cards.map((card) => `
-        <article class="top-card">
-          <div class="emoji">${escapeHtml(card.emoji)}</div>
-          <h4>${escapeHtml(card.title)}</h4>
-          <p>${escapeHtml(card.text)}</p>
-        </article>`).join("") || `<article class="top-card"><div class="emoji">\u2728</div><h4>\u8FD8\u6CA1\u6709 Top 3</h4><p>\u5728\u613F\u666F\u5361\u91CC\u70B9 Top\uFF0C\u5C31\u4F1A\u51FA\u73B0\u5728\u8FD9\u91CC\u3002</p></article>`;
-    }
-
-    function renderVisionBoard() {
-      document.getElementById("visionBoard").innerHTML = data.visionCards.map((card) => `
-        <article class="vision-card" style="background:${card.color}" draggable="true" data-id="${card.id}">
-          <div class="card-top"><span class="emoji-big">${escapeHtml(card.emoji)}</span><span class="tag">${escapeHtml(card.tag)}${card.top ? " \u00B7 Top" : ""}</span></div>
-          <h4 contenteditable="true" data-edit="title">${escapeHtml(card.title)}</h4>
-          <p contenteditable="true" data-edit="text">${escapeHtml(card.text)}</p>
-          <div class="card-tools">
-            <button class="mini-btn" data-action="top">${card.top ? "\u53D6\u6D88 Top" : "\u8BBE\u4E3A Top"}</button>
-            <button class="mini-btn" data-action="color">\u6362\u8272</button>
-            <button class="mini-btn" data-action="delete">\u5220\u9664</button>
-          </div>
-        </article>`).join("");
-      bindVisionEvents();
-    }
-
-    function bindVisionEvents() {
-      document.querySelectorAll(".vision-card").forEach((node) => {
-        node.addEventListener("dragstart", () => { draggedId = node.dataset.id; node.classList.add("dragging"); });
-        node.addEventListener("dragend", () => node.classList.remove("dragging"));
-        node.addEventListener("dragover", (event) => event.preventDefault());
-        node.addEventListener("drop", () => {
-          const targetId = node.dataset.id;
-          if (!draggedId || draggedId === targetId) return;
-          const from = data.visionCards.findIndex((card) => card.id === draggedId);
-          const to = data.visionCards.findIndex((card) => card.id === targetId);
-          const [moved] = data.visionCards.splice(from, 1);
-          data.visionCards.splice(to, 0, moved);
-          renderAll();
-        });
-        node.querySelectorAll("[contenteditable]").forEach((field) => {
-          field.addEventListener("blur", () => {
-            const card = data.visionCards.find((item) => item.id === node.dataset.id);
-            card[field.dataset.edit] = field.textContent.trim();
-            renderAll();
-          });
-        });
-        node.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => handleVisionAction(node.dataset.id, button.dataset.action)));
-      });
-    }
-
-    function handleVisionAction(cardId, action) {
-      const card = data.visionCards.find((item) => item.id === cardId);
-      if (!card) return;
-      if (action === "top") card.top = !card.top;
-      if (action === "color") card.color = CARD_GRADIENTS[(CARD_GRADIENTS.indexOf(card.color) + 1) % CARD_GRADIENTS.length] || CARD_GRADIENTS[0];
-      if (action === "delete") data.visionCards = data.visionCards.filter((item) => item.id !== cardId);
-      renderAll();
-    }
-
-    function renderMood() {
-      document.getElementById("moodOptions").innerHTML = MOODS.map((mood) => `<button class="emoji-btn ${data.mood === mood ? "active" : ""}" data-mood="${mood}">${mood}</button>`).join("");
-      document.getElementById("moodNote").value = data.moodNote || "";
-      document.querySelectorAll("[data-mood]").forEach((button) => button.addEventListener("click", () => { data.mood = button.dataset.mood; renderMood(); }));
-    }
-
-    function renderMissions() {
-      document.getElementById("missionList").innerHTML = data.missions.map((mission) => `
-        <label class="mission ${mission.done ? "done" : ""}">
-          <input type="checkbox" ${mission.done ? "checked" : ""} data-mission="${mission.id}" />
-          <span>${escapeHtml(mission.text)}</span>
-          <button class="mini-btn" data-remove="${mission.id}" type="button">\u5220\u9664</button>
-        </label>`).join("");
-      document.querySelectorAll("[data-mission]").forEach((input) => input.addEventListener("change", (event) => {
-        const mission = data.missions.find((item) => item.id === input.dataset.mission);
-        mission.done = input.checked;
-        if (mission.done) {
-          data.completedDates = Array.from(new Set([...data.completedDates, todayKey()]));
-          burst(event.clientX || window.innerWidth / 2, event.clientY || window.innerHeight / 2);
-          showToast("You slayed today \uD83D\uDD25 \u8FD9\u4E0D\u662F\u9E21\u6C64\uFF0C\u8FD9\u662F\u8BC1\u636E\u3002");
-        }
-        renderAll();
-      }));
-      document.querySelectorAll("[data-remove]").forEach((button) => button.addEventListener("click", () => { data.missions = data.missions.filter((item) => item.id !== button.dataset.remove); renderAll(); }));
-    }
-
-    function renderPep() {
-      document.getElementById("pepCard").innerHTML = `<div style="font-size:44px">\uD83D\uDC8C</div><p>${escapeHtml(PEP_QUOTES[data.pepIndex])}</p>`;
-    }
-
-    function renderProgress() {
-      const percent = Math.min(100, completedCount() * 18 + streakDays() * 10 + (data.moodLog[todayKey()] ? 18 : 0));
-      document.getElementById("streakFill").style.width = `${percent}%`;
-      document.getElementById("streakText").textContent = `\u5B8C\u6210 ${completedCount()} \u4E2A\u5FAE\u4EFB\u52A1 \u00B7 \u8FDE\u7EED\u8BB0\u5F55 ${streakDays()} \u5929 \u00B7 look at that streak \uD83D\uDCAB`;
-      const days = [...Array(7)].map((_, index) => {
-        const d = new Date(); d.setDate(d.getDate() - (6 - index)); return d.toISOString().slice(0, 10);
-      });
-      document.getElementById("miniChart").innerHTML = days.map((day) => `<div class="chart-bar" style="height:${data.moodLog[day] ? 64 : 14}px"></div>`).join("");
-    }
-
-    function addVisionCard() {
-      const emoji = document.getElementById("visionEmoji").value.trim() || "\u2728";
-      const title = document.getElementById("visionTitle").value.trim() || "\u65B0\u7684\u613F\u666F";
-      const text = document.getElementById("visionText").value.trim() || "\u628A\u5B83\u5199\u5177\u4F53\uFF1A\u753B\u9762\u3001\u884C\u52A8\u3001\u611F\u53D7\u3002";
-      data.visionCards.push({ id: id(), emoji, title, text, tag: "new", top: data.visionCards.filter((card) => card.top).length < 3, color: CARD_GRADIENTS[data.visionCards.length % CARD_GRADIENTS.length] });
-      document.getElementById("visionTitle").value = "";
-      document.getElementById("visionText").value = "";
-      burst();
-      showToast("\u613F\u666F\u5DF2\u52A0\u5165\u3002\u73B0\u5728\u7ED9\u5B83\u4E00\u4E2A\u5C0F\u884C\u52A8\uFF0C\u522B\u53EA\u6536\u85CF\u68A6\u3002 ");
-      renderAll();
-    }
-
-    function addMission(text) {
-      const value = text || document.getElementById("missionInput").value.trim();
-      if (!value) return;
-      data.missions.push({ id: id(), text: value, done: false });
-      document.getElementById("missionInput").value = "";
-      showToast("\u5FAE\u4EFB\u52A1\u5DF2\u4FDD\u5B58\u3002\u5C0F\u5230\u80FD\u505A\uFF0C\u624D\u662F\u771F\u7684\u5F3A\u3002 ");
-      renderAll();
-    }
-
-    function bindControls() {
-      document.getElementById("addVisionBtn").addEventListener("click", addVisionCard);
-      document.getElementById("addQuickVisionBtn").addEventListener("click", () => {
-        document.getElementById("visionTitle").value = "\u4E00\u4E2A\u66F4\u81EA\u7531\u7684\u65E5\u5E38";
-        document.getElementById("visionText").value = "\u6211\u77E5\u9053\u81EA\u5DF1\u8981\u4EC0\u4E48\uFF0C\u4E5F\u613F\u610F\u6BCF\u5929\u7ED9\u5B83\u4E00\u70B9\u771F\u5B9E\u884C\u52A8\u3002";
-        addVisionCard();
-      });
-      document.getElementById("saveMoodBtn").addEventListener("click", () => {
-        data.moodNote = document.getElementById("moodNote").value.trim();
-        data.moodLog[todayKey()] = { mood: data.mood, note: data.moodNote };
-        burst();
-        showToast("\u72B6\u6001\u5DF2\u8BB0\u5F55\u3002\u4F60\u4E0D\u9700\u8981\u5047\u88C5\uFF0C\u4F60\u53EA\u9700\u8981\u8BDA\u5B9E\u3002 ");
-        renderAll();
-      });
-      document.getElementById("addMissionBtn").addEventListener("click", () => addMission());
-      document.getElementById("nextPepBtn").addEventListener("click", () => { data.pepIndex = (data.pepIndex + 1) % PEP_QUOTES.length; burst(); renderAll(); });
-      document.getElementById("drawPepBtn").addEventListener("click", () => { data.pepIndex = (data.pepIndex + 1) % PEP_QUOTES.length; burst(); renderAll(); document.getElementById("pepCard").scrollIntoView({ behavior: "smooth", block: "center" }); });
-      document.getElementById("savePepMissionBtn").addEventListener("click", () => addMission(PEP_QUOTES[data.pepIndex]));
-      document.getElementById("completeRitualBtn").addEventListener("click", (event) => {
-        const firstOpen = data.missions.find((mission) => !mission.done);
-        if (firstOpen) firstOpen.done = true;
-        data.completedDates = Array.from(new Set([...data.completedDates, todayKey()]));
-        burst(event.clientX, event.clientY);
-        showToast("You slayed today \uD83D\uDD25 \u4E00\u4E2A\u52A8\u4F5C\u5C31\u80FD\u6539\u53D8\u4ECA\u5929\u7684\u53D9\u4E8B\u3002 ");
-        renderAll();
-      });
-    }
-
-    bindControls();
-    renderAll();
-  </script>
+<script>
+const STORAGE_KEY = "joyce_magic_private_v1";
+const OLD_STORAGE_KEYS = ["magic_queen_manifest_v1", "manifest_atelier_v3", "manifest_atelier_v2", "manifest_studio_v1"];
+const MODES = {
+  queen_boss: { name: "Queen Boss Mode", icon: "\uD83D\uDC51", kicker: "Own today, queen.", intro: "Main character discipline\uFF1A\u5148\u770B\u613F\u666F\uFF0C\u518D\u5B8C\u6210\u4E00\u4E2A\u80FD\u8BA9\u73B0\u5B9E\u524D\u8FDB\u7684\u5C0F\u52A8\u4F5C\u3002", missionTone: "Own today, queen. \u5FAE\u4EFB\u52A1\u4E0D\u662F\u538B\u529B\uFF0C\u662F\u4F60\u638C\u63A7\u611F\u7684\u8BC1\u636E\u3002", pep: ["Own today, queen. \u9009\u4E00\u4E2A\u4EFB\u52A1\uFF0C\u628A\u5B83\u505A\u5B8C\u3002", "Main character discipline\uFF1A\u4E0D\u7B49\u72B6\u6001\u5B8C\u7F8E\uFF0C\u5148\u63A8\u8FDB 10 \u5206\u949F\u3002", "Boss mode means boundaries, receipts, and one real action."] },
+  sweet_spicy: { name: "Sweet & Spicy Mode", icon: "\uD83D\uDC96", kicker: "Hot goals only.", intro: "Cute, but unstoppable\uFF1A\u613F\u666F\u8981\u6F02\u4EAE\uFF0C\u884C\u52A8\u4E5F\u8981\u6709\u8BC1\u636E\u3002", missionTone: "Hot goals only. Cute, but unstoppable\uFF0C\u505A\u4E00\u70B9\u5C31\u8D62\u3002", pep: ["Cute, but unstoppable. \u522B\u53EA\u622A\u56FE\u613F\u671B\uFF0C\u7ED9\u5B83\u4E00\u4E2A\u52A8\u4F5C\u3002", "Hot goals only\uFF1A\u4ECA\u5929\u7684\u4F60\u4E0D\u9700\u8981\u5B8C\u7F8E\uFF0C\u4F46\u9700\u8981\u5151\u73B0\u4E00\u70B9\u70B9\u3002", "Flirty with life, serious with your goals."] },
+  clean_dreamy: { name: "Clean Girl Dreamy Mode", icon: "\uD83E\uDEE7", kicker: "Soft life, sharp focus.", intro: "Romanticize the routine\uFF1A\u8BB0\u5F55\u5FC3\u60C5\u3001\u6574\u7406\u613F\u666F\u3001\u5B8C\u6210\u4E00\u4E2A\u6E29\u67D4\u7684\u5C0F\u4EFB\u52A1\u3002", missionTone: "Soft life, sharp focus. \u4ECA\u5929\u53EA\u505A\u4E00\u4E2A\u8F7B\u76C8\u4F46\u771F\u5B9E\u7684\u52A8\u4F5C\u3002", pep: ["Soft life, sharp focus. \u6162\u6162\u6765\uFF0C\u4F46\u522B\u505C\u5728\u539F\u5730\u3002", "Romanticize the routine\uFF1A\u628A\u4E00\u4E2A\u5C0F\u6B65\u9AA4\u505A\u5F97\u6F02\u4EAE\u3002", "\u6E29\u67D4\u4E0D\u662F\u677E\u6563\uFF0C\u662F\u7A33\u5B9A\u5730\u56DE\u5230\u81EA\u5DF1\u3002"] }
+};
+const MOODS = ["\uD83D\uDE0C", "\uD83E\uDD79", "\u2728", "\uD83D\uDD25", "\uD83C\uDF27\uFE0F", "\uD83D\uDC85"];
+const CARD_GRADIENTS = ["linear-gradient(135deg, #f4e7ff, #e2f2ff)", "linear-gradient(135deg, #fff2cf, #ffe7f7)", "linear-gradient(135deg, #e9fff4, #eef0ff)", "linear-gradient(135deg, #f7f3ff, #e8fbff)"];
+const BADGES = [
+  { key: "slayStar", icon: "\u2B50", name: "Slay Star", condition: () => completedCount() >= 1 },
+  { key: "queenEnergy", icon: "\uD83D\uDC51", name: "Queen Energy", condition: () => streakDays() >= 3 },
+  { key: "bossMode", icon: "\uD83D\uDCBC", name: "Boss Mode", condition: () => completedCount() >= 5 }
+];
+const DEFAULT_DATA = {
+  mode: "clean_dreamy", mood: "\u2728", moodNote: "", pepIndex: 0, habitName: "Daily reset", habitCompletedDates: [],
+  visionCards: [
+    { id: id(), emoji: "\uD83C\uDF19", title: "\u7A33\u5B9A\u8FDB\u8D26", text: "\u7528\u559C\u6B22\u7684\u65B9\u5F0F\u521B\u9020\u4EF7\u503C\uFF0C\u8D26\u6237\u8E0F\u5B9E\u589E\u957F\u3002", imageURL: "", priority: "high", completed: false, top: true, color: CARD_GRADIENTS[0] },
+    { id: id(), emoji: "\uD83E\uDE9E", title: "\u72B6\u6001\u53D1\u5149", text: "\u8EAB\u4F53\u8F7B\u76C8\uFF0C\u4F5C\u606F\u8212\u670D\uFF0C\u5FC3\u91CC\u6709\u4F59\u88D5\u3002", imageURL: "", priority: "medium", completed: false, top: true, color: CARD_GRADIENTS[1] },
+    { id: id(), emoji: "\uD83E\uDEF6", title: "\u8212\u670D\u5173\u7CFB", text: "\u88AB\u5C0A\u91CD\u3001\u88AB\u652F\u6301\uFF0C\u4E5F\u80FD\u6E05\u695A\u8868\u8FBE\u8FB9\u754C\u3002", imageURL: "", priority: "high", completed: false, top: true, color: CARD_GRADIENTS[2] }
+  ],
+  missions: [{ id: id(), title: "\u5199\u4E0B\u4ECA\u5929\u6700\u91CD\u8981\u7684\u4E00\u6B65", completed: false, points: 10 }, { id: id(), title: "\u6574\u7406\u4E00\u4E2A\u80FD\u8BA9\u5FC3\u60C5\u53D8\u597D\u7684\u5C0F\u89D2\u843D", completed: false, points: 10 }],
+  moodLog: {}, rewards: [], unlocked: [], completedDates: []
+};
+let data = loadData();
+let draggedId = null;
+function id(){ return `jm_${Date.now()}_${Math.random().toString(16).slice(2)}`; }
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function escapeHtml(value){ return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+function migrateOld(raw){
+  const old = raw && typeof raw === "object" ? raw : {};
+  if (Array.isArray(old.visionCards) && old.mode) return old;
+  const oldCards = Array.isArray(old.visionCards) ? old.visionCards : [];
+  const fromVision = Array.isArray(old.vision) ? old.vision.map((text, index) => ({ id:id(), emoji:["\uD83C\uDF19","\uD83E\uDE9E","\uD83E\uDEF6","\uD83C\uDF31"][index%4], title:`\u613F\u666F ${index+1}`, text, imageURL:"", priority:index<2?"high":"medium", completed:false, top:index<3, color:CARD_GRADIENTS[index%CARD_GRADIENTS.length] })) : [];
+  return { ...DEFAULT_DATA, ...old, mode: old.mode || "clean_dreamy", visionCards: oldCards.length ? oldCards : (fromVision.length ? fromVision : DEFAULT_DATA.visionCards), missions: Array.isArray(old.missions) ? old.missions.map(m => ({ id:m.id || id(), title:m.title || m.text || "\u5FAE\u4EFB\u52A1", completed:Boolean(m.completed || m.done), points:m.points || 10 })) : DEFAULT_DATA.missions };
+}
+function normalize(value){
+  const source = migrateOld(value);
+  return { ...DEFAULT_DATA, ...source, mode: MODES[source.mode] ? source.mode : "clean_dreamy", visionCards: Array.isArray(source.visionCards) ? source.visionCards : DEFAULT_DATA.visionCards, missions: Array.isArray(source.missions) ? source.missions : DEFAULT_DATA.missions, moodLog: source.moodLog && typeof source.moodLog === "object" ? source.moodLog : {}, habitCompletedDates: Array.isArray(source.habitCompletedDates) ? source.habitCompletedDates : [], rewards: Array.isArray(source.rewards) ? source.rewards : [], unlocked: Array.isArray(source.unlocked) ? source.unlocked : [], completedDates: Array.isArray(source.completedDates) ? source.completedDates : [] };
+}
+function loadData(){ try { const saved = localStorage.getItem(STORAGE_KEY) || OLD_STORAGE_KEYS.map(k => localStorage.getItem(k)).find(Boolean); return saved ? normalize(JSON.parse(saved)) : structuredClone(DEFAULT_DATA); } catch(e){ return structuredClone(DEFAULT_DATA); } }
+function saveData(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function completedCount(){ return data.missions.filter(m => m.completed).length; }
+function streakDays(){ return new Set([...data.completedDates, ...data.habitCompletedDates]).size; }
+function activeMode(){ return MODES[data.mode] || MODES.clean_dreamy; }
+function showToast(message){ document.querySelectorAll(".toast").forEach(t => t.remove()); const toast=document.createElement("div"); toast.className="toast"; toast.textContent=message; document.body.appendChild(toast); setTimeout(()=>toast.remove(),2300); }
+function burst(x=innerWidth/2,y=innerHeight/2){ const colors=["#d6a1ff","#a1d1ff","#f7c948","#ff8fd3"]; for(let i=0;i<30;i++){ const dot=document.createElement("span"); dot.className="confetti"; dot.style.left=`${x}px`; dot.style.top=`${y}px`; dot.style.background=colors[i%colors.length]; dot.style.setProperty("--x",`${Math.random()*240-120}px`); dot.style.setProperty("--y",`${Math.random()*190-140}px`); document.body.appendChild(dot); setTimeout(()=>dot.remove(),1000); } ["\uD83D\uDC51","\u2728","\uD83D\uDCAB","\u2B50","\uD83D\uDC85"].forEach((emoji,index)=>{ const item=document.createElement("span"); item.className="emoji-burst"; item.textContent=emoji; item.style.left=`${x}px`; item.style.top=`${y}px`; item.style.setProperty("--x",`${(index-2)*34}px`); item.style.setProperty("--y",`${-80-Math.random()*40}px`); document.body.appendChild(item); setTimeout(()=>item.remove(),950); }); }
+function renderAll(){ document.body.dataset.mode=data.mode; renderModes(); renderBadges(); renderTop3(); renderVisionBoard(); renderMood(); renderMissions(); renderPep(); renderProgress(); saveData(); }
+function renderModes(){ const mode=activeMode(); document.getElementById("modeKicker").textContent=`${mode.icon} ${mode.kicker}`; document.getElementById("modeIntro").textContent=mode.intro; document.getElementById("missionTone").textContent=mode.missionTone; document.getElementById("modeSwitch").innerHTML=Object.entries(MODES).map(([id,m])=>`<button class="mode-btn ${data.mode===id?"active":""}" data-mode="${id}">${m.icon} ${m.name}</button>`).join(""); document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>{ data.mode=btn.dataset.mode; burst(); showToast("Mode switched \u00B7 color fade unlocked \u2728"); renderAll(); })); }
+function renderBadges(){ data.unlocked=Array.from(new Set([...data.unlocked, ...BADGES.filter(b=>b.condition()).map(b=>b.key)])); const html=BADGES.map(b=>`<span class="badge ${data.unlocked.includes(b.key)?"unlocked":""}">${b.icon} ${b.name}</span>`).join(""); document.getElementById("badgePreview").innerHTML=html; document.getElementById("badges").innerHTML=html; }
+function renderTop3(){ const cards=data.visionCards.filter(c=>c.top).slice(0,3); document.getElementById("top3").innerHTML=cards.map(c=>`<article class="top-card"><div class="emoji">${escapeHtml(c.emoji)}</div><h4>${escapeHtml(c.title)}</h4><p>${escapeHtml(c.text)}</p></article>`).join("") || `<article class="top-card"><div class="emoji">\u2728</div><h4>\u8FD8\u6CA1\u6709 Top 3</h4><p>\u5728\u613F\u666F\u5361\u91CC\u70B9 Top\u3002</p></article>`; }
+function renderVisionBoard(){ document.getElementById("visionBoard").innerHTML=data.visionCards.map(card=>`<article class="vision-card" style="background:${card.color}" draggable="true" data-id="${card.id}">${card.imageURL?`<img src="${escapeHtml(card.imageURL)}" alt="" style="width:100%;max-height:110px;object-fit:cover;border-radius:18px;margin-bottom:10px;">`:""}<div class="card-top"><span class="emoji-big">${escapeHtml(card.emoji)}</span><span class="tag">${escapeHtml(card.priority)}${card.completed?" \u00B7 done":""}${card.top?" \u00B7 Top":""}</span></div><h4 contenteditable="true" data-edit="title">${escapeHtml(card.title)}</h4><p contenteditable="true" data-edit="text">${escapeHtml(card.text)}</p><div class="card-tools"><button class="mini-btn" data-action="top">${card.top?"\u53D6\u6D88 Top":"\u8BBE\u4E3A Top"}</button><button class="mini-btn" data-action="done">${card.completed?"\u53D6\u6D88\u5B8C\u6210":"\u5B8C\u6210"}</button><button class="mini-btn" data-action="priority">\u4F18\u5148\u7EA7</button><button class="mini-btn" data-action="color">\u6362\u8272</button><button class="mini-btn" data-action="delete">\u5220\u9664</button></div></article>`).join(""); bindVisionEvents(); }
+function bindVisionEvents(){ document.querySelectorAll(".vision-card").forEach(node=>{ node.addEventListener("dragstart",()=>{ draggedId=node.dataset.id; node.classList.add("dragging"); }); node.addEventListener("dragend",()=>node.classList.remove("dragging")); node.addEventListener("dragover",e=>e.preventDefault()); node.addEventListener("drop",()=>{ const targetId=node.dataset.id; if(!draggedId||draggedId===targetId)return; const from=data.visionCards.findIndex(c=>c.id===draggedId); const to=data.visionCards.findIndex(c=>c.id===targetId); const [moved]=data.visionCards.splice(from,1); data.visionCards.splice(to,0,moved); renderAll(); }); node.querySelectorAll("[contenteditable]").forEach(field=>field.addEventListener("blur",()=>{ const card=data.visionCards.find(c=>c.id===node.dataset.id); card[field.dataset.edit]=field.textContent.trim(); renderAll(); })); node.querySelectorAll("[data-action]").forEach(button=>button.addEventListener("click",()=>handleVisionAction(node.dataset.id,button.dataset.action))); }); }
+function handleVisionAction(cardId,action){ const card=data.visionCards.find(c=>c.id===cardId); if(!card)return; if(action==="top") card.top=!card.top; if(action==="done"){ card.completed=!card.completed; if(card.completed){ burst(); showToast("Vision receipt unlocked \u2728"); } } if(action==="priority") card.priority=card.priority==="high"?"medium":card.priority==="medium"?"low":"high"; if(action==="color") card.color=CARD_GRADIENTS[(CARD_GRADIENTS.indexOf(card.color)+1)%CARD_GRADIENTS.length]||CARD_GRADIENTS[0]; if(action==="delete") data.visionCards=data.visionCards.filter(c=>c.id!==cardId); renderAll(); }
+function renderMood(){ document.getElementById("moodOptions").innerHTML=MOODS.map(m=>`<button class="emoji-btn ${data.mood===m?"active":""}" data-mood="${m}">${m}</button>`).join(""); document.getElementById("moodNote").value=data.moodNote||""; document.querySelectorAll("[data-mood]").forEach(btn=>btn.addEventListener("click",()=>{ data.mood=btn.dataset.mood; renderMood(); })); }
+function renderMissions(){ document.getElementById("missionList").innerHTML=data.missions.map(m=>`<label class="mission ${m.completed?"done":""}"><input type="checkbox" ${m.completed?"checked":""} data-mission="${m.id}"/><span>${escapeHtml(m.title)} <b>+${m.points||10}</b></span><button class="mini-btn" data-remove="${m.id}" type="button">\u5220\u9664</button></label>`).join(""); document.querySelectorAll("[data-mission]").forEach(input=>input.addEventListener("change",e=>{ const mission=data.missions.find(m=>m.id===input.dataset.mission); mission.completed=input.checked; if(mission.completed){ data.completedDates=Array.from(new Set([...data.completedDates,todayKey()])); burst(e.clientX||innerWidth/2,e.clientY||innerHeight/2); showToast(data.mode==="queen_boss"?"Own today, queen. \uD83D\uDC51":data.mode==="sweet_spicy"?"Cute, but unstoppable. \uD83D\uDC96":"Soft life, sharp focus. \uD83E\uDEE7"); } renderAll(); })); document.querySelectorAll("[data-remove]").forEach(btn=>btn.addEventListener("click",()=>{ data.missions=data.missions.filter(m=>m.id!==btn.dataset.remove); renderAll(); })); }
+function renderPep(){ const mode=activeMode(); document.getElementById("pepCard").innerHTML=`<div style="font-size:44px">\uD83D\uDC8C</div><p>${escapeHtml(mode.pep[data.pepIndex % mode.pep.length])}</p>`; }
+function renderProgress(){ const percent=Math.min(100, completedCount()*18+streakDays()*10+(data.moodLog[todayKey()]?18:0)); document.getElementById("streakFill").style.width=`${percent}%`; document.getElementById("streakText").textContent=`\u5B8C\u6210 ${completedCount()} \u4E2A\u5FAE\u4EFB\u52A1 \u00B7 \u8FDE\u7EED\u8BB0\u5F55 ${streakDays()} \u5929 \u00B7 look at that streak \uD83D\uDCAB`; const days=[...Array(7)].map((_,i)=>{const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toISOString().slice(0,10);}); document.getElementById("miniChart").innerHTML=days.map(day=>`<div class="chart-bar" style="height:${data.moodLog[day]||data.habitCompletedDates.includes(day)?64:14}px"></div>`).join(""); }
+function addVisionCard(){ const emoji=document.getElementById("visionEmoji").value.trim()||"\u2728"; const title=document.getElementById("visionTitle").value.trim()||"\u65B0\u7684\u613F\u666F"; const text=document.getElementById("visionText").value.trim()||"\u628A\u5B83\u5199\u5177\u4F53\uFF1A\u753B\u9762\u3001\u884C\u52A8\u3001\u611F\u53D7\u3002"; const imageURL=document.getElementById("visionImage").value.trim(); data.visionCards.push({id:id(),emoji,title,text,imageURL,priority:"medium",completed:false,top:data.visionCards.filter(c=>c.top).length<3,color:CARD_GRADIENTS[data.visionCards.length%CARD_GRADIENTS.length]}); ["visionTitle","visionText","visionImage"].forEach(id=>document.getElementById(id).value=""); burst(); showToast("\u613F\u666F\u5DF2\u52A0\u5165\u3002\u73B0\u5728\u7ED9\u5B83\u4E00\u4E2A\u5C0F\u884C\u52A8\uFF0C\u522B\u53EA\u6536\u85CF\u68A6\u3002 "); renderAll(); }
+function addMission(text){ const value=text||document.getElementById("missionInput").value.trim(); if(!value)return; data.missions.push({id:id(),title:value,completed:false,points:10}); document.getElementById("missionInput").value=""; showToast("\u5FAE\u4EFB\u52A1\u5DF2\u4FDD\u5B58\u3002\u5C0F\u5230\u80FD\u505A\uFF0C\u624D\u662F\u771F\u7684\u5F3A\u3002 "); renderAll(); }
+function bindControls(){ document.getElementById("addVisionBtn").addEventListener("click",addVisionCard); document.getElementById("addQuickVisionBtn").addEventListener("click",()=>{ document.getElementById("visionTitle").value="\u4E00\u4E2A\u66F4\u81EA\u7531\u7684\u65E5\u5E38"; document.getElementById("visionText").value="\u6211\u77E5\u9053\u81EA\u5DF1\u8981\u4EC0\u4E48\uFF0C\u4E5F\u613F\u610F\u6BCF\u5929\u7ED9\u5B83\u4E00\u70B9\u771F\u5B9E\u884C\u52A8\u3002"; addVisionCard(); }); document.getElementById("saveMoodBtn").addEventListener("click",()=>{ data.moodNote=document.getElementById("moodNote").value.trim(); data.moodLog[todayKey()]={emoji:data.mood,score:MOODS.indexOf(data.mood)+1,notes:data.moodNote}; burst(); showToast("\u72B6\u6001\u5DF2\u8BB0\u5F55\u3002\u4F60\u4E0D\u9700\u8981\u5047\u88C5\uFF0C\u4F60\u53EA\u9700\u8981\u8BDA\u5B9E\u3002 "); renderAll(); }); document.getElementById("habitBtn").addEventListener("click",()=>{ data.habitCompletedDates=Array.from(new Set([...data.habitCompletedDates,todayKey()])); burst(); showToast("Habit streak updated \uD83D\uDCAB"); renderAll(); }); document.getElementById("addMissionBtn").addEventListener("click",()=>addMission()); document.getElementById("nextPepBtn").addEventListener("click",()=>{ data.pepIndex=(data.pepIndex+1)%activeMode().pep.length; burst(); renderAll(); }); document.getElementById("drawPepBtn").addEventListener("click",()=>{ data.pepIndex=(data.pepIndex+1)%activeMode().pep.length; burst(); renderAll(); document.getElementById("pepCard").scrollIntoView({behavior:"smooth",block:"center"}); }); document.getElementById("savePepMissionBtn").addEventListener("click",()=>addMission(activeMode().pep[data.pepIndex%activeMode().pep.length])); document.getElementById("completeRitualBtn").addEventListener("click",e=>{ const firstOpen=data.missions.find(m=>!m.completed); if(firstOpen) firstOpen.completed=true; data.completedDates=Array.from(new Set([...data.completedDates,todayKey()])); burst(e.clientX,e.clientY); showToast("You slayed today \uD83D\uDD25 \u4E00\u4E2A\u52A8\u4F5C\u5C31\u80FD\u6539\u53D8\u4ECA\u5929\u7684\u53D9\u4E8B\u3002 "); renderAll(); }); }
+bindControls(); renderAll();
+</script>
 </body>
 </html>
