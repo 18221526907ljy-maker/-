@@ -1,9 +1,9 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
-index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a91fbbd2e 100644
+index 3e004b0467145cd952e35006bec5f572e629b103..592ea99b2bbed3597c9ecfc66ab20dbf29cbd4b1 100644
 --- a/index.html
 +++ b/index.html
-@@ -1,827 +1,356 @@
+@@ -1,827 +1,580 @@
  <!DOCTYPE html>
  <html lang="zh-CN">
  <head>
@@ -88,80 +88,213 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 -    </style>
 +  <meta charset="UTF-8" />
 +  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-+  <title>显化能量站｜Manifest Studio</title>
++  <title>甜辣显化衣帽间｜Manifest Atelier</title>
 +  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 +  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 +  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 +  <script src="https://cdn.tailwindcss.com"></script>
 +  <link rel="preconnect" href="https://fonts.googleapis.com" />
 +  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
++  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
 +  <style>
-+    :root { color-scheme: dark; }
++    :root {
++      color-scheme: dark;
++      --cream: #fff7ed;
++      --gold: #ffd36e;
++      --rose: #ff6fae;
++      --hot: #ff2f7d;
++      --cherry: #ff174d;
++      --violet: #b693ff;
++      --ink: #11040d;
++    }
++
 +    * { box-sizing: border-box; }
++
 +    body {
 +      margin: 0;
 +      min-height: 100vh;
 +      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-+      color: #fff7ed;
++      color: var(--cream);
 +      background:
-+        radial-gradient(circle at top left, rgba(244, 114, 182, 0.34), transparent 32rem),
-+        radial-gradient(circle at top right, rgba(251, 191, 36, 0.24), transparent 30rem),
-+        linear-gradient(135deg, #20111d 0%, #41182f 42%, #0f172a 100%);
++        radial-gradient(circle at 9% 8%, rgba(255, 111, 174, 0.58), transparent 30rem),
++        radial-gradient(circle at 78% 2%, rgba(255, 211, 110, 0.42), transparent 32rem),
++        radial-gradient(circle at 58% 72%, rgba(255, 47, 125, 0.24), transparent 28rem),
++        radial-gradient(circle at 92% 88%, rgba(182, 147, 255, 0.28), transparent 30rem),
++        linear-gradient(135deg, #11040d 0%, #3a0c25 42%, #120f2f 100%);
 +      overflow-x: hidden;
 +    }
-+    body::before {
++
++    body::before,
++    body::after {
 +      content: "";
 +      position: fixed;
 +      inset: 0;
 +      pointer-events: none;
++      z-index: 0;
++    }
++
++    body::before {
 +      background-image:
-+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-+      background-size: 46px 46px;
-+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), transparent);
++        linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
++        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
++      background-size: 64px 64px;
++      mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), transparent 76%);
 +    }
++
++    body::after {
++      opacity: .18;
++      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
++      mix-blend-mode: soft-light;
++    }
++
++    .display { font-family: "Playfair Display", "Noto Serif SC", serif; }
 +    .serif { font-family: "Noto Serif SC", serif; }
++
++    .shell { position: relative; z-index: 1; }
++
 +    .glass {
-+      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-+      border: 1px solid rgba(255,255,255,0.18);
-+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.34);
-+      backdrop-filter: blur(22px);
++      border: 1px solid rgba(255,255,255,0.17);
++      background: linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.065));
++      box-shadow: 0 30px 90px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.16);
++      backdrop-filter: blur(26px) saturate(140%);
 +    }
-+    .soft-card {
-+      background: rgba(255,255,255,0.1);
-+      border: 1px solid rgba(255,255,255,0.16);
-+      backdrop-filter: blur(14px);
++
++    .panel {
++      border: 1px solid rgba(255,255,255,0.14);
++      background: linear-gradient(150deg, rgba(255,255,255,0.12), rgba(255,255,255,0.055));
++      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
++      backdrop-filter: blur(18px);
 +    }
-+    .glow-text { text-shadow: 0 0 28px rgba(251, 191, 36, 0.55); }
-+    .breathing-orb {
-+      animation: breathe 5s ease-in-out infinite;
-+      box-shadow: 0 0 60px rgba(251, 191, 36, 0.35), inset 0 0 28px rgba(255,255,255,0.2);
-+    }
-+    @keyframes breathe {
-+      0%, 100% { transform: scale(1); opacity: .82; }
-+      50% { transform: scale(1.08); opacity: 1; }
-+    }
-+    .float-slow { animation: floatSlow 8s ease-in-out infinite; }
-+    @keyframes floatSlow {
-+      0%, 100% { transform: translateY(0); }
-+      50% { transform: translateY(-12px); }
-+    }
-+    .sparkle {
-+      position: fixed;
-+      width: 7px;
-+      height: 7px;
-+      border-radius: 999px;
-+      background: rgba(255,255,255,.8);
-+      filter: blur(.4px);
-+      animation: rise 8s linear infinite;
++
++    .neon-border { position: relative; overflow: hidden; }
++    .neon-border::before {
++      content: "";
++      position: absolute;
++      inset: -1px;
++      padding: 1px;
++      border-radius: inherit;
++      background: linear-gradient(120deg, rgba(255,211,110,.95), rgba(255,47,125,.88), rgba(255,111,174,.78), rgba(182,147,255,.78), rgba(255,211,110,.9));
++      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
++      -webkit-mask-composite: xor;
++      mask-composite: exclude;
 +      pointer-events: none;
 +    }
-+    @keyframes rise {
-+      from { transform: translateY(105vh) scale(.5); opacity: 0; }
-+      12% { opacity: .75; }
-+      to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
++
++    .hero-title {
++      letter-spacing: -0.07em;
++      text-shadow: 0 0 52px rgba(255,47,125,.34), 0 0 30px rgba(255,211,110,.22);
 +    }
++
++    .aurora {
++      position: absolute;
++      width: 32rem;
++      height: 32rem;
++      border-radius: 999px;
++      filter: blur(18px);
++      opacity: .64;
++      animation: drift 14s ease-in-out infinite alternate;
++      background: conic-gradient(from 120deg, rgba(255,211,110,.82), rgba(255,47,125,.58), rgba(255,111,174,.55), rgba(182,147,255,.55), rgba(255,211,110,.82));
++    }
++
++    @keyframes drift {
++      from { transform: translate3d(-8%, -6%, 0) rotate(0deg) scale(.9); }
++      to { transform: translate3d(8%, 5%, 0) rotate(28deg) scale(1.07); }
++    }
++
++    .orb {
++      animation: breathe 5.6s ease-in-out infinite;
++      background:
++        radial-gradient(circle at 34% 26%, rgba(255,255,255,.95), rgba(255,255,255,.26) 22%, transparent 34%),
++        conic-gradient(from 210deg, #ffd36e, #ff2f7d, #ff9ac8, #b693ff, #ffd36e);
++      box-shadow: 0 0 96px rgba(255,47,125,.44), 0 0 58px rgba(255,211,110,.28), inset 0 0 35px rgba(255,255,255,.25);
++    }
++
++    @keyframes breathe {
++      0%, 100% { transform: scale(1); filter: saturate(1); }
++      50% { transform: scale(1.085); filter: saturate(1.24); }
++    }
++
++    .orbit { animation: rotate 18s linear infinite; }
++    @keyframes rotate { to { transform: rotate(360deg); } }
++
++    .sparkle {
++      position: fixed;
++      width: 6px;
++      height: 6px;
++      border-radius: 999px;
++      background: rgba(255,255,255,.85);
++      filter: blur(.25px);
++      pointer-events: none;
++      animation: rise 9s linear infinite;
++      z-index: 1;
++    }
++
++    @keyframes rise {
++      from { transform: translateY(110vh) scale(.45); opacity: 0; }
++      16% { opacity: .7; }
++      88% { opacity: .42; }
++      to { transform: translateY(-14vh) scale(1.24); opacity: 0; }
++    }
++
++    .shine {
++      background: linear-gradient(90deg, #fff7ed, #ffd36e, #ff2f7d, #ff9ac8, #fff7ed);
++      background-size: 240% auto;
++      -webkit-background-clip: text;
++      background-clip: text;
++      color: transparent;
++      animation: shine 8s ease-in-out infinite;
++    }
++
++    @keyframes shine {
++      0%, 100% { background-position: 0% 50%; }
++      50% { background-position: 100% 50%; }
++    }
++
++    .marquee-track { animation: marquee 26s linear infinite; }
++    @keyframes marquee { to { transform: translateX(-50%); } }
++
++    .lipstick {
++      background: linear-gradient(135deg, #ff2f7d, #ff174d 52%, #ffd36e);
++      box-shadow: 0 18px 52px rgba(255, 47, 125, .34), inset 0 1px 0 rgba(255,255,255,.28);
++    }
++
++    .ribbon {
++      position: relative;
++      isolation: isolate;
++    }
++
++    .ribbon::after {
++      content: "";
++      position: absolute;
++      left: 1.4rem;
++      right: 1.4rem;
++      bottom: -.45rem;
++      height: .8rem;
++      border-radius: 999px;
++      background: linear-gradient(90deg, transparent, rgba(255,47,125,.58), transparent);
++      filter: blur(10px);
++      z-index: -1;
++    }
++
++    .sticker {
++      border: 1px solid rgba(255,255,255,.22);
++      background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
++      box-shadow: 0 22px 50px rgba(255,47,125,.16);
++      transform: rotate(-2deg);
++    }
++
++    .confidence-card {
++      transition: transform .22s ease, background .22s ease, border-color .22s ease;
++    }
++
++    .confidence-card:hover {
++      transform: translateY(-4px) rotate(.6deg);
++      border-color: rgba(255,255,255,.34);
++      background: linear-gradient(145deg, rgba(255,111,174,.2), rgba(255,255,255,.09));
++    }
++
++    input, textarea { caret-color: var(--gold); }
++    ::selection { background: rgba(255,139,189,.42); color: white; }
 +  </style>
  </head>
  <body>
@@ -897,39 +1030,54 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 -                                </div>
 -                            </div>
 -                        )}
--
--                    </div>
 +  <div id="root"></div>
 +
 +  <script type="text/babel">
 +    const { useEffect, useMemo, useState } = React;
 +
-+    const STORAGE_KEY = "manifest_studio_v1";
++    const STORAGE_KEY = "manifest_atelier_v2";
++    const OLD_STORAGE_KEY = "manifest_studio_v1";
++
++    const MOODS = ["甜心粉", "辣妹红", "富贵金"];
 +
 +    const DEFAULT_DATA = {
 +      name: "亲爱的我",
 +      intention: "我正在成为松弛、富足、有行动力的自己。",
 +      focus: "健康、事业、爱与自由",
++      mood: MOODS[0],
 +      affirmations: [
-+        "我允许好事轻松流向我。",
-+        "我的行动稳定有力，结果正在靠近。",
-+        "我值得被看见、被支持、被丰盛地爱着。",
-+        "今天的每一步，都在把我带向理想生活。"
++        "我漂亮、清醒、会选择，好事主动来找我。",
++        "我甜得有吸引力，辣得有边界感。",
++        "我值得被偏爱、被支持、被丰盛地爱着。",
++        "今天的每一步，都让我更自信、更闪耀。"
 +      ],
 +      gratitude: ["我感谢当下拥有的能量与选择。", "我感谢自己没有放弃。"],
-+      wins: ["完成了今天最重要的一件事。"],
++      wins: ["完成了今天最重要的一件事，也夸了自己。"],
 +      vision: [
-+        "清晨醒来，身体轻盈，内心安定。",
-+        "做热爱的事并获得稳定回报。",
-+        "和同频的人一起创造、玩耍、成长。"
++        "清晨醒来，皮肤发光，身体轻盈，内心安定。",
++        "做热爱的事，漂亮地赚钱，松弛地被爱。",
++        "和同频的人一起创造、玩耍、变美、成长。"
 +      ],
 +      ritualCount: 0,
 +      lastRitualDate: ""
 +    };
 +
++    function normalizeData(value) {
++      return {
++        ...DEFAULT_DATA,
++        ...value,
++        affirmations: Array.isArray(value?.affirmations) ? value.affirmations : DEFAULT_DATA.affirmations,
++        gratitude: Array.isArray(value?.gratitude) ? value.gratitude : DEFAULT_DATA.gratitude,
++        wins: Array.isArray(value?.wins) ? value.wins : DEFAULT_DATA.wins,
++        vision: Array.isArray(value?.vision) ? value.vision : DEFAULT_DATA.vision,
++        mood: MOODS.includes(value?.mood) ? value.mood : DEFAULT_DATA.mood
++      };
++    }
++
 +    function loadData() {
 +      try {
-+        return { ...DEFAULT_DATA, ...JSON.parse(localStorage.getItem(STORAGE_KEY)) };
++        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY);
++        return saved ? normalizeData(JSON.parse(saved)) : DEFAULT_DATA;
 +      } catch (error) {
 +        return DEFAULT_DATA;
 +      }
@@ -944,18 +1092,25 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 +      }).format(new Date());
 +    }
 +
++    const listMeta = {
++      affirmations: { title: "甜辣确认语", eyebrow: "SWEET FIRE", color: "from-pink-300 to-rose-500", placeholder: "例如：我漂亮、富足、被偏爱，也很有执行力" },
++      gratitude: { title: "开心感恩簿", eyebrow: "JOY RECEIPTS", color: "from-amber-200 to-pink-300", placeholder: "我感谢今天让我心情变好的……" },
++      wins: { title: "自信战绩", eyebrow: "MAIN CHARACTER", color: "from-fuchsia-300 to-red-400", placeholder: "今天我很棒，因为……" },
++      vision: { title: "粉金愿景衣橱", eyebrow: "DREAM CLOSET", color: "from-rose-200 to-orange-300", placeholder: "例如：我穿着喜欢的衣服，漂亮赚钱，状态稳定发光……" }
++    };
++
 +    function Sparkles() {
 +      return (
 +        <div aria-hidden="true">
-+          {Array.from({ length: 26 }).map((_, index) => (
++          {Array.from({ length: 36 }).map((_, index) => (
 +            <span
 +              className="sparkle"
 +              key={index}
 +              style={{
-+                left: `${(index * 37) % 100}%`,
-+                animationDelay: `${(index * 0.47) % 7}s`,
-+                animationDuration: `${6 + (index % 5)}s`,
-+                opacity: 0.35 + (index % 4) * 0.15
++                left: `${(index * 29 + 7) % 100}%`,
++                animationDelay: `${(index * 0.41) % 8}s`,
++                animationDuration: `${7 + (index % 6)}s`,
++                opacity: 0.24 + (index % 5) * 0.11
 +              }}
 +            />
 +          ))}
@@ -963,34 +1118,56 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 +      );
 +    }
 +
-+    function SectionTitle({ eyebrow, title, children }) {
++    function Pill({ children, active, onClick }) {
 +      return (
-+        <div className="mb-5">
-+          <p className="text-xs font-black uppercase tracking-[0.36em] text-amber-200/75">{eyebrow}</p>
-+          <h2 className="serif mt-2 text-2xl font-black text-white md:text-3xl">{title}</h2>
-+          {children && <p className="mt-2 text-sm leading-6 text-orange-100/75">{children}</p>}
++        <button
++          className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.24em] transition ${active ? "border-amber-100 bg-amber-100 text-slate-950 shadow-[0_0_30px_rgba(248,216,139,.28)]" : "border-white/15 bg-white/[0.08] text-orange-50/70 hover:border-white/35 hover:bg-white/[0.12]"}`}
++          onClick={onClick}
++        >
++          {children}
++        </button>
++      );
++    }
++
++    function SectionHeader({ eyebrow, title, children }) {
++      return (
++        <div className="mb-5 flex items-end justify-between gap-4">
++          <div>
++            <p className="text-[11px] font-black uppercase tracking-[0.34em] text-amber-100/70">{eyebrow}</p>
++            <h2 className="serif mt-2 text-2xl font-black text-white md:text-3xl">{title}</h2>
++            {children && <p className="mt-2 max-w-2xl text-sm leading-6 text-orange-50/64">{children}</p>}
++          </div>
 +        </div>
 +      );
 +    }
 +
-+    function EditableList({ title, description, items, placeholder, onChange }) {
++    function EditableList({ type, items, onChange }) {
 +      const [draft, setDraft] = useState("");
++      const meta = listMeta[type];
 +      const addItem = () => {
 +        const value = draft.trim();
 +        if (!value) return;
 +        onChange([...items, value]);
 +        setDraft("");
 +      };
++
 +      return (
-+        <section className="glass rounded-[2rem] p-6">
-+          <SectionTitle eyebrow="write it real" title={title}>{description}</SectionTitle>
++        <section className="glass neon-border rounded-[2rem] p-5 md:p-6">
++          <div className="mb-5 flex items-center justify-between gap-4">
++            <div>
++              <p className="text-[10px] font-black tracking-[0.34em] text-white/45">{meta.eyebrow}</p>
++              <h3 className="serif mt-2 text-2xl font-black text-white">{meta.title}</h3>
++            </div>
++            <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${meta.color} opacity-90 shadow-[0_0_34px_rgba(255,255,255,.16)]`} />
++          </div>
++
 +          <div className="space-y-3">
 +            {items.map((item, index) => (
-+              <div className="soft-card group flex items-start gap-3 rounded-2xl p-4" key={`${item}-${index}`}>
-+                <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-amber-200 shadow-[0_0_18px_rgba(253,230,138,.8)]" />
-+                <p className="flex-1 text-sm leading-6 text-orange-50">{item}</p>
++              <div className="panel group flex items-start gap-3 rounded-3xl p-4 transition hover:-translate-y-0.5 hover:bg-white/[0.14]" key={`${type}-${item}-${index}`}>
++                <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-gradient-to-br ${meta.color} shadow-[0_0_18px_rgba(248,216,139,.54)]`} />
++                <p className="flex-1 text-sm leading-6 text-orange-50/88">{item}</p>
 +                <button
-+                  className="rounded-full px-2 text-orange-100/45 transition hover:bg-white/10 hover:text-white"
++                  className="rounded-full px-2 text-orange-100/38 transition hover:bg-white/10 hover:text-white"
 +                  onClick={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))}
 +                  title="删除"
 +                >
@@ -999,15 +1176,16 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 +              </div>
 +            ))}
 +          </div>
++
 +          <div className="mt-4 flex gap-2">
 +            <input
-+              className="min-w-0 flex-1 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm text-white outline-none placeholder:text-orange-100/40 focus:border-amber-200/70"
++              className="min-w-0 flex-1 rounded-2xl border border-white/[0.12] bg-black/[0.18] px-4 py-3 text-sm text-white outline-none placeholder:text-orange-100/[0.36] focus:border-amber-100/70 focus:bg-black/[0.24]"
 +              value={draft}
 +              onChange={(event) => setDraft(event.target.value)}
 +              onKeyDown={(event) => event.key === "Enter" && addItem()}
-+              placeholder={placeholder}
++              placeholder={meta.placeholder}
 +            />
-+            <button className="rounded-2xl bg-amber-200 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-white" onClick={addItem}>
++            <button className="rounded-2xl bg-white px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-100" onClick={addItem}>
 +              加入
 +            </button>
 +          </div>
@@ -1018,15 +1196,20 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 +    function App() {
 +      const [data, setData] = useState(loadData);
 +      const [ritualDone, setRitualDone] = useState(false);
++      const moods = MOODS;
++      const confidenceBoosts = ["我今天也很好看", "我允许自己被偏爱", "我越行动越有魅力"];
 +
 +      useEffect(() => {
 +        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 +      }, [data]);
 +
 +      const currentAffirmation = useMemo(() => {
++        if (!data.affirmations.length) return DEFAULT_DATA.affirmations[0];
 +        const daySeed = new Date().getDate() + data.ritualCount;
-+        return data.affirmations[daySeed % data.affirmations.length] || DEFAULT_DATA.affirmations[0];
++        return data.affirmations[daySeed % data.affirmations.length];
 +      }, [data.affirmations, data.ritualCount]);
++
++      const completionScore = Math.min(100, 18 + data.ritualCount * 8 + data.wins.length * 7 + data.gratitude.length * 5);
 +
 +      const completeRitual = () => {
 +        const date = new Date().toDateString();
@@ -1039,137 +1222,177 @@ index 3e004b0467145cd952e35006bec5f572e629b103..45dcc888200a8b0b2fd501819f3d9d4a
 +        window.setTimeout(() => setRitualDone(false), 2600);
 +      };
 +
-+      return (
-+        <main className="relative min-h-screen px-4 py-6 md:px-8 lg:px-12">
-+          <Sparkles />
-+          <section className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.15fr_.85fr]">
-+            <div className="glass relative overflow-hidden rounded-[2.5rem] p-7 md:p-10">
-+              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-pink-300/20 blur-3xl" />
-+              <div className="relative z-10">
-+                <p className="text-sm font-bold tracking-[0.35em] text-amber-100/80">MANIFEST STUDIO</p>
-+                <h1 className="serif glow-text mt-5 max-w-4xl text-5xl font-black leading-tight md:text-7xl">
-+                  {data.name}，你的理想现实正在成形。
-+                </h1>
-+                <p className="mt-6 max-w-2xl text-lg leading-8 text-orange-50/80">
-+                  这是一个自用能量页面：每天写下显化意图、确认语、感恩与胜利，让潜意识和行动保持同频。
-+                </p>
++      const updateList = (key, value) => setData({ ...data, [key]: value });
 +
-+                <div className="mt-8 grid gap-3 md:grid-cols-3">
-+                  <div className="soft-card rounded-3xl p-5">
-+                    <p className="text-xs uppercase tracking-[0.28em] text-orange-100/55">Today</p>
-+                    <p className="mt-3 font-bold text-white">{todayText()}</p>
++      return (
++        <main className="shell min-h-screen px-4 py-5 md:px-8 lg:px-10">
++          <Sparkles />
++          <div className="mx-auto max-w-7xl">
++            <nav className="glass mb-5 flex flex-wrap items-center justify-between gap-4 rounded-full px-5 py-3">
++              <div className="flex items-center gap-3">
++                <div className="lipstick grid h-10 w-10 place-items-center rounded-full text-lg text-white shadow-[0_0_30px_rgba(255,47,125,.35)]">✦</div>
++                <div>
++                  <p className="text-xs font-black uppercase tracking-[0.28em] text-white/50">Manifest Atelier</p>
++                  <p className="text-sm font-semibold text-orange-50/80">甜辣自信 · 显化 · 心情变好</p>
++                </div>
++              </div>
++              <div className="flex flex-wrap gap-2">
++                {moods.map((mood) => (
++                  <Pill key={mood} active={data.mood === mood} onClick={() => setData({ ...data, mood })}>{mood}</Pill>
++                ))}
++              </div>
++            </nav>
++
++            <section className="grid gap-5 lg:grid-cols-[1.35fr_.65fr]">
++              <div className="glass neon-border ribbon relative min-h-[620px] overflow-hidden rounded-[2.8rem] p-6 md:p-10">
++                <div className="aurora -right-28 -top-28" />
++                <div className="sticker absolute right-8 top-8 hidden rounded-[1.4rem] px-5 py-4 text-center lg:block">
++                  <p className="text-3xl">💋</p>
++                  <p className="mt-1 text-xs font-black uppercase tracking-[0.24em] text-white/76">soft but savage</p>
++                </div>
++                <div className="absolute bottom-8 right-8 hidden h-64 w-64 rounded-full border border-white/10 lg:block" />
++                <div className="absolute bottom-16 right-16 hidden h-44 w-44 rounded-full border border-white/10 lg:block" />
++
++                <div className="relative z-10 flex h-full flex-col justify-between gap-10">
++                  <div>
++                    <div className="mb-8 flex flex-wrap gap-3">
++                      <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-amber-100/80">{todayText()}</span>
++                      <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-pink-100/80">{data.focus}</span>
++                    </div>
+ 
++                    <p className="mb-4 text-sm font-black uppercase tracking-[0.42em] text-white/42">Pretty, powerful, magnetic</p>
++                    <h1 className="display hero-title max-w-5xl text-6xl font-black leading-[0.9] md:text-8xl lg:text-9xl">
++                      <span className="shine">甜一点，</span><br />辣一点，自信到底。
++                    </h1>
++                    <p className="mt-7 max-w-2xl text-lg leading-8 text-orange-50/72 md:text-xl">
++                      {data.name}，这里是你的甜辣显化衣帽间。进来就要心情变好：漂亮地许愿，清醒地行动，自信地接住爱与丰盛。
++                    </p>
++
++                    <div className="mt-8 grid gap-3 md:grid-cols-3">
++                      {confidenceBoosts.map((boost, index) => (
++                        <div className="confidence-card panel rounded-[1.35rem] p-4" key={boost}>
++                          <p className="text-2xl">{["💖", "💋", "👑"][index]}</p>
++                          <p className="mt-3 text-sm font-black leading-6 text-white">{boost}</p>
++                        </div>
++                      ))}
+                     </div>
 +                  </div>
-+                  <div className="soft-card rounded-3xl p-5">
-+                    <p className="text-xs uppercase tracking-[0.28em] text-orange-100/55">Rituals</p>
-+                    <p className="mt-3 text-3xl font-black text-amber-100">{data.ritualCount}</p>
-+                  </div>
-+                  <div className="soft-card rounded-3xl p-5">
-+                    <p className="text-xs uppercase tracking-[0.28em] text-orange-100/55">Focus</p>
-+                    <p className="mt-3 font-bold text-white">{data.focus}</p>
++
++                  <div className="grid gap-4 md:grid-cols-2">
++                    <label className="panel rounded-[1.7rem] p-4">
++                      <span className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-100/60">今天的女主角</span>
++                      <input
++                        className="mt-3 w-full border-0 bg-transparent text-2xl font-black text-white outline-none placeholder:text-white/24"
++                        value={data.name}
++                        onChange={(event) => setData({ ...data, name: event.target.value })}
++                      />
++                    </label>
++                    <label className="panel rounded-[1.7rem] p-4">
++                      <span className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-100/60">今日甜辣主题</span>
++                      <input
++                        className="mt-3 w-full border-0 bg-transparent text-2xl font-black text-white outline-none placeholder:text-white/24"
++                        value={data.focus}
++                        onChange={(event) => setData({ ...data, focus: event.target.value })}
++                      />
++                    </label>
 +                  </div>
                  </div>
 -            );
 -        };
- 
+-
 -        const root = ReactDOM.createRoot(document.getElementById('root'));
 -        root.render(<App />);
 -    </script>
-+                <div className="mt-8 grid gap-4 md:grid-cols-2">
-+                  <label className="block">
-+                    <span className="text-xs font-black uppercase tracking-[0.28em] text-amber-100/70">称呼自己</span>
-+                    <input
-+                      className="mt-3 w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none focus:border-amber-200/70"
-+                      value={data.name}
-+                      onChange={(event) => setData({ ...data, name: event.target.value })}
-+                    />
-+                  </label>
-+                  <label className="block">
-+                    <span className="text-xs font-black uppercase tracking-[0.28em] text-amber-100/70">近期显化主题</span>
-+                    <input
-+                      className="mt-3 w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none focus:border-amber-200/70"
-+                      value={data.focus}
-+                      onChange={(event) => setData({ ...data, focus: event.target.value })}
-+                    />
-+                  </label>
-+                </div>
++              </div>
++
++              <aside className="grid gap-5">
++                <section className="glass relative overflow-hidden rounded-[2.8rem] p-6 md:p-8">
++                  <div className="absolute left-1/2 top-20 h-60 w-60 -translate-x-1/2 rounded-full bg-pink-300/20 blur-3xl" />
++                  <SectionHeader eyebrow="GIRL MAGIC" title="今日确认语">
++                    读完就把肩膀打开：你很漂亮，也很有力量。
++                  </SectionHeader>
++                  <div className="relative mx-auto my-7 grid h-60 w-60 place-items-center">
++                    <div className="orbit absolute inset-0 rounded-full border border-dashed border-white/24" />
++                    <div className="orb h-44 w-44 rounded-full" />
++                    <div className="absolute h-3 w-3 translate-x-28 rounded-full bg-amber-100 shadow-[0_0_22px_rgba(248,216,139,.8)]" />
++                  </div>
++                  <p className="serif relative text-center text-3xl font-black leading-normal text-white">“{currentAffirmation}”</p>
++                  <button
++                    className="lipstick mt-7 w-full rounded-[1.6rem] px-6 py-4 text-base font-black text-white shadow-[0_20px_55px_rgba(255,47,125,.26)] transition hover:-translate-y-1 hover:saturate-125"
++                    onClick={completeRitual}
++                  >
++                    开启 60 秒甜辣显化 ✨
++                  </button>
++                  {ritualDone && <p className="mt-4 text-center font-bold text-amber-100">已记录：漂亮宝贝，今天的你更自信了。</p>}
++                </section>
++
++                <section className="glass rounded-[2rem] p-6">
++                  <div className="flex items-center justify-between">
++                    <div>
++                      <p className="text-[11px] font-black uppercase tracking-[0.32em] text-white/45">ENERGY INDEX</p>
++                      <h3 className="serif mt-2 text-2xl font-black">甜辣能量值</h3>
++                    </div>
++                    <p className="text-4xl font-black text-amber-100">{completionScore}</p>
++                  </div>
++                  <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
++                    <div className="h-full rounded-full bg-gradient-to-r from-amber-200 via-pink-300 to-violet-300" style={{ width: `${completionScore}%` }} />
++                  </div>
++                  <div className="mt-5 grid grid-cols-3 gap-2 text-center text-xs text-orange-50/64">
++                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.ritualCount}</b>仪式</div>
++                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.wins.length}</b>胜利</div>
++                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.gratitude.length}</b>感恩</div>
++                  </div>
++                </section>
++              </aside>
++            </section>
++
++            <div className="glass my-5 overflow-hidden rounded-full py-3">
++              <div className="marquee-track flex w-max gap-8 whitespace-nowrap text-sm font-black uppercase tracking-[0.32em] text-white/46">
++                {Array.from({ length: 2 }).map((_, group) => (
++                  <span key={group} className="flex gap-8">
++                    <span>✦ Pretty girls keep promises to themselves</span>
++                    <span>✦ 甜美但不讨好</span>
++                    <span>✦ 辣妹有边界也有野心</span>
++                    <span>✦ 心情好，好事来</span>
++                    <span>✦ Confidence is the outfit</span>
++                  </span>
++                ))}
 +              </div>
 +            </div>
 +
-+            <aside className="glass flex flex-col justify-between rounded-[2.5rem] p-7 md:p-9">
-+              <div>
-+                <SectionTitle eyebrow="daily anchor" title="今日确认语">
-+                  先相信，再行动；把注意力放回你想创造的现实。
-+                </SectionTitle>
-+                <div className="float-slow mx-auto my-8 flex h-56 w-56 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 via-pink-200 to-fuchsia-300 breathing-orb">
-+                  <div className="h-36 w-36 rounded-full border border-white/60 bg-white/20" />
-+                </div>
-+                <p className="serif text-center text-3xl font-black leading-normal text-white">“{currentAffirmation}”</p>
++            <section className="grid gap-5 lg:grid-cols-[1fr_.72fr]">
++              <div className="glass neon-border rounded-[2.4rem] p-6 md:p-8">
++                <SectionHeader eyebrow="INTENTION" title="核心意图">
++                  写给那个漂亮、清醒、敢要也敢拿的自己。
++                </SectionHeader>
++                <textarea
++                  className="min-h-56 w-full resize-none rounded-[2rem] border border-white/[0.12] bg-black/[0.18] p-5 text-xl font-semibold leading-9 text-white outline-none placeholder:text-orange-100/35 focus:border-amber-100/70 focus:bg-black/[0.24]"
++                  value={data.intention}
++                  onChange={(event) => setData({ ...data, intention: event.target.value })}
++                />
 +              </div>
-+              <button
-+                className="mt-8 w-full rounded-3xl bg-white px-6 py-4 text-base font-black text-slate-950 shadow-[0_16px_40px_rgba(255,255,255,.18)] transition hover:-translate-y-1 hover:bg-amber-100"
-+                onClick={completeRitual}
-+              >
-+                完成 60 秒显化仪式 ✨
-+              </button>
-+              {ritualDone && <p className="mt-4 text-center font-bold text-amber-100">已记录：你和理想现实更靠近了一步。</p>}
-+            </aside>
-+          </section>
 +
-+          <section className="mx-auto mt-6 grid max-w-7xl gap-6 lg:grid-cols-3">
-+            <div className="glass rounded-[2rem] p-6 lg:col-span-2">
-+              <SectionTitle eyebrow="intention" title="核心意图">
-+                用现在时写下你正在成为谁，让大脑反复看见方向。
-+              </SectionTitle>
-+              <textarea
-+                className="min-h-40 w-full resize-none rounded-3xl border border-white/15 bg-white/10 p-5 text-lg leading-8 text-white outline-none placeholder:text-orange-100/35 focus:border-amber-200/70"
-+                value={data.intention}
-+                onChange={(event) => setData({ ...data, intention: event.target.value })}
-+              />
-+            </div>
-+            <div className="glass rounded-[2rem] p-6">
-+              <SectionTitle eyebrow="micro ritual" title="60 秒流程" />
-+              <ol className="space-y-4 text-sm leading-6 text-orange-50/85">
-+                <li><b className="text-amber-100">01 呼吸：</b>吸气 4 秒，呼气 6 秒，重复三次。</li>
-+                <li><b className="text-amber-100">02 画面：</b>闭眼看见愿望已经实现后的一个日常片段。</li>
-+                <li><b className="text-amber-100">03 行动：</b>问自己：今天最小的一步是什么？</li>
-+                <li><b className="text-amber-100">04 记录：</b>点击完成，让这个新身份被你确认。</li>
-+              </ol>
-+            </div>
-+          </section>
++              <div className="glass rounded-[2.4rem] p-6 md:p-8">
++                <SectionHeader eyebrow="60S RITUAL" title="甜辣充电流程" />
++                <ol className="space-y-4 text-sm leading-6 text-orange-50/78">
++                  <li className="panel rounded-3xl p-4"><b className="text-amber-100">01 / 呼吸</b><br />吸气 4 秒，呼气 6 秒，重复三次，把气场调成“我值得”。</li>
++                  <li className="panel rounded-3xl p-4"><b className="text-pink-100">02 / 画面</b><br />闭眼看见愿望实现后的你：状态好、衣服美、账户稳、笑容甜。</li>
++                  <li className="panel rounded-3xl p-4"><b className="text-violet-100">03 / 行动</b><br />问自己：今天最小、最漂亮、最有女主感的一步是什么？</li>
++                  <li className="panel rounded-3xl p-4"><b className="text-cyan-100">04 / 记录</b><br />点击完成，给今天的自己一个明确的“我超棒”。</li>
++                </ol>
++              </div>
++            </section>
 +
-+          <section className="mx-auto mt-6 grid max-w-7xl gap-6 lg:grid-cols-3">
-+            <EditableList
-+              title="显化确认语"
-+              description="越具体、越像你会说的话，越容易每天重复。"
-+              items={data.affirmations}
-+              placeholder="例如：金钱以愉悦的方式来到我身边"
-+              onChange={(affirmations) => setData({ ...data, affirmations })}
-+            />
-+            <EditableList
-+              title="感恩清单"
-+              description="感恩不是否认问题，而是提醒自己已经被支持。"
-+              items={data.gratitude}
-+              placeholder="我感谢……"
-+              onChange={(gratitude) => setData({ ...data, gratitude })}
-+            />
-+            <EditableList
-+              title="今日胜利"
-+              description="记录微小证据，强化“我做得到”的自我概念。"
-+              items={data.wins}
-+              placeholder="今天我完成了……"
-+              onChange={(wins) => setData({ ...data, wins })}
-+            />
-+          </section>
++            <section className="mt-5 grid gap-5 lg:grid-cols-3">
++              <EditableList type="affirmations" items={data.affirmations} onChange={(value) => updateList("affirmations", value)} />
++              <EditableList type="gratitude" items={data.gratitude} onChange={(value) => updateList("gratitude", value)} />
++              <EditableList type="wins" items={data.wins} onChange={(value) => updateList("wins", value)} />
++            </section>
 +
-+          <section className="mx-auto my-6 max-w-7xl">
-+            <EditableList
-+              title="理想生活画面板"
-+              description="把你的显化目标写成可感知的生活镜头：地点、身体感受、身边的人、正在发生的事。"
-+              items={data.vision}
-+              placeholder="例如：我坐在明亮的工作室里，账户稳定进账，身体放松……"
-+              onChange={(vision) => setData({ ...data, vision })}
-+            />
-+          </section>
++            <section className="my-5">
++              <EditableList type="vision" items={data.vision} onChange={(value) => updateList("vision", value)} />
++            </section>
++          </div>
 +        </main>
 +      );
 +    }
