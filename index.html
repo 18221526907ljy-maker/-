@@ -84,23 +84,19 @@
 +  <meta charset="UTF-8" />
 +  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 +  <title>甜辣显化衣帽间｜Manifest Atelier</title>
-+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-+  <script src="https://cdn.tailwindcss.com"></script>
-+  <link rel="preconnect" href="https://fonts.googleapis.com" />
-+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
 +  <style>
 +    :root {
 +      color-scheme: dark;
 +      --cream: #fff7ed;
++      --muted: rgba(255, 247, 237, .72);
 +      --gold: #ffd36e;
 +      --rose: #ff6fae;
 +      --hot: #ff2f7d;
 +      --cherry: #ff174d;
 +      --violet: #b693ff;
 +      --ink: #11040d;
++      --glass: rgba(255, 255, 255, .12);
++      --line: rgba(255, 255, 255, .17);
 +    }
 +
 +    * { box-sizing: border-box; }
@@ -108,7 +104,7 @@
 +    body {
 +      margin: 0;
 +      min-height: 100vh;
-+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
++      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 +      color: var(--cream);
 +      background:
 +        radial-gradient(circle at 9% 8%, rgba(255, 111, 174, 0.58), transparent 30rem),
@@ -142,26 +138,42 @@
 +      mix-blend-mode: soft-light;
 +    }
 +
-+    .display { font-family: "Playfair Display", "Noto Serif SC", serif; }
-+    .serif { font-family: "Noto Serif SC", serif; }
++    button, input, textarea { font: inherit; }
++    button { cursor: pointer; }
++    input, textarea { caret-color: var(--gold); }
++    ::selection { background: rgba(255,47,125,.42); color: white; }
 +
-+    .shell { position: relative; z-index: 1; }
++    .shell {
++      position: relative;
++      z-index: 1;
++      min-height: 100vh;
++      padding: 20px;
++    }
++
++    .container {
++      width: min(1280px, 100%);
++      margin: 0 auto;
++    }
 +
 +    .glass {
-+      border: 1px solid rgba(255,255,255,0.17);
-+      background: linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.065));
-+      box-shadow: 0 30px 90px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.16);
++      border: 1px solid var(--line);
++      background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.065));
++      box-shadow: 0 30px 90px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.16);
 +      backdrop-filter: blur(26px) saturate(140%);
 +    }
 +
 +    .panel {
-+      border: 1px solid rgba(255,255,255,0.14);
-+      background: linear-gradient(150deg, rgba(255,255,255,0.12), rgba(255,255,255,0.055));
-+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
++      border: 1px solid rgba(255,255,255,.14);
++      background: linear-gradient(150deg, rgba(255,255,255,.12), rgba(255,255,255,.055));
++      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
 +      backdrop-filter: blur(18px);
 +    }
 +
-+    .neon-border { position: relative; overflow: hidden; }
++    .neon-border {
++      position: relative;
++      overflow: hidden;
++    }
++
 +    .neon-border::before {
 +      content: "";
 +      position: absolute;
@@ -175,13 +187,116 @@
 +      pointer-events: none;
 +    }
 +
-+    .hero-title {
-+      letter-spacing: -0.07em;
-+      text-shadow: 0 0 52px rgba(255,47,125,.34), 0 0 30px rgba(255,211,110,.22);
++    .lipstick {
++      background: linear-gradient(135deg, #ff2f7d, #ff174d 52%, #ffd36e);
++      box-shadow: 0 18px 52px rgba(255, 47, 125, .34), inset 0 1px 0 rgba(255,255,255,.28);
++    }
++
++    .topbar {
++      display: flex;
++      align-items: center;
++      justify-content: space-between;
++      gap: 18px;
++      padding: 12px 20px;
++      border-radius: 999px;
++      margin-bottom: 20px;
++      flex-wrap: wrap;
++    }
++
++    .brand {
++      display: flex;
++      align-items: center;
++      gap: 12px;
++    }
++
++    .brand-mark {
++      width: 42px;
++      height: 42px;
++      display: grid;
++      place-items: center;
++      border-radius: 999px;
++      color: white;
++      font-size: 20px;
++    }
++
++    .eyebrow {
++      margin: 0;
++      font-size: 11px;
++      font-weight: 900;
++      text-transform: uppercase;
++      letter-spacing: .32em;
++      color: rgba(255, 255, 255, .52);
++    }
++
++    .brand-subtitle {
++      margin: 3px 0 0;
++      color: rgba(255, 247, 237, .82);
++      font-size: 14px;
++      font-weight: 700;
++    }
++
++    .mood-row {
++      display: flex;
++      flex-wrap: wrap;
++      gap: 8px;
++    }
++
++    .mood-pill {
++      border: 1px solid rgba(255,255,255,.15);
++      border-radius: 999px;
++      padding: 9px 14px;
++      background: rgba(255,255,255,.08);
++      color: rgba(255,247,237,.74);
++      font-size: 12px;
++      font-weight: 900;
++      letter-spacing: .18em;
++      transition: transform .2s ease, background .2s ease, border-color .2s ease;
++    }
++
++    .mood-pill:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.34); }
++    .mood-pill.active { background: var(--gold); border-color: var(--gold); color: #21040f; box-shadow: 0 0 30px rgba(255,211,110,.25); }
++
++    .hero-grid {
++      display: grid;
++      grid-template-columns: 1.35fr .65fr;
++      gap: 20px;
++    }
++
++    .hero {
++      position: relative;
++      min-height: 620px;
++      padding: 40px;
++      border-radius: 44px;
++      isolation: isolate;
++    }
++
++    .hero::after {
++      content: "";
++      position: absolute;
++      left: 24px;
++      right: 24px;
++      bottom: -8px;
++      height: 14px;
++      border-radius: 999px;
++      background: linear-gradient(90deg, transparent, rgba(255,47,125,.58), transparent);
++      filter: blur(10px);
++      z-index: -1;
++    }
++
++    .hero-inner {
++      position: relative;
++      z-index: 1;
++      min-height: 540px;
++      display: flex;
++      flex-direction: column;
++      justify-content: space-between;
++      gap: 40px;
 +    }
 +
 +    .aurora {
 +      position: absolute;
++      right: -110px;
++      top: -110px;
 +      width: 32rem;
 +      height: 32rem;
 +      border-radius: 999px;
@@ -196,7 +311,167 @@
 +      to { transform: translate3d(8%, 5%, 0) rotate(28deg) scale(1.07); }
 +    }
 +
++    .sticker {
++      position: absolute;
++      right: 34px;
++      top: 34px;
++      border: 1px solid rgba(255,255,255,.22);
++      border-radius: 22px;
++      background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
++      box-shadow: 0 22px 50px rgba(255,47,125,.16);
++      transform: rotate(-2deg);
++      padding: 16px 20px;
++      text-align: center;
++    }
++
++    .sticker-icon { margin: 0; font-size: 34px; }
++    .sticker-text { margin: 4px 0 0; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .22em; color: rgba(255,255,255,.76); }
++
++    .circle-line {
++      position: absolute;
++      right: 48px;
++      bottom: 44px;
++      width: 260px;
++      height: 260px;
++      border: 1px solid rgba(255,255,255,.1);
++      border-radius: 999px;
++    }
++
++    .circle-line.small {
++      right: 84px;
++      bottom: 80px;
++      width: 176px;
++      height: 176px;
++    }
++
++    .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
++    .chip { border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.1); padding: 9px 14px; font-size: 12px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,230,170,.86); }
++    .chip.pink { color: rgba(255,198,222,.88); }
++
++    .hero-kicker {
++      margin: 0 0 16px;
++      font-size: 14px;
++      font-weight: 900;
++      text-transform: uppercase;
++      letter-spacing: .38em;
++      color: rgba(255,255,255,.42);
++    }
++
++    .hero-title {
++      margin: 0;
++      max-width: 900px;
++      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
++      font-size: clamp(58px, 8vw, 128px);
++      line-height: .9;
++      letter-spacing: -.07em;
++      text-shadow: 0 0 52px rgba(255,47,125,.34), 0 0 30px rgba(255,211,110,.22);
++    }
++
++    .shine {
++      background: linear-gradient(90deg, #fff7ed, #ffd36e, #ff2f7d, #ff9ac8, #fff7ed);
++      background-size: 240% auto;
++      -webkit-background-clip: text;
++      background-clip: text;
++      color: transparent;
++      animation: shine 8s ease-in-out infinite;
++    }
++
++    @keyframes shine { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
++
++    .hero-copy {
++      max-width: 720px;
++      margin: 28px 0 0;
++      color: rgba(255,247,237,.76);
++      font-size: 20px;
++      line-height: 1.75;
++      font-weight: 600;
++    }
++
++    .confidence-grid {
++      display: grid;
++      grid-template-columns: repeat(3, 1fr);
++      gap: 12px;
++      margin-top: 32px;
++    }
++
++    .confidence-card {
++      border-radius: 22px;
++      padding: 16px;
++      transition: transform .22s ease, background .22s ease, border-color .22s ease;
++    }
++
++    .confidence-card:hover {
++      transform: translateY(-4px) rotate(.6deg);
++      border-color: rgba(255,255,255,.34);
++      background: linear-gradient(145deg, rgba(255,111,174,.2), rgba(255,255,255,.09));
++    }
++
++    .confidence-card p { margin: 0; }
++    .confidence-icon { font-size: 26px; }
++    .confidence-text { margin-top: 10px !important; color: white; font-size: 14px; line-height: 1.55; font-weight: 900; }
++
++    .field-grid {
++      display: grid;
++      grid-template-columns: repeat(2, 1fr);
++      gap: 16px;
++    }
++
++    .field-card {
++      display: block;
++      border-radius: 28px;
++      padding: 16px;
++    }
++
++    .field-card span {
++      display: block;
++      color: rgba(255,230,170,.64);
++      font-size: 11px;
++      font-weight: 900;
++      letter-spacing: .24em;
++      text-transform: uppercase;
++    }
++
++    .field-card input {
++      width: 100%;
++      margin-top: 12px;
++      border: 0;
++      outline: 0;
++      background: transparent;
++      color: white;
++      font-size: 26px;
++      font-weight: 900;
++    }
++
++    .side-stack { display: grid; gap: 20px; }
++
++    .section-card { border-radius: 44px; padding: 30px; }
++    .section-head { margin-bottom: 20px; }
++    .section-head h2 { margin: 8px 0 0; font-family: Georgia, "Times New Roman", "Noto Serif SC", serif; font-size: 30px; line-height: 1.15; }
++    .section-head p:last-child { margin: 8px 0 0; color: rgba(255,247,237,.66); font-size: 14px; line-height: 1.6; }
++
++    .orb-wrap {
++      position: relative;
++      width: 240px;
++      height: 240px;
++      display: grid;
++      place-items: center;
++      margin: 28px auto;
++    }
++
++    .orbit {
++      position: absolute;
++      inset: 0;
++      border: 1px dashed rgba(255,255,255,.24);
++      border-radius: 999px;
++      animation: rotate 18s linear infinite;
++    }
++
++    @keyframes rotate { to { transform: rotate(360deg); } }
++
 +    .orb {
++      width: 176px;
++      height: 176px;
++      border-radius: 999px;
 +      animation: breathe 5.6s ease-in-out infinite;
 +      background:
 +        radial-gradient(circle at 34% 26%, rgba(255,255,255,.95), rgba(255,255,255,.26) 22%, transparent 34%),
@@ -204,13 +479,119 @@
 +      box-shadow: 0 0 96px rgba(255,47,125,.44), 0 0 58px rgba(255,211,110,.28), inset 0 0 35px rgba(255,255,255,.25);
 +    }
 +
-+    @keyframes breathe {
-+      0%, 100% { transform: scale(1); filter: saturate(1); }
-+      50% { transform: scale(1.085); filter: saturate(1.24); }
++    .orbit-dot {
++      position: absolute;
++      width: 12px;
++      height: 12px;
++      transform: translateX(112px);
++      border-radius: 999px;
++      background: var(--gold);
++      box-shadow: 0 0 22px rgba(255,211,110,.8);
 +    }
 +
-+    .orbit { animation: rotate 18s linear infinite; }
-+    @keyframes rotate { to { transform: rotate(360deg); } }
++    @keyframes breathe { 0%, 100% { transform: scale(1); filter: saturate(1); } 50% { transform: scale(1.085); filter: saturate(1.24); } }
++
++    .affirmation {
++      position: relative;
++      margin: 0;
++      text-align: center;
++      color: white;
++      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
++      font-size: 30px;
++      line-height: 1.45;
++      font-weight: 900;
++    }
++
++    .primary-btn {
++      width: 100%;
++      margin-top: 26px;
++      border: 0;
++      border-radius: 26px;
++      padding: 17px 20px;
++      color: white;
++      font-weight: 900;
++      font-size: 16px;
++      transition: transform .22s ease, filter .22s ease;
++    }
++
++    .primary-btn:hover { transform: translateY(-3px); filter: saturate(1.18); }
++    .ritual-feedback { min-height: 24px; margin: 14px 0 0; color: var(--gold); text-align: center; font-weight: 900; }
++
++    .energy-number { margin: 0; color: var(--gold); font-size: 42px; font-weight: 900; }
++    .energy-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
++    .progress { margin-top: 20px; height: 12px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
++    .progress-bar { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #ffd36e, #ff6fae, #b693ff); transition: width .3s ease; }
++    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; text-align: center; color: rgba(255,247,237,.66); font-size: 12px; }
++    .stat { border-radius: 18px; padding: 12px 8px; }
++    .stat b { display: block; color: white; font-size: 18px; }
++
++    .marquee {
++      margin: 20px 0;
++      border-radius: 999px;
++      overflow: hidden;
++      padding: 12px 0;
++    }
++
++    .marquee-track {
++      display: flex;
++      width: max-content;
++      gap: 32px;
++      white-space: nowrap;
++      color: rgba(255,255,255,.48);
++      font-size: 14px;
++      font-weight: 900;
++      text-transform: uppercase;
++      letter-spacing: .28em;
++      animation: marquee 26s linear infinite;
++    }
++
++    .marquee-track span { display: inline-flex; gap: 32px; }
++    @keyframes marquee { to { transform: translateX(-50%); } }
++
++    .middle-grid { display: grid; grid-template-columns: 1fr .72fr; gap: 20px; }
++    .intention-area {
++      width: 100%;
++      min-height: 224px;
++      resize: vertical;
++      border: 1px solid rgba(255,255,255,.12);
++      border-radius: 32px;
++      outline: 0;
++      background: rgba(0,0,0,.18);
++      color: white;
++      padding: 20px;
++      font-size: 20px;
++      font-weight: 700;
++      line-height: 1.75;
++    }
++
++    .ritual-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; color: rgba(255,247,237,.78); font-size: 14px; line-height: 1.65; }
++    .ritual-list li { border-radius: 24px; padding: 16px; }
++    .ritual-list b { display: block; margin-bottom: 4px; color: var(--gold); }
++    .ritual-list li:nth-child(2) b { color: #ffc2df; }
++    .ritual-list li:nth-child(3) b { color: #d8c5ff; }
++    .ritual-list li:nth-child(4) b { color: #bcecff; }
++
++    .list-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
++    .list-card { border-radius: 32px; padding: 24px; }
++    .list-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
++    .list-header h3 { margin: 8px 0 0; font-family: Georgia, "Times New Roman", "Noto Serif SC", serif; font-size: 26px; }
++    .color-block { width: 48px; height: 48px; border-radius: 18px; box-shadow: 0 0 34px rgba(255,255,255,.16); }
++    .pink { background: linear-gradient(135deg, #ff9ac8, #ff174d); }
++    .gold { background: linear-gradient(135deg, #ffd36e, #ff9ac8); }
++    .red { background: linear-gradient(135deg, #ff7ad6, #ff174d); }
++    .peach { background: linear-gradient(135deg, #ffc2d6, #ffbd70); }
++    .items { display: grid; gap: 12px; }
++    .item { display: flex; align-items: flex-start; gap: 12px; border-radius: 24px; padding: 14px; transition: transform .2s ease, background .2s ease; }
++    .item:hover { transform: translateY(-2px); background: rgba(255,255,255,.14); }
++    .dot { width: 10px; height: 10px; flex: 0 0 auto; margin-top: 7px; border-radius: 999px; box-shadow: 0 0 18px rgba(255,211,110,.54); }
++    .item p { flex: 1; margin: 0; color: rgba(255,247,237,.88); font-size: 14px; line-height: 1.65; }
++    .delete-btn { border: 0; background: transparent; color: rgba(255,230,210,.42); font-size: 20px; line-height: 1; transition: color .2s ease; }
++    .delete-btn:hover { color: white; }
++    .add-row { display: flex; gap: 8px; margin-top: 16px; }
++    .add-row input { min-width: 0; flex: 1; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; outline: 0; background: rgba(0,0,0,.18); color: white; padding: 12px 14px; }
++    .add-row input::placeholder { color: rgba(255,230,210,.36); }
++    .add-row button { border: 0; border-radius: 18px; background: white; color: #21040f; padding: 12px 18px; font-size: 14px; font-weight: 900; }
++    .vision-card { margin-top: 20px; }
 +
 +    .sparkle {
 +      position: fixed;
@@ -231,65 +612,25 @@
 +      to { transform: translateY(-14vh) scale(1.24); opacity: 0; }
 +    }
 +
-+    .shine {
-+      background: linear-gradient(90deg, #fff7ed, #ffd36e, #ff2f7d, #ff9ac8, #fff7ed);
-+      background-size: 240% auto;
-+      -webkit-background-clip: text;
-+      background-clip: text;
-+      color: transparent;
-+      animation: shine 8s ease-in-out infinite;
++    @media (max-width: 980px) {
++      .hero-grid, .middle-grid, .list-grid { grid-template-columns: 1fr; }
++      .hero { padding: 28px; min-height: auto; }
++      .hero-inner { min-height: auto; }
++      .sticker, .circle-line { display: none; }
++      .confidence-grid, .field-grid { grid-template-columns: 1fr; }
 +    }
 +
-+    @keyframes shine {
-+      0%, 100% { background-position: 0% 50%; }
-+      50% { background-position: 100% 50%; }
++    @media (max-width: 640px) {
++      .shell { padding: 12px; }
++      .topbar { border-radius: 28px; }
++      .section-card, .hero { border-radius: 32px; padding: 22px; }
++      .hero-title { font-size: 56px; }
++      .hero-copy { font-size: 16px; }
++      .orb-wrap { width: 210px; height: 210px; }
++      .orb { width: 150px; height: 150px; }
++      .stats-grid { grid-template-columns: 1fr; }
++      .add-row { flex-direction: column; }
 +    }
-+
-+    .marquee-track { animation: marquee 26s linear infinite; }
-+    @keyframes marquee { to { transform: translateX(-50%); } }
-+
-+    .lipstick {
-+      background: linear-gradient(135deg, #ff2f7d, #ff174d 52%, #ffd36e);
-+      box-shadow: 0 18px 52px rgba(255, 47, 125, .34), inset 0 1px 0 rgba(255,255,255,.28);
-+    }
-+
-+    .ribbon {
-+      position: relative;
-+      isolation: isolate;
-+    }
-+
-+    .ribbon::after {
-+      content: "";
-+      position: absolute;
-+      left: 1.4rem;
-+      right: 1.4rem;
-+      bottom: -.45rem;
-+      height: .8rem;
-+      border-radius: 999px;
-+      background: linear-gradient(90deg, transparent, rgba(255,47,125,.58), transparent);
-+      filter: blur(10px);
-+      z-index: -1;
-+    }
-+
-+    .sticker {
-+      border: 1px solid rgba(255,255,255,.22);
-+      background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-+      box-shadow: 0 22px 50px rgba(255,47,125,.16);
-+      transform: rotate(-2deg);
-+    }
-+
-+    .confidence-card {
-+      transition: transform .22s ease, background .22s ease, border-color .22s ease;
-+    }
-+
-+    .confidence-card:hover {
-+      transform: translateY(-4px) rotate(.6deg);
-+      border-color: rgba(255,255,255,.34);
-+      background: linear-gradient(145deg, rgba(255,111,174,.2), rgba(255,255,255,.09));
-+    }
-+
-+    input, textarea { caret-color: var(--gold); }
-+    ::selection { background: rgba(255,139,189,.42); color: white; }
 +  </style>
  </head>
  <body>
@@ -415,7 +756,298 @@
 -                overlay: 'rgba(255,255,255,0)',
 -                btnClass: 'rounded-full border border-stone-300 text-stone-600 hover:bg-[#65a30d] hover:text-white hover:border-[#65a30d] transition-colors duration-300'
 -            }
--        };
++  <main class="shell">
++    <div id="sparkles" aria-hidden="true"></div>
++    <div class="container">
++      <nav class="topbar glass">
++        <div class="brand">
++          <div class="brand-mark lipstick">✦</div>
++          <div>
++            <p class="eyebrow">Manifest Atelier</p>
++            <p class="brand-subtitle">甜辣自信 · 显化 · 心情变好</p>
++          </div>
++        </div>
++        <div class="mood-row" id="moodRow"></div>
++      </nav>
++
++      <section class="hero-grid">
++        <div class="hero glass neon-border">
++          <div class="aurora"></div>
++          <div class="sticker">
++            <p class="sticker-icon">💋</p>
++            <p class="sticker-text">soft but savage</p>
++          </div>
++          <div class="circle-line"></div>
++          <div class="circle-line small"></div>
++
++          <div class="hero-inner">
++            <div>
++              <div class="chips">
++                <span class="chip" id="todayChip"></span>
++                <span class="chip pink" id="focusChip"></span>
++              </div>
++              <p class="hero-kicker">Pretty, powerful, magnetic</p>
++              <h1 class="hero-title"><span class="shine">甜一点，</span><br />辣一点，自信到底。</h1>
++              <p class="hero-copy"><span id="heroName">亲爱的我</span>，这里是你的甜辣显化衣帽间。进来就要心情变好：漂亮地许愿，清醒地行动，自信地接住爱与丰盛。</p>
++              <div class="confidence-grid" id="confidenceGrid"></div>
++            </div>
++
++            <div class="field-grid">
++              <label class="field-card panel">
++                <span>今天的女主角</span>
++                <input id="nameInput" autocomplete="off" />
++              </label>
++              <label class="field-card panel">
++                <span>今日甜辣主题</span>
++                <input id="focusInput" autocomplete="off" />
++              </label>
++            </div>
++          </div>
++        </div>
++
++        <aside class="side-stack">
++          <section class="section-card glass" style="position: relative; overflow: hidden;">
++            <div style="position:absolute; left:50%; top:80px; width:240px; height:240px; transform:translateX(-50%); border-radius:999px; background:rgba(255,111,174,.18); filter:blur(48px);"></div>
++            <div class="section-head">
++              <p class="eyebrow" style="color:rgba(255,230,170,.72);">Girl Magic</p>
++              <h2>今日确认语</h2>
++              <p>读完就把肩膀打开：你很漂亮，也很有力量。</p>
++            </div>
++            <div class="orb-wrap">
++              <div class="orbit"></div>
++              <div class="orb"></div>
++              <div class="orbit-dot"></div>
++            </div>
++            <p class="affirmation" id="currentAffirmation"></p>
++            <button class="primary-btn lipstick" id="ritualButton">开启 60 秒甜辣显化 ✨</button>
++            <p class="ritual-feedback" id="ritualFeedback"></p>
++          </section>
++
++          <section class="section-card glass" style="border-radius:32px;">
++            <div class="energy-row">
++              <div>
++                <p class="eyebrow">Energy Index</p>
++                <h2 style="margin:8px 0 0; font-family:Georgia,'Times New Roman','Noto Serif SC',serif; font-size:26px;">甜辣能量值</h2>
++              </div>
++              <p class="energy-number" id="energyNumber">0</p>
++            </div>
++            <div class="progress"><div class="progress-bar" id="energyBar"></div></div>
++            <div class="stats-grid">
++              <div class="stat panel"><b id="ritualCount">0</b>仪式</div>
++              <div class="stat panel"><b id="winsCount">0</b>胜利</div>
++              <div class="stat panel"><b id="gratitudeCount">0</b>感恩</div>
++            </div>
++          </section>
++        </aside>
++      </section>
++
++      <div class="marquee glass">
++        <div class="marquee-track">
++          <span><span>✦ Pretty girls keep promises to themselves</span><span>✦ 甜美但不讨好</span><span>✦ 辣妹有边界也有野心</span><span>✦ 心情好，好事来</span><span>✦ Confidence is the outfit</span></span>
++          <span><span>✦ Pretty girls keep promises to themselves</span><span>✦ 甜美但不讨好</span><span>✦ 辣妹有边界也有野心</span><span>✦ 心情好，好事来</span><span>✦ Confidence is the outfit</span></span>
++        </div>
++      </div>
++
++      <section class="middle-grid">
++        <div class="section-card glass neon-border" style="border-radius:38px;">
++          <div class="section-head">
++            <p class="eyebrow" style="color:rgba(255,230,170,.72);">Intention</p>
++            <h2>核心意图</h2>
++            <p>写给那个漂亮、清醒、敢要也敢拿的自己。</p>
++          </div>
++          <textarea class="intention-area" id="intentionInput"></textarea>
++        </div>
++
++        <div class="section-card glass" style="border-radius:38px;">
++          <div class="section-head">
++            <p class="eyebrow" style="color:rgba(255,230,170,.72);">60s Ritual</p>
++            <h2>甜辣充电流程</h2>
++          </div>
++          <ol class="ritual-list">
++            <li class="panel"><b>01 / 呼吸</b>吸气 4 秒，呼气 6 秒，重复三次，把气场调成“我值得”。</li>
++            <li class="panel"><b>02 / 画面</b>闭眼看见愿望实现后的你：状态好、衣服美、账户稳、笑容甜。</li>
++            <li class="panel"><b>03 / 行动</b>问自己：今天最小、最漂亮、最有女主感的一步是什么？</li>
++            <li class="panel"><b>04 / 记录</b>点击完成，给今天的自己一个明确的“我超棒”。</li>
++          </ol>
++        </div>
++      </section>
++
++      <section class="list-grid" id="topLists"></section>
++      <section class="vision-card" id="visionList"></section>
++    </div>
++  </main>
++
++  <script>
++    const STORAGE_KEY = "manifest_atelier_v3";
++    const OLD_STORAGE_KEYS = ["manifest_atelier_v2", "manifest_studio_v1"];
++    const MOODS = ["甜心粉", "辣妹红", "富贵金"];
++    const CONFIDENCE_BOOSTS = ["我今天也很好看", "我允许自己被偏爱", "我越行动越有魅力"];
++
++    const DEFAULT_DATA = {
++      name: "亲爱的我",
++      intention: "我正在成为松弛、富足、有行动力的自己。",
++      focus: "健康、事业、爱与自由",
++      mood: MOODS[0],
++      affirmations: [
++        "我漂亮、清醒、会选择，好事主动来找我。",
++        "我甜得有吸引力，辣得有边界感。",
++        "我值得被偏爱、被支持、被丰盛地爱着。",
++        "今天的每一步，都让我更自信、更闪耀。"
++      ],
++      gratitude: ["我感谢当下拥有的能量与选择。", "我感谢自己没有放弃。"],
++      wins: ["完成了今天最重要的一件事，也夸了自己。"],
++      vision: [
++        "清晨醒来，皮肤发光，身体轻盈，内心安定。",
++        "做热爱的事，漂亮地赚钱，松弛地被爱。",
++        "和同频的人一起创造、玩耍、变美、成长。"
++      ],
++      ritualCount: 0,
++      lastRitualDate: ""
++    };
++
++    const LIST_META = {
++      affirmations: { title: "甜辣确认语", eyebrow: "Sweet Fire", color: "pink", placeholder: "例如：我漂亮、富足、被偏爱，也很有执行力" },
++      gratitude: { title: "开心感恩簿", eyebrow: "Joy Receipts", color: "gold", placeholder: "我感谢今天让我心情变好的……" },
++      wins: { title: "自信战绩", eyebrow: "Main Character", color: "red", placeholder: "今天我很棒，因为……" },
++      vision: { title: "粉金愿景衣橱", eyebrow: "Dream Closet", color: "peach", placeholder: "例如：我穿着喜欢的衣服，漂亮赚钱，状态稳定发光……" }
++    };
++
++    let data = loadData();
++    let feedbackTimer = null;
++
++    function normalizeData(value) {
++      const source = value && typeof value === "object" ? value : {};
++      return {
++        ...DEFAULT_DATA,
++        ...source,
++        affirmations: Array.isArray(source.affirmations) ? source.affirmations : DEFAULT_DATA.affirmations,
++        gratitude: Array.isArray(source.gratitude) ? source.gratitude : DEFAULT_DATA.gratitude,
++        wins: Array.isArray(source.wins) ? source.wins : DEFAULT_DATA.wins,
++        vision: Array.isArray(source.vision) ? source.vision : DEFAULT_DATA.vision,
++        mood: MOODS.includes(source.mood) ? source.mood : DEFAULT_DATA.mood
++      };
++    }
++
++    function loadData() {
++      try {
++        const saved = localStorage.getItem(STORAGE_KEY) || OLD_STORAGE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
++        return saved ? normalizeData(JSON.parse(saved)) : { ...DEFAULT_DATA };
++      } catch (error) {
++        return { ...DEFAULT_DATA };
++      }
++    }
++
++    function saveData() {
++      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
++    }
++
++    function todayText() {
++      return new Intl.DateTimeFormat("zh-CN", {
++        year: "numeric",
++        month: "long",
++        day: "numeric",
++        weekday: "long"
++      }).format(new Date());
++    }
++
++    function escapeHtml(value) {
++      return String(value)
++        .replace(/&/g, "&amp;")
++        .replace(/</g, "&lt;")
++        .replace(/>/g, "&gt;")
++        .replace(/"/g, "&quot;")
++        .replace(/'/g, "&#039;");
++    }
++
++    function currentAffirmation() {
++      if (!data.affirmations.length) return DEFAULT_DATA.affirmations[0];
++      const daySeed = new Date().getDate() + data.ritualCount;
++      return data.affirmations[daySeed % data.affirmations.length];
++    }
++
++    function completionScore() {
++      return Math.min(100, 18 + data.ritualCount * 8 + data.wins.length * 7 + data.gratitude.length * 5);
++    }
++
++    function renderSparkles() {
++      const sparkles = document.getElementById("sparkles");
++      sparkles.innerHTML = Array.from({ length: 36 }).map((_, index) => (
++        `<span class="sparkle" style="left:${(index * 29 + 7) % 100}%; animation-delay:${(index * 0.41) % 8}s; animation-duration:${7 + (index % 6)}s; opacity:${0.24 + (index % 5) * 0.11};"></span>`
++      )).join("");
++    }
++
++    function renderMoodPills() {
++      const moodRow = document.getElementById("moodRow");
++      moodRow.innerHTML = MOODS.map((mood) => `<button class="mood-pill ${data.mood === mood ? "active" : ""}" data-mood="${escapeHtml(mood)}">${escapeHtml(mood)}</button>`).join("");
++      moodRow.querySelectorAll("[data-mood]").forEach((button) => {
++        button.addEventListener("click", () => {
++          data.mood = button.dataset.mood;
++          saveData();
++          renderMoodPills();
++        });
++      });
++    }
++
++    function renderConfidenceCards() {
++      document.getElementById("confidenceGrid").innerHTML = CONFIDENCE_BOOSTS.map((boost, index) => `
++        <div class="confidence-card panel">
++          <p class="confidence-icon">${["💖", "💋", "👑"][index]}</p>
++          <p class="confidence-text">${escapeHtml(boost)}</p>
++        </div>
++      `).join("");
++    }
++
++    function listMarkup(type) {
++      const meta = LIST_META[type];
++      return `
++        <div class="list-card glass neon-border" data-list="${type}">
++          <div class="list-header">
++            <div>
++              <p class="eyebrow">${escapeHtml(meta.eyebrow)}</p>
++              <h3>${escapeHtml(meta.title)}</h3>
++            </div>
++            <div class="color-block ${meta.color}"></div>
++          </div>
++          <div class="items">
++            ${data[type].map((item, index) => `
++              <div class="item panel">
++                <span class="dot ${meta.color}"></span>
++                <p>${escapeHtml(item)}</p>
++                <button class="delete-btn" data-delete="${index}" title="删除">×</button>
++              </div>
++            `).join("")}
++          </div>
++          <div class="add-row">
++            <input data-draft="${type}" placeholder="${escapeHtml(meta.placeholder)}" />
++            <button data-add="${type}">加入</button>
++          </div>
++        </div>
++      `;
++    }
++
++    function attachListEvents(root) {
++      root.querySelectorAll("[data-delete]").forEach((button) => {
++        button.addEventListener("click", () => {
++          const type = button.closest("[data-list]").dataset.list;
++          const index = Number(button.dataset.delete);
++          data[type] = data[type].filter((_, itemIndex) => itemIndex !== index);
++          saveData();
++          renderLists();
++          renderStats();
++        });
++      });
++
++      root.querySelectorAll("[data-add]").forEach((button) => {
++        const type = button.dataset.add;
++        const input = root.querySelector(`[data-draft="${type}"]`);
++        const add = () => {
++          const value = input.value.trim();
++          if (!value) return;
++          data[type] = [...data[type], value];
++          saveData();
++          renderLists();
++          renderStats();
+         };
 -
 -        // --- 2. DATA LAYER (Persisted) ---
 -        const INITIAL_DATA = [
@@ -1025,375 +1657,99 @@
 -                                </div>
 -                            </div>
 -                        )}
-+  <div id="root"></div>
-+
-+  <script type="text/babel">
-+    const { useEffect, useMemo, useState } = React;
-+
-+    const STORAGE_KEY = "manifest_atelier_v2";
-+    const OLD_STORAGE_KEY = "manifest_studio_v1";
-+
-+    const MOODS = ["甜心粉", "辣妹红", "富贵金"];
-+
-+    const DEFAULT_DATA = {
-+      name: "亲爱的我",
-+      intention: "我正在成为松弛、富足、有行动力的自己。",
-+      focus: "健康、事业、爱与自由",
-+      mood: MOODS[0],
-+      affirmations: [
-+        "我漂亮、清醒、会选择，好事主动来找我。",
-+        "我甜得有吸引力，辣得有边界感。",
-+        "我值得被偏爱、被支持、被丰盛地爱着。",
-+        "今天的每一步，都让我更自信、更闪耀。"
-+      ],
-+      gratitude: ["我感谢当下拥有的能量与选择。", "我感谢自己没有放弃。"],
-+      wins: ["完成了今天最重要的一件事，也夸了自己。"],
-+      vision: [
-+        "清晨醒来，皮肤发光，身体轻盈，内心安定。",
-+        "做热爱的事，漂亮地赚钱，松弛地被爱。",
-+        "和同频的人一起创造、玩耍、变美、成长。"
-+      ],
-+      ritualCount: 0,
-+      lastRitualDate: ""
-+    };
-+
-+    function normalizeData(value) {
-+      return {
-+        ...DEFAULT_DATA,
-+        ...value,
-+        affirmations: Array.isArray(value?.affirmations) ? value.affirmations : DEFAULT_DATA.affirmations,
-+        gratitude: Array.isArray(value?.gratitude) ? value.gratitude : DEFAULT_DATA.gratitude,
-+        wins: Array.isArray(value?.wins) ? value.wins : DEFAULT_DATA.wins,
-+        vision: Array.isArray(value?.vision) ? value.vision : DEFAULT_DATA.vision,
-+        mood: MOODS.includes(value?.mood) ? value.mood : DEFAULT_DATA.mood
-+      };
-+    }
-+
-+    function loadData() {
-+      try {
-+        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY);
-+        return saved ? normalizeData(JSON.parse(saved)) : DEFAULT_DATA;
-+      } catch (error) {
-+        return DEFAULT_DATA;
-+      }
-+    }
-+
-+    function todayText() {
-+      return new Intl.DateTimeFormat("zh-CN", {
-+        year: "numeric",
-+        month: "long",
-+        day: "numeric",
-+        weekday: "long"
-+      }).format(new Date());
-+    }
-+
-+    const listMeta = {
-+      affirmations: { title: "甜辣确认语", eyebrow: "SWEET FIRE", color: "from-pink-300 to-rose-500", placeholder: "例如：我漂亮、富足、被偏爱，也很有执行力" },
-+      gratitude: { title: "开心感恩簿", eyebrow: "JOY RECEIPTS", color: "from-amber-200 to-pink-300", placeholder: "我感谢今天让我心情变好的……" },
-+      wins: { title: "自信战绩", eyebrow: "MAIN CHARACTER", color: "from-fuchsia-300 to-red-400", placeholder: "今天我很棒，因为……" },
-+      vision: { title: "粉金愿景衣橱", eyebrow: "DREAM CLOSET", color: "from-rose-200 to-orange-300", placeholder: "例如：我穿着喜欢的衣服，漂亮赚钱，状态稳定发光……" }
-+    };
-+
-+    function Sparkles() {
-+      return (
-+        <div aria-hidden="true">
-+          {Array.from({ length: 36 }).map((_, index) => (
-+            <span
-+              className="sparkle"
-+              key={index}
-+              style={{
-+                left: `${(index * 29 + 7) % 100}%`,
-+                animationDelay: `${(index * 0.41) % 8}s`,
-+                animationDuration: `${7 + (index % 6)}s`,
-+                opacity: 0.24 + (index % 5) * 0.11
-+              }}
-+            />
-+          ))}
-+        </div>
-+      );
-+    }
-+
-+    function Pill({ children, active, onClick }) {
-+      return (
-+        <button
-+          className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.24em] transition ${active ? "border-amber-100 bg-amber-100 text-slate-950 shadow-[0_0_30px_rgba(248,216,139,.28)]" : "border-white/15 bg-white/[0.08] text-orange-50/70 hover:border-white/35 hover:bg-white/[0.12]"}`}
-+          onClick={onClick}
-+        >
-+          {children}
-+        </button>
-+      );
-+    }
-+
-+    function SectionHeader({ eyebrow, title, children }) {
-+      return (
-+        <div className="mb-5 flex items-end justify-between gap-4">
-+          <div>
-+            <p className="text-[11px] font-black uppercase tracking-[0.34em] text-amber-100/70">{eyebrow}</p>
-+            <h2 className="serif mt-2 text-2xl font-black text-white md:text-3xl">{title}</h2>
-+            {children && <p className="mt-2 max-w-2xl text-sm leading-6 text-orange-50/64">{children}</p>}
-+          </div>
-+        </div>
-+      );
-+    }
-+
-+    function EditableList({ type, items, onChange }) {
-+      const [draft, setDraft] = useState("");
-+      const meta = listMeta[type];
-+      const addItem = () => {
-+        const value = draft.trim();
-+        if (!value) return;
-+        onChange([...items, value]);
-+        setDraft("");
-+      };
-+
-+      return (
-+        <section className="glass neon-border rounded-[2rem] p-5 md:p-6">
-+          <div className="mb-5 flex items-center justify-between gap-4">
-+            <div>
-+              <p className="text-[10px] font-black tracking-[0.34em] text-white/45">{meta.eyebrow}</p>
-+              <h3 className="serif mt-2 text-2xl font-black text-white">{meta.title}</h3>
-+            </div>
-+            <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${meta.color} opacity-90 shadow-[0_0_34px_rgba(255,255,255,.16)]`} />
-+          </div>
-+
-+          <div className="space-y-3">
-+            {items.map((item, index) => (
-+              <div className="panel group flex items-start gap-3 rounded-3xl p-4 transition hover:-translate-y-0.5 hover:bg-white/[0.14]" key={`${type}-${item}-${index}`}>
-+                <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-gradient-to-br ${meta.color} shadow-[0_0_18px_rgba(248,216,139,.54)]`} />
-+                <p className="flex-1 text-sm leading-6 text-orange-50/88">{item}</p>
-+                <button
-+                  className="rounded-full px-2 text-orange-100/38 transition hover:bg-white/10 hover:text-white"
-+                  onClick={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))}
-+                  title="删除"
-+                >
-+                  ×
-+                </button>
-+              </div>
-+            ))}
-+          </div>
-+
-+          <div className="mt-4 flex gap-2">
-+            <input
-+              className="min-w-0 flex-1 rounded-2xl border border-white/[0.12] bg-black/[0.18] px-4 py-3 text-sm text-white outline-none placeholder:text-orange-100/[0.36] focus:border-amber-100/70 focus:bg-black/[0.24]"
-+              value={draft}
-+              onChange={(event) => setDraft(event.target.value)}
-+              onKeyDown={(event) => event.key === "Enter" && addItem()}
-+              placeholder={meta.placeholder}
-+            />
-+            <button className="rounded-2xl bg-white px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-100" onClick={addItem}>
-+              加入
-+            </button>
-+          </div>
-+        </section>
-+      );
-+    }
-+
-+    function App() {
-+      const [data, setData] = useState(loadData);
-+      const [ritualDone, setRitualDone] = useState(false);
-+      const moods = MOODS;
-+      const confidenceBoosts = ["我今天也很好看", "我允许自己被偏爱", "我越行动越有魅力"];
-+
-+      useEffect(() => {
-+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-+      }, [data]);
-+
-+      const currentAffirmation = useMemo(() => {
-+        if (!data.affirmations.length) return DEFAULT_DATA.affirmations[0];
-+        const daySeed = new Date().getDate() + data.ritualCount;
-+        return data.affirmations[daySeed % data.affirmations.length];
-+      }, [data.affirmations, data.ritualCount]);
-+
-+      const completionScore = Math.min(100, 18 + data.ritualCount * 8 + data.wins.length * 7 + data.gratitude.length * 5);
-+
-+      const completeRitual = () => {
-+        const date = new Date().toDateString();
-+        setData((previous) => ({
-+          ...previous,
-+          ritualCount: previous.lastRitualDate === date ? previous.ritualCount : previous.ritualCount + 1,
-+          lastRitualDate: date
-+        }));
-+        setRitualDone(true);
-+        window.setTimeout(() => setRitualDone(false), 2600);
-+      };
-+
-+      const updateList = (key, value) => setData({ ...data, [key]: value });
-+
-+      return (
-+        <main className="shell min-h-screen px-4 py-5 md:px-8 lg:px-10">
-+          <Sparkles />
-+          <div className="mx-auto max-w-7xl">
-+            <nav className="glass mb-5 flex flex-wrap items-center justify-between gap-4 rounded-full px-5 py-3">
-+              <div className="flex items-center gap-3">
-+                <div className="lipstick grid h-10 w-10 place-items-center rounded-full text-lg text-white shadow-[0_0_30px_rgba(255,47,125,.35)]">✦</div>
-+                <div>
-+                  <p className="text-xs font-black uppercase tracking-[0.28em] text-white/50">Manifest Atelier</p>
-+                  <p className="text-sm font-semibold text-orange-50/80">甜辣自信 · 显化 · 心情变好</p>
-+                </div>
-+              </div>
-+              <div className="flex flex-wrap gap-2">
-+                {moods.map((mood) => (
-+                  <Pill key={mood} active={data.mood === mood} onClick={() => setData({ ...data, mood })}>{mood}</Pill>
-+                ))}
-+              </div>
-+            </nav>
-+
-+            <section className="grid gap-5 lg:grid-cols-[1.35fr_.65fr]">
-+              <div className="glass neon-border ribbon relative min-h-[620px] overflow-hidden rounded-[2.8rem] p-6 md:p-10">
-+                <div className="aurora -right-28 -top-28" />
-+                <div className="sticker absolute right-8 top-8 hidden rounded-[1.4rem] px-5 py-4 text-center lg:block">
-+                  <p className="text-3xl">💋</p>
-+                  <p className="mt-1 text-xs font-black uppercase tracking-[0.24em] text-white/76">soft but savage</p>
-+                </div>
-+                <div className="absolute bottom-8 right-8 hidden h-64 w-64 rounded-full border border-white/10 lg:block" />
-+                <div className="absolute bottom-16 right-16 hidden h-44 w-44 rounded-full border border-white/10 lg:block" />
-+
-+                <div className="relative z-10 flex h-full flex-col justify-between gap-10">
-+                  <div>
-+                    <div className="mb-8 flex flex-wrap gap-3">
-+                      <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-amber-100/80">{todayText()}</span>
-+                      <span className="rounded-full border border-white/16 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-pink-100/80">{data.focus}</span>
-+                    </div>
- 
-+                    <p className="mb-4 text-sm font-black uppercase tracking-[0.42em] text-white/42">Pretty, powerful, magnetic</p>
-+                    <h1 className="display hero-title max-w-5xl text-6xl font-black leading-[0.9] md:text-8xl lg:text-9xl">
-+                      <span className="shine">甜一点，</span><br />辣一点，自信到底。
-+                    </h1>
-+                    <p className="mt-7 max-w-2xl text-lg leading-8 text-orange-50/72 md:text-xl">
-+                      {data.name}，这里是你的甜辣显化衣帽间。进来就要心情变好：漂亮地许愿，清醒地行动，自信地接住爱与丰盛。
-+                    </p>
-+
-+                    <div className="mt-8 grid gap-3 md:grid-cols-3">
-+                      {confidenceBoosts.map((boost, index) => (
-+                        <div className="confidence-card panel rounded-[1.35rem] p-4" key={boost}>
-+                          <p className="text-2xl">{["💖", "💋", "👑"][index]}</p>
-+                          <p className="mt-3 text-sm font-black leading-6 text-white">{boost}</p>
-+                        </div>
-+                      ))}
-                     </div>
-+                  </div>
-+
-+                  <div className="grid gap-4 md:grid-cols-2">
-+                    <label className="panel rounded-[1.7rem] p-4">
-+                      <span className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-100/60">今天的女主角</span>
-+                      <input
-+                        className="mt-3 w-full border-0 bg-transparent text-2xl font-black text-white outline-none placeholder:text-white/24"
-+                        value={data.name}
-+                        onChange={(event) => setData({ ...data, name: event.target.value })}
-+                      />
-+                    </label>
-+                    <label className="panel rounded-[1.7rem] p-4">
-+                      <span className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-100/60">今日甜辣主题</span>
-+                      <input
-+                        className="mt-3 w-full border-0 bg-transparent text-2xl font-black text-white outline-none placeholder:text-white/24"
-+                        value={data.focus}
-+                        onChange={(event) => setData({ ...data, focus: event.target.value })}
-+                      />
-+                    </label>
-+                  </div>
-                 </div>
+-
+-                    </div>
+-                </div>
 -            );
 -        };
 -
 -        const root = ReactDOM.createRoot(document.getElementById('root'));
 -        root.render(<App />);
 -    </script>
-+              </div>
-+
-+              <aside className="grid gap-5">
-+                <section className="glass relative overflow-hidden rounded-[2.8rem] p-6 md:p-8">
-+                  <div className="absolute left-1/2 top-20 h-60 w-60 -translate-x-1/2 rounded-full bg-pink-300/20 blur-3xl" />
-+                  <SectionHeader eyebrow="GIRL MAGIC" title="今日确认语">
-+                    读完就把肩膀打开：你很漂亮，也很有力量。
-+                  </SectionHeader>
-+                  <div className="relative mx-auto my-7 grid h-60 w-60 place-items-center">
-+                    <div className="orbit absolute inset-0 rounded-full border border-dashed border-white/24" />
-+                    <div className="orb h-44 w-44 rounded-full" />
-+                    <div className="absolute h-3 w-3 translate-x-28 rounded-full bg-amber-100 shadow-[0_0_22px_rgba(248,216,139,.8)]" />
-+                  </div>
-+                  <p className="serif relative text-center text-3xl font-black leading-normal text-white">“{currentAffirmation}”</p>
-+                  <button
-+                    className="lipstick mt-7 w-full rounded-[1.6rem] px-6 py-4 text-base font-black text-white shadow-[0_20px_55px_rgba(255,47,125,.26)] transition hover:-translate-y-1 hover:saturate-125"
-+                    onClick={completeRitual}
-+                  >
-+                    开启 60 秒甜辣显化 ✨
-+                  </button>
-+                  {ritualDone && <p className="mt-4 text-center font-bold text-amber-100">已记录：漂亮宝贝，今天的你更自信了。</p>}
-+                </section>
-+
-+                <section className="glass rounded-[2rem] p-6">
-+                  <div className="flex items-center justify-between">
-+                    <div>
-+                      <p className="text-[11px] font-black uppercase tracking-[0.32em] text-white/45">ENERGY INDEX</p>
-+                      <h3 className="serif mt-2 text-2xl font-black">甜辣能量值</h3>
-+                    </div>
-+                    <p className="text-4xl font-black text-amber-100">{completionScore}</p>
-+                  </div>
-+                  <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
-+                    <div className="h-full rounded-full bg-gradient-to-r from-amber-200 via-pink-300 to-violet-300" style={{ width: `${completionScore}%` }} />
-+                  </div>
-+                  <div className="mt-5 grid grid-cols-3 gap-2 text-center text-xs text-orange-50/64">
-+                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.ritualCount}</b>仪式</div>
-+                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.wins.length}</b>胜利</div>
-+                    <div className="panel rounded-2xl p-3"><b className="block text-lg text-white">{data.gratitude.length}</b>感恩</div>
-+                  </div>
-+                </section>
-+              </aside>
-+            </section>
-+
-+            <div className="glass my-5 overflow-hidden rounded-full py-3">
-+              <div className="marquee-track flex w-max gap-8 whitespace-nowrap text-sm font-black uppercase tracking-[0.32em] text-white/46">
-+                {Array.from({ length: 2 }).map((_, group) => (
-+                  <span key={group} className="flex gap-8">
-+                    <span>✦ Pretty girls keep promises to themselves</span>
-+                    <span>✦ 甜美但不讨好</span>
-+                    <span>✦ 辣妹有边界也有野心</span>
-+                    <span>✦ 心情好，好事来</span>
-+                    <span>✦ Confidence is the outfit</span>
-+                  </span>
-+                ))}
-+              </div>
-+            </div>
-+
-+            <section className="grid gap-5 lg:grid-cols-[1fr_.72fr]">
-+              <div className="glass neon-border rounded-[2.4rem] p-6 md:p-8">
-+                <SectionHeader eyebrow="INTENTION" title="核心意图">
-+                  写给那个漂亮、清醒、敢要也敢拿的自己。
-+                </SectionHeader>
-+                <textarea
-+                  className="min-h-56 w-full resize-none rounded-[2rem] border border-white/[0.12] bg-black/[0.18] p-5 text-xl font-semibold leading-9 text-white outline-none placeholder:text-orange-100/35 focus:border-amber-100/70 focus:bg-black/[0.24]"
-+                  value={data.intention}
-+                  onChange={(event) => setData({ ...data, intention: event.target.value })}
-+                />
-+              </div>
-+
-+              <div className="glass rounded-[2.4rem] p-6 md:p-8">
-+                <SectionHeader eyebrow="60S RITUAL" title="甜辣充电流程" />
-+                <ol className="space-y-4 text-sm leading-6 text-orange-50/78">
-+                  <li className="panel rounded-3xl p-4"><b className="text-amber-100">01 / 呼吸</b><br />吸气 4 秒，呼气 6 秒，重复三次，把气场调成“我值得”。</li>
-+                  <li className="panel rounded-3xl p-4"><b className="text-pink-100">02 / 画面</b><br />闭眼看见愿望实现后的你：状态好、衣服美、账户稳、笑容甜。</li>
-+                  <li className="panel rounded-3xl p-4"><b className="text-violet-100">03 / 行动</b><br />问自己：今天最小、最漂亮、最有女主感的一步是什么？</li>
-+                  <li className="panel rounded-3xl p-4"><b className="text-cyan-100">04 / 记录</b><br />点击完成，给今天的自己一个明确的“我超棒”。</li>
-+                </ol>
-+              </div>
-+            </section>
-+
-+            <section className="mt-5 grid gap-5 lg:grid-cols-3">
-+              <EditableList type="affirmations" items={data.affirmations} onChange={(value) => updateList("affirmations", value)} />
-+              <EditableList type="gratitude" items={data.gratitude} onChange={(value) => updateList("gratitude", value)} />
-+              <EditableList type="wins" items={data.wins} onChange={(value) => updateList("wins", value)} />
-+            </section>
-+
-+            <section className="my-5">
-+              <EditableList type="vision" items={data.vision} onChange={(value) => updateList("vision", value)} />
-+            </section>
-+          </div>
-+        </main>
-+      );
++        button.addEventListener("click", add);
++        input.addEventListener("keydown", (event) => {
++          if (event.key === "Enter") add();
++        });
++      });
 +    }
 +
-+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
++    function renderLists() {
++      const topLists = document.getElementById("topLists");
++      topLists.innerHTML = ["affirmations", "gratitude", "wins"].map(listMarkup).join("");
++      attachListEvents(topLists);
++
++      const visionList = document.getElementById("visionList");
++      visionList.innerHTML = listMarkup("vision");
++      attachListEvents(visionList);
++      document.getElementById("currentAffirmation").textContent = `“${currentAffirmation()}”`;
++    }
++
++    function renderStats() {
++      const score = completionScore();
++      document.getElementById("energyNumber").textContent = score;
++      document.getElementById("energyBar").style.width = `${score}%`;
++      document.getElementById("ritualCount").textContent = data.ritualCount;
++      document.getElementById("winsCount").textContent = data.wins.length;
++      document.getElementById("gratitudeCount").textContent = data.gratitude.length;
++    }
++
++    function bindEditableFields() {
++      const nameInput = document.getElementById("nameInput");
++      const focusInput = document.getElementById("focusInput");
++      const intentionInput = document.getElementById("intentionInput");
++
++      nameInput.value = data.name;
++      focusInput.value = data.focus;
++      intentionInput.value = data.intention;
++      document.getElementById("todayChip").textContent = todayText();
++      document.getElementById("focusChip").textContent = data.focus;
++      document.getElementById("heroName").textContent = data.name;
++
++      nameInput.addEventListener("input", () => {
++        data.name = nameInput.value;
++        document.getElementById("heroName").textContent = data.name || DEFAULT_DATA.name;
++        saveData();
++      });
++
++      focusInput.addEventListener("input", () => {
++        data.focus = focusInput.value;
++        document.getElementById("focusChip").textContent = data.focus || DEFAULT_DATA.focus;
++        saveData();
++      });
++
++      intentionInput.addEventListener("input", () => {
++        data.intention = intentionInput.value;
++        saveData();
++      });
++    }
++
++    function bindRitual() {
++      document.getElementById("ritualButton").addEventListener("click", () => {
++        const date = new Date().toDateString();
++        if (data.lastRitualDate !== date) data.ritualCount += 1;
++        data.lastRitualDate = date;
++        saveData();
++        renderStats();
++        document.getElementById("currentAffirmation").textContent = `“${currentAffirmation()}”`;
++        const feedback = document.getElementById("ritualFeedback");
++        feedback.textContent = "已记录：漂亮宝贝，今天的你更自信了。";
++        clearTimeout(feedbackTimer);
++        feedbackTimer = setTimeout(() => { feedback.textContent = ""; }, 2600);
++      });
++    }
++
++    function init() {
++      renderSparkles();
++      renderMoodPills();
++      renderConfidenceCards();
++      bindEditableFields();
++      bindRitual();
++      renderLists();
++      renderStats();
++      saveData();
++    }
++
++    init();
 +  </script>
  </body>
  </html>
-
